@@ -1,5 +1,8 @@
 node_modules/
 client/dist/
 data/state.json
-data/state.json.tmp
+data/users.json
+data/dms/
+data/session-secret
+*.tmp
 .env

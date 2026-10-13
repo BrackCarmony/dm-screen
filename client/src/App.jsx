@@ -6,6 +6,7 @@ import Encounters from './pages/Encounters.jsx';
 import Shop from './pages/Shop.jsx';
 import Party from './pages/Party.jsx';
 import Reference from './pages/Reference.jsx';
+import Account from './pages/Account.jsx';
 
 const TABS = [
   ['battle', 'Battle'],
@@ -14,6 +15,7 @@ const TABS = [
   ['shop', 'Magic Shop'],
   ['party', 'Party'],
   ['reference', 'XP Tables'],
+  ['account', 'Account'],
 ];
 
 function useHashTab() {
@@ -37,7 +39,7 @@ export default function App() {
   const load = useCallback(async () => {
     const m = await api.me();
     setMe(m);
-    if (m.dm) setState(await api.state());
+    setState(m.user ? await api.state() : null);
   }, []);
 
   useEffect(() => {
@@ -57,7 +59,9 @@ export default function App() {
   }, []);
 
   if (!me) return <div className="center muted">Loading…</div>;
-  if (!me.dm) return <Login onDone={load} />;
+  const resetToken = window.location.pathname === '/reset' ? new URLSearchParams(window.location.search).get('token') : null;
+  if (resetToken) return <Reset token={resetToken} />;
+  if (!me.user) return <Auth firstAccount={me.firstAccount} onDone={load} />;
   if (!state) return <div className="center muted">Loading…</div>;
 
   const props = { state, update };
@@ -71,12 +75,12 @@ export default function App() {
           ))}
         </nav>
         <div className="topbar-right">
-          <a href="/players" target="_blank" rel="noreferrer">Player view ↗</a>
-          {me.passwordSet && <button className="link" onClick={() => api.logout().then(load)}>Log out</button>}
+          <a href={`/p/${me.user.slug}`} target="_blank" rel="noreferrer">Player view ↗</a>
+          <span className="muted">{me.user.name}</span>
+          <button className="link" onClick={() => api.logout().then(load)}>Log out</button>
         </div>
       </header>
       {saveError && <div className="banner error">{saveError}</div>}
-      {!me.passwordSet && <div className="banner">No DM password is set, so anyone can open this page. Set DM_PASSWORD before deploying.</div>}
       <main>
         {tab === 'battle' && <Battle {...props} />}
         {tab === 'bestiary' && <Bestiary {...props} />}
@@ -84,12 +88,62 @@ export default function App() {
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
+        {tab === 'account' && <Account user={me.user} onChange={(user) => setMe({ ...me, user })} />}
       </main>
     </div>
   );
 }
 
-function Login({ onDone }) {
+function Auth({ firstAccount, onDone }) {
+  const [mode, setMode] = useState(firstAccount ? 'signup' : 'login');
+  const [f, setF] = useState({ name: '', email: '', password: '' });
+  const [err, setErr] = useState('');
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const [sent, setSent] = useState(false);
+  const submit = (e) => {
+    e.preventDefault();
+    setErr('');
+    if (mode === 'forgot') return api.forgot(f.email).then(() => setSent(true)).catch((x) => setErr(x.message));
+    const go = mode === 'signup' ? api.signup(f) : api.login(f.email, f.password);
+    go.then(onDone).catch((x) => setErr(x.message));
+  };
+  if (mode === 'forgot') {
+    return (
+      <form className="login" onSubmit={submit}>
+        <h1>Reset password</h1>
+        {sent ? (
+          <p>If that email has an account, a reset link is on its way. It works for one hour.</p>
+        ) : (
+          <>
+            <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required autoFocus />
+            <button className="primary">Send reset link</button>
+          </>
+        )}
+        {err && <p className="error-text">{err}</p>}
+        <button type="button" className="link" onClick={() => { setMode('login'); setSent(false); }}>Back to log in</button>
+      </form>
+    );
+  }
+  return (
+    <form className="login" onSubmit={submit}>
+      <h1>DM Screen</h1>
+      <div className="seg">
+        <button type="button" className={mode === 'login' ? 'on' : ''} onClick={() => setMode('login')}>Log in</button>
+        <button type="button" className={mode === 'signup' ? 'on' : ''} onClick={() => setMode('signup')}>Sign up</button>
+      </div>
+      {mode === 'signup' && firstAccount && <p className="muted small">This is the first account, so it gets the campaign data already on this server.</p>}
+      {mode === 'signup' && <input placeholder="Your name" value={f.name} onChange={set('name')} autoComplete="name" required />}
+      <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required />
+      <input type="password" placeholder={mode === 'signup' ? 'Password (8+ characters)' : 'Password'} value={f.password} onChange={set('password')} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required />
+      <button className="primary">{mode === 'signup' ? 'Create account' : 'Log in'}</button>
+      {err && <p className="error-text">{err}</p>}
+      {mode === 'login' && <button type="button" className="link" onClick={() => setMode('forgot')}>Forgot password?</button>}
+      <p className="muted small">Players: ask your DM for their player link.</p>
+    </form>
+  );
+}
+
+function Reset({ token }) {
   const [pw, setPw] = useState('');
   const [err, setErr] = useState('');
   return (
@@ -97,14 +151,15 @@ function Login({ onDone }) {
       className="login"
       onSubmit={(e) => {
         e.preventDefault();
-        api.login(pw).then(onDone).catch((x) => setErr(x.message));
+        setErr('');
+        api.reset(token, pw).then(() => window.location.replace('/')).catch((x) => setErr(x.message));
       }}
     >
-      <h1>DM Screen</h1>
-      <input type="password" placeholder="DM password" value={pw} onChange={(e) => setPw(e.target.value)} autoFocus />
-      <button className="primary">Enter</button>
+      <h1>Choose a new password</h1>
+      <input type="password" placeholder="New password (8+ characters)" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} required autoFocus />
+      <button className="primary">Save and log in</button>
       {err && <p className="error-text">{err}</p>}
-      <p className="muted"><a href="/players">Looking for the player view?</a></p>
+      <a href="/">Back to log in</a>
     </form>
   );
 }

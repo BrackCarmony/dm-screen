@@ -10,8 +10,12 @@ async function call(method, url, body) {
 
 export const api = {
   me: () => call('GET', '/api/me'),
-  login: (password) => call('POST', '/api/login', { password }),
+  signup: (fields) => call('POST', '/api/signup', fields),
+  login: (email, password) => call('POST', '/api/login', { email, password }),
+  forgot: (email) => call('POST', '/api/forgot', { email }),
+  reset: (token, password) => call('POST', '/api/reset', { token, password }),
   logout: () => call('POST', '/api/logout'),
+  account: (patch) => call('PUT', '/api/account', patch),
   state: () => call('GET', '/api/state'),
   put: (key, value) => call('PUT', `/api/state/${key}`, value),
 };

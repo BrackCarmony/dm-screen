@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { SAVES, beastMap, currentHp, d, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, uid, xpSummary } from '../rules.js';
 
 export default function Battle({ state, update }) {
@@ -67,6 +67,7 @@ export default function Battle({ state, update }) {
                 beast={beasts.get(c.name)}
                 beasts={beasts}
                 save={battle.save}
+                onSave={(save) => setBattle((b) => ({ ...b, save }))}
                 isTurn={battle.turn === c.id}
                 onChange={(fn) => setCombatant(c.id, fn)}
                 onRemove={() => setBattle((b) => ({ ...b, combatants: b.combatants.filter((x) => x.id !== c.id) }))}
@@ -119,7 +120,7 @@ function AddMonster({ bestiary, onAdd }) {
   );
 }
 
-function MonsterCard({ c, beast, beasts, save, isTurn, onChange, onRemove, onCopy }) {
+function MonsterCard({ c, beast, beasts, save, onSave, isTurn, onChange, onRemove, onCopy }) {
   const [amount, setAmount] = useState('');
   const [open, setOpen] = useState(false);
   const max = maxHp(c, beasts);
@@ -158,7 +159,7 @@ function MonsterCard({ c, beast, beasts, save, isTurn, onChange, onRemove, onCop
       <div className="stats">
         <Stat label="AC" value={beast?.ac ?? '–'} />
         <Stat label="Speed" value={beast?.speed || '–'} />
-        <Stat label={`${save?.toUpperCase()} save`} value={fmtMod(beast?.saves?.[save])} />
+        <SavePicker save={save} saves={beast?.saves} onPick={onSave} />
         <Stat label="Init" value={fmtMod(beast?.init)} />
         <Stat label="CR" value={fmtCr(beast?.cr)} />
       </div>
@@ -200,6 +201,41 @@ function MonsterCard({ c, beast, beasts, save, isTurn, onChange, onRemove, onCop
         </>
       )}
     </article>
+  );
+}
+
+// The save pill on a card: tap it to pick which save every card in this battle shows.
+function SavePicker({ save, saves, onPick }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
+    const esc = (e) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', esc); };
+  }, [open]);
+
+  return (
+    <div className="stat save-pick" ref={ref}>
+      <button type="button" className="stat-btn" aria-haspopup="listbox" aria-expanded={open} title="Change save" onClick={() => setOpen(!open)}>
+        <span className="label">{save?.toUpperCase()} save ▾</span>
+        <span className="value">{fmtMod(saves?.[save])}</span>
+      </button>
+      {open && (
+        <ul className="save-menu" role="listbox">
+          {SAVES.map((s) => (
+            <li key={s}>
+              <button type="button" role="option" aria-selected={s === save} className={s === save ? 'on' : ''} onClick={() => { onPick(s); setOpen(false); }}>
+                <span>{s.toUpperCase()}</span>
+                <span>{fmtMod(saves?.[s])}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
