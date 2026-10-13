@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 
-export default function Players() {
+export default function Players({ slug }) {
   const [view, setView] = useState(null);
   const [live, setLive] = useState(false);
 
   useEffect(() => {
-    const es = new EventSource('/api/public/stream');
+    const es = new EventSource(`/api/public/${encodeURIComponent(slug)}/stream`);
     es.onmessage = (e) => {
       setView(JSON.parse(e.data));
       setLive(true);
     };
-    es.onerror = () => setLive(false);
+    es.onerror = () => {
+      setLive(false);
+      fetch(`/api/public/${encodeURIComponent(slug)}`).then((r) => r.status === 404 && (es.close(), setView({ missing: true })));
+    };
     return () => es.close();
-  }, []);
+  }, [slug]);
 
   if (!view) return <div className="center muted">Connecting…</div>;
+  if (view.missing || view.moved) return <div className="center muted">This player link doesn't exist. Ask your DM for the current one.</div>;
   return (
     <div className="players">
       <header>
         <h1>{view.battle ?? 'No battle running'}</h1>
-        {view.battle && <div className="muted">Round {view.round}</div>}
+        {view.battle ? <div className="muted">Round {view.round}</div> : <div className="muted">{view.dm}</div>}
         <span className={`dot ${live ? 'on' : ''}`} title={live ? 'Live' : 'Reconnecting'} />
       </header>
       <ol className="order">

@@ -165,3 +165,7 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .order .status { font-size: .8rem; color: var(--warn); min-width: 4.5rem; }
 @media (max-width: 480px) { .order .health { width: 6rem; } .order .status { display: none; } }
 @media (max-width: 600px) { main { padding: 1rem 16px; } .topbar-right { margin-left: 0; } }
+.seg { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.seg button { flex: 1; border: 0; border-radius: 0; background: var(--surface); }
+.seg button.on { background: var(--surface-2); font-weight: 600; }
+.add-row > span { align-self: center; }

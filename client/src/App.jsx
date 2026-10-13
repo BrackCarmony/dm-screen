@@ -6,6 +6,7 @@ import Encounters from './pages/Encounters.jsx';
 import Shop from './pages/Shop.jsx';
 import Party from './pages/Party.jsx';
 import Reference from './pages/Reference.jsx';
+import Account from './pages/Account.jsx';
 
 const TABS = [
   ['battle', 'Battle'],
@@ -14,6 +15,7 @@ const TABS = [
   ['shop', 'Magic Shop'],
   ['party', 'Party'],
   ['reference', 'XP Tables'],
+  ['account', 'Account'],
 ];
 
 function useHashTab() {
@@ -37,7 +39,7 @@ export default function App() {
   const load = useCallback(async () => {
     const m = await api.me();
     setMe(m);
-    if (m.dm) setState(await api.state());
+    setState(m.user ? await api.state() : null);
   }, []);
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function App() {
   }, []);
 
   if (!me) return <div className="center muted">Loading…</div>;
-  if (!me.dm) return <Login onDone={load} />;
+  if (!me.user) return <Auth firstAccount={me.firstAccount} onDone={load} />;
   if (!state) return <div className="center muted">Loading…</div>;
 
   const props = { state, update };
@@ -71,12 +73,12 @@ export default function App() {
           ))}
         </nav>
         <div className="topbar-right">
-          <a href="/players" target="_blank" rel="noreferrer">Player view ↗</a>
-          {me.passwordSet && <button className="link" onClick={() => api.logout().then(load)}>Log out</button>}
+          <a href={`/p/${me.user.slug}`} target="_blank" rel="noreferrer">Player view ↗</a>
+          <span className="muted">{me.user.name}</span>
+          <button className="link" onClick={() => api.logout().then(load)}>Log out</button>
         </div>
       </header>
       {saveError && <div className="banner error">{saveError}</div>}
-      {!me.passwordSet && <div className="banner">No DM password is set, so anyone can open this page. Set DM_PASSWORD before deploying.</div>}
       <main>
         {tab === 'battle' && <Battle {...props} />}
         {tab === 'bestiary' && <Bestiary {...props} />}
@@ -84,27 +86,37 @@ export default function App() {
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
+        {tab === 'account' && <Account user={me.user} onChange={(user) => setMe({ ...me, user })} />}
       </main>
     </div>
   );
 }
 
-function Login({ onDone }) {
-  const [pw, setPw] = useState('');
+function Auth({ firstAccount, onDone }) {
+  const [mode, setMode] = useState(firstAccount ? 'signup' : 'login');
+  const [f, setF] = useState({ name: '', email: '', password: '' });
   const [err, setErr] = useState('');
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const submit = (e) => {
+    e.preventDefault();
+    setErr('');
+    const go = mode === 'signup' ? api.signup(f) : api.login(f.email, f.password);
+    go.then(onDone).catch((x) => setErr(x.message));
+  };
   return (
-    <form
-      className="login"
-      onSubmit={(e) => {
-        e.preventDefault();
-        api.login(pw).then(onDone).catch((x) => setErr(x.message));
-      }}
-    >
+    <form className="login" onSubmit={submit}>
       <h1>DM Screen</h1>
-      <input type="password" placeholder="DM password" value={pw} onChange={(e) => setPw(e.target.value)} autoFocus />
-      <button className="primary">Enter</button>
+      <div className="seg">
+        <button type="button" className={mode === 'login' ? 'on' : ''} onClick={() => setMode('login')}>Log in</button>
+        <button type="button" className={mode === 'signup' ? 'on' : ''} onClick={() => setMode('signup')}>Sign up</button>
+      </div>
+      {mode === 'signup' && firstAccount && <p className="muted small">This is the first account, so it gets the campaign data already on this server.</p>}
+      {mode === 'signup' && <input placeholder="Your name" value={f.name} onChange={set('name')} autoComplete="name" required />}
+      <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required />
+      <input type="password" placeholder={mode === 'signup' ? 'Password (8+ characters)' : 'Password'} value={f.password} onChange={set('password')} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required />
+      <button className="primary">{mode === 'signup' ? 'Create account' : 'Log in'}</button>
       {err && <p className="error-text">{err}</p>}
-      <p className="muted"><a href="/players">Looking for the player view?</a></p>
+      <p className="muted small">Players: ask your DM for their player link.</p>
     </form>
   );
 }
