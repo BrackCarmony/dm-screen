@@ -18,4 +18,6 @@ export const api = {
   account: (patch) => call('PUT', '/api/account', patch),
   state: () => call('GET', '/api/state'),
   put: (key, value) => call('PUT', `/api/state/${key}`, value),
+  feedback: () => call('GET', '/api/feedback'),
+  sendFeedback: (item) => call('POST', '/api/feedback', item),
 };

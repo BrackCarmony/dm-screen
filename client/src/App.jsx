@@ -7,6 +7,7 @@ import Shop from './pages/Shop.jsx';
 import Party from './pages/Party.jsx';
 import Reference from './pages/Reference.jsx';
 import Account from './pages/Account.jsx';
+import Feedback from './pages/Feedback.jsx';
 
 const TABS = [
   ['battle', 'Battle'],
@@ -15,6 +16,7 @@ const TABS = [
   ['shop', 'Magic Shop'],
   ['party', 'Party'],
   ['reference', 'XP Tables'],
+  ['feedback', 'Feedback'],
   ['account', 'Account'],
 ];
 
@@ -88,6 +90,7 @@ export default function App() {
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
+        {tab === 'feedback' && <Feedback pages={TABS.filter(([id]) => id !== 'feedback').map(([, label]) => label)} />}
         {tab === 'account' && <Account user={me.user} onChange={(user) => setMe({ ...me, user })} />}
       </main>
     </div>

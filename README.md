@@ -23,7 +23,21 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 - **Encounters**: the Dungeon Rooms and Combat Tables groups. "Start battle" creates a battle with those monsters and your party.
 - **Magic Shop**: roll items under a gold target from the major and minor item tables, and keep named shops.
 - **Party** and **XP Tables**.
+- **Feedback**: DMs send suggestions or problems, and see whether each one was addressed or rejected, with any reply.
 - **/p/&lt;link&gt;**: read-only initiative order for the battle marked "Show to players". It updates live, shows monster names as their player-facing name, and shows monster health as a bar.
+
+## Reviewing feedback
+
+Feedback is kept in `$DATA_DIR/feedback.json`. Review it from the command line; DMs see the status and note on their Feedback page.
+
+```sh
+scripts/prod-feedback.sh list                  # open feedback on the live site (over ssh)
+scripts/prod-feedback.sh list all --json
+scripts/prod-feedback.sh addressed <id> "Added in the next release"
+scripts/prod-feedback.sh rejected <id> "Out of scope for now"
+scripts/prod-feedback.sh reopen <id>
+npm run feedback -- list                       # the same against local data
+```
 
 ## Run locally
 

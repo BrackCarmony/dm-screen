@@ -9,7 +9,8 @@
     "build": "vite build --config client/vite.config.js",
     "start": "node server/index.js",
     "test": "node --test",
-    "reset-link": "node scripts/reset-link.js"
+    "reset-link": "node scripts/reset-link.js",
+    "feedback": "node scripts/feedback.js"
   },
   "dependencies": {
     "express": "^4.21.2",
