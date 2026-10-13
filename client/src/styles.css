@@ -169,3 +169,11 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .seg button { flex: 1; border: 0; border-radius: 0; background: var(--surface); }
 .seg button.on { background: var(--surface-2); font-weight: 600; }
 .add-row > span { align-self: center; }
+.save-pick { position: relative; padding: 0; }
+.stat-btn { all: unset; box-sizing: border-box; width: 100%; padding: .2rem; display: flex; flex-direction: column; align-items: center; cursor: pointer; border-radius: 6px; }
+.stat-btn:hover, .stat-btn[aria-expanded="true"] { background: var(--border); }
+.stat-btn:focus-visible { outline: 2px solid var(--accent); }
+.save-menu { position: absolute; top: calc(100% + 4px); left: 50%; transform: translateX(-50%); z-index: 10; list-style: none; margin: 0; padding: .25rem; min-width: 7.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+.save-menu button { all: unset; box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; gap: 1rem; padding: .3rem .5rem; border-radius: 5px; cursor: pointer; }
+.save-menu button:hover, .save-menu button:focus-visible { background: var(--surface-2); }
+.save-menu button.on { font-weight: 700; color: var(--accent); }
