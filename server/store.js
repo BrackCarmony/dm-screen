@@ -123,3 +123,31 @@ export function createUserStore(dataDir) {
     },
   };
 }
+
+// Feedback from DMs, in dataDir/feedback.json. Read from disk on every call so that
+// scripts/feedback.js can mark items while the server is running.
+export const FEEDBACK_STATUSES = ['open', 'addressed', 'rejected'];
+
+export function createFeedbackStore(dataDir) {
+  const file = path.join(dataDir, 'feedback.json');
+  fs.mkdirSync(dataDir, { recursive: true });
+  const read = () => (fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : []);
+
+  return {
+    all: read,
+    byId: (id) => read().find((f) => f.id === id) ?? null,
+    forUser: (userId) => read().filter((f) => f.userId === userId),
+    add(item) {
+      writeJson(file, [...read(), item]);
+      return item;
+    },
+    update(id, patch) {
+      const items = read();
+      const i = items.findIndex((f) => f.id === id);
+      if (i === -1) return null;
+      items[i] = { ...items[i], ...patch, updatedAt: new Date().toISOString() };
+      writeJson(file, items);
+      return items[i];
+    },
+  };
+}

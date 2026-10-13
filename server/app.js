@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import fs from 'node:fs';
 import express from 'express';
-import { createDmStore, createUserStore } from './store.js';
+import { createDmStore, createFeedbackStore, createUserStore } from './store.js';
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
@@ -15,6 +15,7 @@ export const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-'
 export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer() }) {
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
+  const feedback = createFeedbackStore(dataDir);
   const session = sessionCookie(loadSecret(dataDir));
   const app = express();
   app.set('trust proxy', 'loopback');
@@ -145,6 +146,37 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     if (patch.slug) broadcast(oldSlug, { battle: null, order: [], moved: true });
     broadcast(user.slug); // the player view shows the DM's name
     res.json({ user: publicUser(user) });
+  });
+
+  // Feedback: DMs send it and see what happened to theirs; scripts/feedback.js reviews it.
+  const feedbackLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 10 });
+  const ownFeedback = (f) => ({ id: f.id, page: f.page, message: f.message, status: f.status, note: f.note, createdAt: f.createdAt, updatedAt: f.updatedAt });
+
+  app.get('/api/feedback', requireDm, (req, res) => {
+    res.json(feedback.forUser(req.user.id).map(ownFeedback).reverse());
+  });
+
+  app.post('/api/feedback', requireDm, feedbackLimiter, (req, res) => {
+    const message = String(req.body?.message ?? '').trim();
+    const page = String(req.body?.page ?? '').trim().slice(0, 40);
+    if (!message) return res.status(400).json({ error: 'Write some feedback first.' });
+    if (message.length > 4000) return res.status(400).json({ error: 'Keep it under 4,000 characters.' });
+    const now = new Date().toISOString();
+    let id;
+    do id = crypto.randomBytes(4).toString('hex'); while (feedback.byId(id));
+    const item = feedback.add({
+      id,
+      userId: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      page,
+      message,
+      status: 'open',
+      note: '',
+      createdAt: now,
+      updatedAt: now,
+    });
+    res.json(ownFeedback(item));
   });
 
   app.get('/api/state', requireDm, (req, res) => res.json(dms.get(req.user.id)));
