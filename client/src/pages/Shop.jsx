@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { uid } from '../rules.js';
 
 // Mirrors the Magic Shops Tool: each table scales its prices, keeps the items at or
@@ -6,6 +6,7 @@ import { uid } from '../rules.js';
 export default function Shop({ state, update }) {
   const shop = state.shop;
   const [rolled, setRolled] = useState({});
+  const [editing, setEditing] = useState(null);
   const setShop = (fn) => update('shop', fn);
   const setTable = (id, patch) => setShop((s) => ({ ...s, tables: s.tables.map((t) => (t.id === id ? { ...t, ...patch } : t)) }));
 
@@ -28,18 +29,24 @@ export default function Shop({ state, update }) {
   return (
     <div className="page">
       {shop.note && <p className="muted">{shop.note}</p>}
-      <div className="shop-grid">
+      <div className="shop-tables">
         {shop.tables.map((t) => {
           const pool = affordable(t);
           return (
-            <section key={t.id} className="panel">
+            <section key={t.id} className={editing === t.id ? 'panel editing' : 'panel'}>
               <h2>{t.name}</h2>
               <div className="form-row">
                 <label>Gold target<input type="number" value={t.goldTarget} onChange={(e) => setTable(t.id, { goldTarget: Number(e.target.value) || 0 })} /></label>
-                <label>Price ×<input type="number" step="any" className="narrow" value={t.multiplier} onChange={(e) => setTable(t.id, { multiplier: Number(e.target.value) || 1 })} /></label>
+                <label title="Raises or lowers every price in this table, e.g. 50 for a pricey port city or -25 for a sale. Items must fit the gold target after the markup.">
+                  Markup %<MarkupInput multiplier={t.multiplier} onChange={(multiplier) => setTable(t.id, { multiplier })} />
+                </label>
                 <label>Items<input type="number" min="0" className="narrow" value={t.rolls} onChange={(e) => setTable(t.id, { rolls: Number(e.target.value) || 0 })} /></label>
               </div>
-              <p className="muted small">{pool.length} of {t.items.length} items fit the target.</p>
+              <p className="muted small">
+                {pool.length} of {t.items.length} items fit the target.{' '}
+                <button className="link" onClick={() => setEditing(editing === t.id ? null : t.id)}>{editing === t.id ? 'Done editing' : 'Edit items'}</button>
+              </p>
+              {editing === t.id && <TableItems items={t.items} onChange={(items) => setTable(t.id, { items })} />}
               <button className="primary" onClick={() => roll(t)}>Roll</button>
               {rolled[t.id] && (
                 <ul className="items">
@@ -83,6 +90,37 @@ function affordable(t) {
   return t.items
     .map((it) => ({ ...it, price: Math.round(it.price * t.multiplier) }))
     .filter((it) => it.price <= t.goldTarget);
+}
+
+// Stored as a price multiplier (1.5) but edited as a markup (50%). Keeps its own text so "-" can be typed.
+function MarkupInput({ multiplier, onChange }) {
+  const pct = Math.round((multiplier - 1) * 10000) / 100;
+  const [text, setText] = useState(String(pct));
+  useEffect(() => { if (Number(text) !== pct) setText(String(pct)); }, [pct]);
+  return (
+    <input type="number" step="any" min="-100" className="narrow" value={text}
+      onChange={(e) => { setText(e.target.value); if (e.target.value !== '' && !isNaN(e.target.value)) onChange(1 + Number(e.target.value) / 100); }}
+      onBlur={() => setText(String(pct))} />
+  );
+}
+
+// Prices here are before the table's markup.
+function TableItems({ items, onChange }) {
+  const setItem = (i, patch) => onChange(items.map((it, j) => (j === i ? { ...it, ...patch } : it)));
+  return (
+    <div>
+      <ul className="items">
+        {items.map((it, i) => (
+          <li key={i} className="add-row">
+            <input value={it.name} onChange={(e) => setItem(i, { name: e.target.value })} aria-label="Item" />
+            <input type="number" className="narrow" value={it.price} onChange={(e) => setItem(i, { price: Number(e.target.value) || 0 })} aria-label="Base price in gp" />
+            <button className="icon" title="Remove from table" onClick={() => onChange(items.filter((_, j) => j !== i))}>✕</button>
+          </li>
+        ))}
+      </ul>
+      <AddItem onAdd={(it) => onChange([...items, it])} />
+    </div>
+  );
 }
 
 function AddItem({ onAdd }) {

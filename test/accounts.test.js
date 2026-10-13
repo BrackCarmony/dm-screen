@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createApp } from '../server/app.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-async function startServer() {
-  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dm-screen-'));
+async function startServer(dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dm-screen-'))) {
   const app = createApp({ dataDir, seedDir: path.join(root, 'data', 'seed') });
   const server = await new Promise((r) => { const s = app.listen(0, () => r(s)); });
   const base = `http://127.0.0.1:${server.address().port}`;
@@ -56,6 +56,9 @@ test('each DM has their own data and player link', async (t) => {
   assert.equal(sb.shop.saved.length, 0);
   assert.equal(sb.bestiary.length, sa.bestiary.length);
   assert.ok(sb.shop.tables.length > 0);
+  assert.ok(sb.encounters.length > 0 && sb.encounters.every((e) => e.group === 'Examples'));
+  const names = new Set(sb.bestiary.map((m) => m.name));
+  assert.ok(sb.encounters.flatMap((e) => e.monsters).every((n) => names.has(n)));
 
   // Writes stay with their owner.
   await other('PUT', '/api/state/party', [{ id: 'P01', name: 'Mira', inParty: true }]);
@@ -75,6 +78,9 @@ test('each DM has their own data and player link', async (t) => {
   assert.equal((await fresh('POST', '/api/login', { email: 'SAM@example.com', password: 'longenough' })).status, 200);
   assert.equal((await fresh('GET', '/api/state')).body.party[0].name, 'Mira');
   await fresh('POST', '/api/logout');
+  assert.equal((await fresh('POST', '/api/login', { email: 'sam', password: 'longenough' })).status, 200);
+  assert.equal((await fresh('GET', '/api/state')).body.party[0].name, 'Mira');
+  await fresh('POST', '/api/logout');
   assert.equal((await fresh('GET', '/api/state')).status, 401);
 
   // Changing the player link.
@@ -88,4 +94,23 @@ test('forged session cookies are rejected', async (t) => {
   t.after(close);
   const res = await fetch(`${base}/api/state`, { headers: { cookie: 'sid=someone.deadbeef' } });
   assert.equal(res.status, 401);
+});
+
+test('accounts from before email sign-up still log in by username', async (t) => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dm-screen-'));
+  const salt = 'abcd1234';
+  const hash = crypto.scryptSync('longenough', salt, 64).toString('hex');
+  const old = { id: 'u1', username: 'kedirech', displayName: 'Brack', salt, hash, createdAt: '2026-10-13T00:00:00.000Z' };
+  fs.writeFileSync(path.join(dataDir, 'users.json'), JSON.stringify({ users: [old] }));
+  const { base, close } = await startServer(dataDir);
+  t.after(close);
+  const dm = client(base);
+
+  assert.equal((await dm('POST', '/api/login', { email: 'kedirech', password: 'wrong-one' })).status, 401);
+  const res = await dm('POST', '/api/login', { email: 'Kedirech', password: 'longenough' });
+  assert.equal(res.status, 200);
+  assert.deepEqual(res.body.user, { id: 'u1', email: null, name: 'Brack', slug: 'kedirech' });
+  assert.equal((await dm('PUT', '/api/account', { email: 'brack@example.com' })).body.user.email, 'brack@example.com');
+  await dm('POST', '/api/logout');
+  assert.equal((await dm('POST', '/api/login', { email: 'brack@example.com', password: 'longenough' })).status, 200);
 });

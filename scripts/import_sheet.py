@@ -10,7 +10,6 @@ from pathlib import Path
 
 import openpyxl
 
-SAVES = ["str", "dex", "con", "int", "wis", "cha"]
 BATTLE_TABS = ["general", "army", "death slaad", "salamander", "trolls", "golem", "Copy of golem"]
 
 
@@ -36,31 +35,6 @@ def text(v):
 
 def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-") or "x"
-
-
-def bestiary(wb):
-    ws = wb["Beastiary"]
-    out, seen = [], set()
-    for r in ws.iter_rows(min_row=4, min_col=2, max_col=19, values_only=True):
-        name = text(r[0])
-        if not name or name in seen:
-            continue
-        seen.add(name)
-        ac = r[2]
-        out.append({
-            "name": name,
-            "hp": num(r[1]),
-            "ac": num(ac) if not hasattr(ac, "year") else None,
-            "speed": text(r[3]),
-            "saves": {k: num(r[4 + i]) for i, k in enumerate(SAVES)},
-            "init": num(r[10]),
-            "attacks": [text(a) for a in r[11:14] if text(a)],
-            "cr": num(r[14]),
-            "xp": num(r[15]),
-            "special": text(r[16]),
-            "url": text(r[17]),
-        })
-    return out
 
 
 def encounters(wb):
@@ -172,8 +146,8 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     wb = openpyxl.load_workbook(src, data_only=True)
     roster = party(wb)
+    # bestiary.json is the SRD starter bestiary from scripts/srd_bestiary.py, not the sheet's.
     files = {
-        "bestiary.json": bestiary(wb),
         "encounters.json": encounters(wb),
         "shop.json": shop(wb),
         "xp.json": xp(wb),
