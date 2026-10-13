@@ -41,7 +41,25 @@ npm ci && npm run build
 SESSION_SECRET=... DATA_DIR=/var/lib/dm-screen npm start
 ```
 
-All data lives in `$DATA_DIR`: `users.json` (accounts, with scrypt-hashed passwords) and `dms/<id>.json` (one file per DM). Back that folder up. If `SESSION_SECRET` is unset, a random one is created in `$DATA_DIR/session-secret`. Run it behind HTTPS so login cookies are sent securely. `deploy/` has a systemd unit, an nginx site and an env file example for a droplet.
+All data lives in `$DATA_DIR`: `users.json` (accounts, with scrypt-hashed passwords) and `dms/<id>.json` (one file per DM). Back that folder up. If `SESSION_SECRET` is unset, a random one is created in `$DATA_DIR/session-secret`. Run it behind HTTPS so login cookies are sent securely.
+
+### The droplet
+
+dm-screen.brackcarmony.com runs on the `elo` droplet (Ubuntu 14.04, so upstart rather than systemd). To deploy the committed code:
+
+```sh
+scripts/deploy.sh          # or: scripts/deploy.sh <ssh-host>
+```
+
+It builds the client locally, uploads it, runs `npm ci --omit=dev`, restarts the app and checks that it answers. If the new release doesn't answer, it switches back to the previous one (kept in `/opt/dm-screen-prev`).
+
+One-time setup on a server, using the files in `deploy/`:
+
+- **Node 22** in `/opt/node22`. On Ubuntu 14.04 the official builds don't run; use the `linux-x64-glibc-217` build from unofficial-builds.nodejs.org.
+- **A `dmscreen` user** that owns `/var/lib/dm-screen` (mode 700).
+- **`/etc/dm-screen.env`** (root only, mode 600), based on `deploy/dm-screen.env.example`.
+- **The service:** `deploy/dm-screen.upstart.conf` as `/etc/init/dm-screen.conf` (`start|stop|restart|status dm-screen`, log in `/var/log/upstart/dm-screen.log`), or `deploy/dm-screen.service` on a systemd server.
+- **nginx:** `deploy/nginx.conf` as an nginx site, then `certbot --nginx -d <domain> --redirect` for HTTPS.
 
 ## Starter bestiary
 
