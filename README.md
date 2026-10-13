@@ -13,7 +13,7 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 ### Passwords
 
 - **Change:** on the Account page. This signs the DM out on their other devices.
-- **Forgot:** "Forgot password?" on the login screen emails a reset link that works once, for one hour. Email needs `SMTP_URL` (for example `smtps://user:pass@smtp.example.com:465`), `MAIL_FROM` and `APP_URL` (the site's public address, used to build the link). Without SMTP the link is written to the server log instead.
+- **Forgot:** "Forgot password?" on the login screen emails a reset link that works once, for one hour. Email needs `APP_URL` (the site's public address, used to build the link) and either Mailgun (`MAILGUN_API_KEY`, `MAILGUN_DOMAIN`, and `MAILGUN_BASE_URL=https://api.eu.mailgun.net` for EU accounts) or `SMTP_URL` (for example `smtps://user:pass@smtp.example.com:465`). `MAIL_FROM` sets the sender. Without either, the link is written to the server log instead.
 - **By hand:** on the server, `DATA_DIR=/var/lib/dm-screen APP_URL=https://dm.example.com npm run reset-link -- someone@example.com` prints a reset link you can send yourself.
 
 ## Pages
@@ -32,7 +32,7 @@ npm install
 npm run dev            # API on :3000, app on http://localhost:5173
 ```
 
-Open http://localhost:5173 and sign up.
+Open http://localhost:5173 and sign up. Settings can go in a `.env` file in the project folder (it is git-ignored); see `deploy/dm-screen.env.example`.
 
 ## Production
 

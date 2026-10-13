@@ -5,7 +5,10 @@ import { fileURLToPath } from 'node:url';
 import { createUserStore } from '../server/store.js';
 import { createResetToken, resetLink } from '../server/auth.js';
 
+import fs from 'node:fs';
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+if (fs.existsSync(path.join(root, '.env'))) process.loadEnvFile(path.join(root, '.env'));
 const email = process.argv[2];
 if (!email) {
   console.error('Usage: npm run reset-link -- <email>');
