@@ -1,0 +1,4749 @@
+[
+ {
+  "name": "nabassu",
+  "hp": 190,
+  "ac": 18,
+  "speed": "40/60fly",
+  "saves": {
+   "str": 11,
+   "dex": 7,
+   "con": 5,
+   "int": 2,
+   "wis": 2,
+   "cha": 3
+  },
+  "init": 2,
+  "attacks": [
+   "Claw +11 2d10+6 slash",
+   "Bite +11 4d12+6 Pierce",
+   "Soul Steal Gaze 30ft DC16 Cha 2d12"
+  ],
+  "cr": 15,
+  "xp": 13000,
+  "special": "Mgc Resis, Immune Poison, Res cold,fire, light, non phys,  dark 60 pperp 17 Sv",
+  "url": ""
+ },
+ {
+  "name": "adult-black-dragon",
+  "hp": 195,
+  "ac": 19,
+  "speed": "40/80f/40sw",
+  "saves": {
+   "str": 7,
+   "dex": 2,
+   "con": 10,
+   "int": 2,
+   "wis": 6,
+   "cha": 8
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +11 2d10+6",
+   "Claw +11 2d6+6",
+   "Tail +11 15ft 2d8+6"
+  ],
+  "cr": 14,
+  "xp": 11500,
+  "special": "Frightfull Presence 120 DC 16 wis fear 1 min Acid Breath 60 ft ln DC18 12d8 Acid",
+  "url": "https://roll20.net/compendium/dnd5e/Adult%20Black%20Dragon#content"
+ },
+ {
+  "name": "gallow tree",
+  "hp": 287,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 7,
+   "dex": 0,
+   "con": 6,
+   "int": 0,
+   "wis": 2,
+   "cha": -2
+  },
+  "init": 0,
+  "attacks": [
+   "Slam +12 15ft 6d6+7",
+   "Multi Atk 3 slam",
+   "Create Tree Zombie"
+  ],
+  "cr": 14,
+  "xp": 11500,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "beholder",
+  "hp": 180,
+  "ac": 18,
+  "speed": "20fly",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 4,
+   "int": 8,
+   "wis": 7,
+   "cha": 8
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +5 4d6 pierce",
+   "Eye Cone",
+   "Eye Stalks"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "Darkvision 120. 3 Leg resis. 3 Leg actions (1 bite/eyestalk)",
+  "url": "https://dndwikii.com/monsters/beholder-5e/"
+ },
+ {
+  "name": "vampire",
+  "hp": 144,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 9,
+   "con": 4,
+   "int": 3,
+   "wis": 7,
+   "cha": 9
+  },
+  "init": 4,
+  "attacks": [
+   "Unarmed +9 1d8+4 OR Grapple",
+   "Bite +9 1d6+4 Prc, 3d6 Nec",
+   "Mlt Atk(Max 1 bite) Leg 1:Mv, 1:Unarm 2:Bite"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "Res nec, phys",
+  "url": ""
+ },
+ {
+  "name": "morkoth",
+  "hp": 130,
+  "ac": 17,
+  "speed": "25/50sw",
+  "saves": {
+   "str": 2,
+   "dex": 6,
+   "con": 2,
+   "int": 9,
+   "wis": 6,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [],
+  "cr": 12,
+  "xp": 8400,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "death-slaad",
+  "hp": 170,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 5,
+   "dex": 2,
+   "con": 4,
+   "int": 2,
+   "wis": 0,
+   "cha": 3
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +9 1d8+5 / Claw +9 1d10+5",
+   "GreatSwd +9 2d6+5 Slash +2d6 Necro",
+   "Resist Acd/Cld/Fir/Lig/Thn Spl 2/d fear, fly, fireball, tongues 1/d plane shift, cloudkill"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "Mlt Atk 1 Bite 2 claw/greatswd magic resis, regen 10/trn, blindsight 60, tele 60",
+  "url": ""
+ },
+ {
+  "name": "living-spellbook",
+  "hp": 90,
+  "ac": 17,
+  "speed": "30fly",
+  "saves": {
+   "str": 1,
+   "dex": 4,
+   "con": 2,
+   "int": 4,
+   "wis": 2,
+   "cha": -5
+  },
+  "init": 4,
+  "attacks": [
+   "paper cut +8 3d8 30/60",
+   "Mana burn (5-6) DC16 dex (L+1)*2D8",
+   "6 Glb of Invul. 5:Anim Obj, Bibgy 4: Res Sphr, PlyMrp"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "3: Glyp Wrd, Dsp Mag 2: Inv, Mr Img 1: Mge Arm, Mag Mis, Shield",
+  "url": "https://imgur.com/xJylQfx"
+ },
+ {
+  "name": "warlock",
+  "hp": 132,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 0,
+   "con": 7,
+   "int": 0,
+   "wis": 4,
+   "cha": 9
+  },
+  "init": 0,
+  "attacks": [
+   "Pact Longsword 1d8+9"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "young-red-dragon",
+  "hp": 178,
+  "ac": 18,
+  "speed": "40/40climb/80fly",
+  "saves": {
+   "str": 6,
+   "dex": 4,
+   "con": 9,
+   "int": 2,
+   "wis": 4,
+   "cha": 8
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +10 2d10+6",
+   "Claw +10 2d6+6",
+   "Fire Br (5-6) DC17 Dex 30Cone 16d6 fire"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "Multi Attack 1 Bite 2 Claw",
+  "url": "https://5e.tools/bestiary.html#young%20red%20dragon_mm"
+ },
+ {
+  "name": "thalmack",
+  "hp": 136,
+  "ac": 16,
+  "speed": "40",
+  "saves": {
+   "str": 8,
+   "dex": 2,
+   "con": 7,
+   "int": 0,
+   "wis": -1,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [
+   "Greateaxe +9 1d12+8 (rage)"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "Multi Attack 2",
+  "url": ""
+ },
+ {
+  "name": "evoker",
+  "hp": 66,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 1,
+   "int": 7,
+   "wis": 5,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Quarterstaf +3 1d8-1",
+   "Spells"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "Githyanki Lichblade",
+  "hp": 104,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 2,
+   "con": 6,
+   "int": 6,
+   "wis": 8,
+   "cha": 4
+  },
+  "init": 2,
+  "attacks": [
+   "Multi (2) Silver Greatsword (+1) +11 2d6+7 slash +3d6 (WIS) psychic",
+   "Eld Bls, Boom Bld,"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "3/d(detrect thougts, jump, misty step, non detect, tongues) 1/d plane, telekenisis. 3 slots@5 aid darkness contagion countterspell fly hex mirror image, shield, silence, vamp touch",
+  "url": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fexternal-preview.redd.it%2FjFJEtFq7V5tazr_3iMdn5y0jP6Sf5t6mnYpII3roJ2g.png%3Fauto%3Dwebp%26s%3D3152da5d81416e0292c989dca0452a11e1a06203&f=1&nofb=1&ipt=2e03f92b4d26039b19f8ad4454bfb8d4aabc55a614075b526f9c9f151c86b99e&ipo=images"
+ },
+ {
+  "name": "gray-slaad",
+  "hp": 127,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 3,
+   "con": 3,
+   "int": 1,
+   "wis": -1,
+   "cha": 2
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +7 1d6+3 / Claw +7 1d10+3",
+   "Greatswd +7 2d6+3",
+   "Resist Acd/Cld/Fir/Lig/Thn Spl 2/d fear, fly, fireball, tongues 1/d plane shift"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "Mltk Atk 1 Bite 2 claw/greatswd magic resis,",
+  "url": ""
+ },
+ {
+  "name": "the-lonely",
+  "hp": 112,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 3,
+   "int": -2,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Harpoon Arm +7 4d8+3 pierce grapple (60 ft range) DC15 Escape (2 harpoon arms)",
+   "Sorrowful Embrace. grappled creatures DC 15 wis 4d8 save half pull 30ft regardless"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "Psychic Leech Start of turn 5ft radius DC15Wis 3d6 psychic.  Thrives on Company Adv if 2 creates within 30 ft, otherwise disadvantage",
+  "url": ""
+ },
+ {
+  "name": "tebin",
+  "hp": 65,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 1,
+   "int": 8,
+   "wis": 7,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Fire Bolt +7 2d10",
+   "4/3/3/3/2 Spells"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "Gallow Sapling",
+  "hp": 150,
+  "ac": 14,
+  "speed": "15",
+  "saves": {
+   "str": 5,
+   "dex": -2,
+   "con": 4,
+   "int": -2,
+   "wis": 0,
+   "cha": -4
+  },
+  "init": -2,
+  "attacks": [
+   "Slam + 7 10ft 3d6+3",
+   "Multi Atk 2 Slam",
+   "Create Tree Zombie"
+  ],
+  "cr": 8,
+  "xp": 3900,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "githyanki-knight",
+  "hp": 91,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 2,
+   "con": 2,
+   "int": 2,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Silver Greatsword +9 2d6+6 + 3d6 psychic",
+   "3/day jump, mistystep, nondetection, 1/day plane shirt, telekinesis"
+  ],
+  "cr": 8,
+  "xp": 3900,
+  "special": "Multi Atk 2 Greatsword",
+  "url": "https://angrygolem-games.com/monster-manual/letter-g/githyanki-knight-5e-stats/"
+ },
+ {
+  "name": "green-slaad",
+  "hp": 127,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 3,
+   "int": 0,
+   "wis": -1,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +7 2d6+4 / Claw +7 1d6+4",
+   "Staff +7 2d6+4 / Hurl Flm +4 3d6 fire",
+   "Resist Acd/Cld/Fir/Lig/Thn Spl 2/D fear invis, 1/D fireball"
+  ],
+  "cr": 8,
+  "xp": 3900,
+  "special": "Mlt Atk 1 Bite 2 Claw/Staff Darkv60 Tele 60 Blinds 30 Regen 10/Trn",
+  "url": ""
+ },
+ {
+  "name": "howler",
+  "hp": 90,
+  "ac": 16,
+  "speed": "40",
+  "saves": {
+   "str": 3,
+   "dex": 3,
+   "con": 2,
+   "int": -2,
+   "wis": 5,
+   "cha": -2
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +6 2d6+3 Pir (+4d10 pshycic if frightened)",
+   "Mind-break howl (6) 60 ft cone, DC16 wisdom fear, Half speed, Incapacitated(disarm) 1 Turn",
+   "Multi Atk 2 Bite"
+  ],
+  "cr": 8,
+  "xp": 3900,
+  "special": "Pack Tactics, Damage Resistances cold, fire, lightning; bludgeoning, piercing, and slashing from nonmagical attacks, Condition Immunities frightened",
+  "url": ""
+ },
+ {
+  "name": "tyrannosaurus-rex",
+  "hp": 136,
+  "ac": 13,
+  "speed": "50",
+  "saves": {
+   "str": 7,
+   "dex": 0,
+   "con": 4,
+   "int": -4,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +10 4d12+7 grapple DC17 10ft",
+   "Tail +10 3d8+7 10ft"
+  ],
+  "cr": 8,
+  "xp": 3900,
+  "special": "Multi Attack 1 Bite 1 Tail Different Targets",
+  "url": "https://roll20.net/compendium/dnd5e/Tyrannosaurus%20Rex#content"
+ },
+ {
+  "name": "teroot",
+  "hp": 90,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 1,
+   "int": 5,
+   "wis": 8,
+   "cha": 5
+  },
+  "init": 2,
+  "attacks": [
+   "4/3/3/3/1 Spells"
+  ],
+  "cr": 8,
+  "xp": 3900,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "Andreska",
+  "hp": 94,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 7,
+   "dex": 3,
+   "con": 7,
+   "int": -1,
+   "wis": -1,
+   "cha": -1
+  },
+  "init": 3,
+  "attacks": [
+   "Glaive +8 1d10+4",
+   "Butt +8 1d4+4",
+   "Action Surge, Indomitable Second, Wind (1d10+10)"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Multi Atk, Sentinal, Polearm Master",
+  "url": ""
+ },
+ {
+  "name": "Baerish",
+  "hp": 65,
+  "ac": 21,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 2,
+   "int": 0,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 1,
+  "attacks": [
+   "Long Sword +8 1d8+5 Crit on 19",
+   "Dragon Breath 3d6 15ft cone poison con save"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Multi Atk, Sword Burd, Thunder Clap, Eldritch Blast, Armor of Agythest, Exp Retreat",
+  "url": ""
+ },
+ {
+  "name": "blue-slaad",
+  "hp": 123,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 5,
+   "dex": 2,
+   "con": 4,
+   "int": -2,
+   "wis": -2,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +8 2d6+5",
+   "Claw +8 2d6+5 DC 15 Con Chaos Phage",
+   "Resist Acd/Cld/Fir/Lig/Thn"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Mlt Attack 1 Bite 2 Claw +1 Perc Magic Resis, DarkV 60, Regen 10/Trn, Tele 60",
+  "url": ""
+ },
+ {
+  "name": "giant-ape",
+  "hp": 157,
+  "ac": 12,
+  "speed": "40/40climb",
+  "saves": {
+   "str": 6,
+   "dex": 2,
+   "con": 4,
+   "int": -2,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Fist +9 3d10+6",
+   "Rock 50/100 +9 7d6+6"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Mutli Attak 2 Fist",
+  "url": "https://roll20.net/compendium/dnd5e/Giant%20Ape#h-Giant%20Ape"
+ },
+ {
+  "name": "kathryn",
+  "hp": 66,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 3,
+   "con": 2,
+   "int": 0,
+   "wis": 0,
+   "cha": 4
+  },
+  "init": 3,
+  "attacks": [
+   "Eldricth Blast (2) +8 1d10+3",
+   "Blight 9d8 DC 16 Con",
+   "Ego whip DC16 Int save. No spell Dis every. Save end turn"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "DC 16 Wis Prone. Save end of turn, or damaged (adv)",
+  "url": ""
+ },
+ {
+  "name": "Kirren",
+  "hp": 66,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 4,
+   "con": 2,
+   "int": 2,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 4,
+  "attacks": [
+   "Dagger +8 6d6 (1d6) +4"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Bonus dash disengage hide",
+  "url": ""
+ },
+ {
+  "name": "Menkor",
+  "hp": 80,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 3,
+   "con": 3,
+   "int": 4,
+   "wis": 1,
+   "cha": 1
+  },
+  "init": 3,
+  "attacks": [
+   "Toll the Dead",
+   "Shatter"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "mind-flayer",
+  "hp": 71,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 1,
+   "con": 1,
+   "int": 7,
+   "wis": 6,
+   "cha": 6
+  },
+  "init": 1,
+  "attacks": [
+   "Tentacles +7  2d10+4 Psyc Grpl DC15 int Stun",
+   "Extract Brain  incap only  +7 10d10 Psychic kill on 0",
+   "Mind Blast 60ft cone DC15 Int 4d8+4 Pshyc Stun 1 min Repeat"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "@will Detct Thgt, Levi 1/D Dom Mon, Plne Shft",
+  "url": "https://5e.tools/bestiary/mind-flayer-mm.html"
+ },
+ {
+  "name": "Rembrant",
+  "hp": 76,
+  "ac": 20,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 2,
+   "int": 0,
+   "wis": 0,
+   "cha": 3
+  },
+  "init": 1,
+  "attacks": [
+   "Mace +8 1d8+4",
+   "Command (4)  Branding Smite (3) 2d6 radiant, no invis",
+   "Aura of Vitality (2) 30 ft 2d6 bonus"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Aura +4 saves 1/2 magic 10 ft",
+  "url": ""
+ },
+ {
+  "name": "shambling-mound",
+  "hp": 200,
+  "ac": 15,
+  "speed": "20/20sw",
+  "saves": {
+   "str": 5,
+   "dex": -1,
+   "con": 3,
+   "int": -3,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": -1,
+  "attacks": [
+   "Slam +8 2d8+5 bldg",
+   "Engulfs when move, blind, restrained, each mound turn DC15 Con 2d8",
+   "Multiattack 2 slam both hit engulf"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "Lightning Absorb immun lightning gain HP, blindsigh 60ft, immune blind, deaf, exhaust",
+  "url": "https://roll20.net/compendium/dnd5e/Shambling%20Mound#content"
+ },
+ {
+  "name": "Alister",
+  "hp": 51,
+  "ac": 16,
+  "speed": "40",
+  "saves": {
+   "str": 0,
+   "dex": 4,
+   "con": 2,
+   "int": 2,
+   "wis": -1,
+   "cha": 1
+  },
+  "init": 4,
+  "attacks": [
+   "Pepper Box +10 1d12+4 1/round",
+   "Pistol +10 1d6 +4 2/round"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "Sharp Shooter, Mobile, Second Wind, Action Surge, Trick Shot,",
+  "url": ""
+ },
+ {
+  "name": "Bog",
+  "hp": 82,
+  "ac": 20,
+  "speed": "35",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 3,
+   "int": 0,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Chainball +7 1d10+4"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "Protection, Mobile, Tough, Second Wind, Action Surge, Trip, Goading DC15",
+  "url": ""
+ },
+ {
+  "name": "chimera",
+  "hp": 114,
+  "ac": 14,
+  "speed": "30/60fly",
+  "saves": {
+   "str": 4,
+   "dex": 0,
+   "con": 4,
+   "int": -4,
+   "wis": 2,
+   "cha": 0
+  },
+  "init": 4,
+  "attacks": [
+   "Bite / Claw +7 2d6+4",
+   "Horn +7 1d12 +4",
+   "Fire Breath (5-6) 15ft cn DC15 dex, 7d8"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "",
+  "url": "https://roll20.net/compendium/dnd5e/Chimera#content"
+ },
+ {
+  "name": "Everan",
+  "hp": 50,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 1,
+   "con": 2,
+   "int": 0,
+   "wis": 4,
+   "cha": -1
+  },
+  "init": 1,
+  "attacks": [
+   "Mace + 5 1d6+2",
+   "Spiritual Weapon +7 1d8 + 4",
+   "Guiding Bolt  +7 4d6"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "Warcaster, Shield Master Spl 4/3/3/2 DC15 Healing Word, cure wounds, bless, bane / spiritual weapon, silence, mirror image / spirit guardians, dispel magic   / polymorph, dimension door",
+  "url": ""
+ },
+ {
+  "name": "Kissandra",
+  "hp": 74,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 3,
+   "con": 2,
+   "int": 0,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 3,
+  "attacks": [
+   "Glaive +6 1d10 +3",
+   "Backend +6 1d4+3"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "reroll (1,2) Polearm Master, Sentinel, Second Wind, Action Surge (crit 19) 1/2 prof str, dex, con",
+  "url": ""
+ },
+ {
+  "name": "Kyui Kyui",
+  "hp": 51,
+  "ac": 16,
+  "speed": "35",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 2,
+   "int": 1,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Polearm +7 1d10+4"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "Mancor",
+  "hp": 60,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 2,
+   "int": 3,
+   "wis": 1,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Dagger +5 1d4+2",
+   "Spell +6 DC 14",
+   "Mist Stp, Sugg, Dtc Mag, Mgc Mss, Shld"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "Cone of Cold, Grt Inv, Ice Storm, Counter, Fireball, Fly,",
+  "url": "https://www.dndbeyond.com/monsters/mage"
+ },
+ {
+  "name": "red-wizard",
+  "hp": 40,
+  "ac": 15,
+  "speed": "25",
+  "saves": {
+   "str": -2,
+   "dex": 3,
+   "con": 0,
+   "int": 3,
+   "wis": 1,
+   "cha": 0
+  },
+  "init": 3,
+  "attacks": [
+   "Dagger +6 1d4+3",
+   "Fr Blt, Lght, MgHnd, Prest",
+   "MagMis, Shld, Mst STp, Suggestion, Cnt Spl, FirBal, Fly, Grt Inv, Ice Storm, Cone of COld"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "",
+  "url": "https://5e.tools/bestiary.html#red%20wizard_rot"
+ },
+ {
+  "name": "Riki",
+  "hp": 72,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 2,
+   "int": -1,
+   "wis": 0,
+   "cha": 4
+  },
+  "init": 1,
+  "attacks": [
+   "Greatsword +6 2d6+3",
+   "Lay on hands 25",
+   "Thunder Smite 2d6 +10ft"
+  ],
+  "cr": 6,
+  "xp": 2300,
+  "special": "Reroll(1,2) Tough, Spl 4/3/2 DC15 Command, Compelled Duel,  Thunderwave, cure wounds,   Magic Weapon, 1/2 magic dmg +4 save10ft aura (bns action 10ft fly on spell)",
+  "url": ""
+ },
+ {
+  "name": "air-elemental",
+  "hp": 90,
+  "ac": 15,
+  "speed": "90fly",
+  "saves": {
+   "str": 2,
+   "dex": 5,
+   "con": 2,
+   "int": -2,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": 5,
+  "attacks": [
+   "Slam +8 2d8+5",
+   "Whirlwind (4-6) DC13 Str 3d8+2 20 ft rnd prn (1d6/10) DC13 Dex slm",
+   "Mlt Atk"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Imn: Ps | Res:BPSnM | Imn:MstCnd",
+  "url": ""
+ },
+ {
+  "name": "bulette",
+  "hp": 94,
+  "ac": 17,
+  "speed": "40/40br",
+  "saves": {
+   "str": 4,
+   "dex": 0,
+   "con": 5,
+   "int": -4,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +7 4d12+4 Pierce",
+   "Deadly Leap: 15ft DC16STR/Dex prone 3d6+5 bldg + 3d6+4 sdlash.  Save half"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Darkvision 60 Tremor 60. Standing Leap",
+  "url": "https://roll20.net/compendium/dnd5e/Bulette#content"
+ },
+ {
+  "name": "carnium-wolf",
+  "hp": 37,
+  "ac": 14,
+  "speed": "50",
+  "saves": {
+   "str": 3,
+   "dex": 2,
+   "con": 2,
+   "int": 1,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +5 2d6+3 DC13 STR Prone",
+   "DC13 At Will Cmd, Cmp Lang, Dtct Thgt,",
+   "DC 13 1/Day Conf, Dom Mon"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Res Physical, Imn Mental Para Pet Prn Rest Stnd",
+  "url": ""
+ },
+ {
+  "name": "chupacabra",
+  "hp": 63,
+  "ac": 15,
+  "speed": "30/60 fly",
+  "saves": {
+   "str": 4,
+   "dex": 7,
+   "con": 7,
+   "int": -4,
+   "wis": 7,
+   "cha": -3
+  },
+  "init": 7,
+  "attacks": [
+   "Bite +7 2d8+5 DC15 Con 2d6+4 bleed",
+   "Claws +7 2d6+4 Slash",
+   "Mlt Atk Bite + claw or 2 Claw"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Lots",
+  "url": "https://www.dandwiki.com/wiki/Chupacabra_(5e_Creature)"
+ },
+ {
+  "name": "earth-elemental",
+  "hp": 126,
+  "ac": 17,
+  "speed": "30/30br",
+  "saves": {
+   "str": 5,
+   "dex": -1,
+   "con": 5,
+   "int": -3,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": -1,
+  "attacks": [
+   "Slam +8 2d8+5",
+   "Mlt Atk"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Siege | Vul:Thnd | Imn:Psn| | Imn: Exh Par Pet Psn Unc, tremorsense 60",
+  "url": ""
+ },
+ {
+  "name": "fire-elemental",
+  "hp": 102,
+  "ac": 13,
+  "speed": "50",
+  "saves": {
+   "str": 0,
+   "dex": 3,
+   "con": 3,
+   "int": -1,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": 3,
+  "attacks": [
+   "Touch +6 2d6+3 (1d10 burn)",
+   "Fire Form (1d10 touch / retaliate)",
+   "Mlt Atk"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Water Susceptibility, FrPs Imn, Res:BPSnM, Imn:MstCnd",
+  "url": ""
+ },
+ {
+  "name": "flesh-golem",
+  "hp": 93,
+  "ac": 9,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": -1,
+   "con": 4,
+   "int": -2,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": -1,
+  "attacks": [
+   "Mlt (2) Slam +7 2d8+4",
+   "Adv Mag Saves, Absorb Lightning, Immuntable Formm, Fire dmg -> Dis Atk / Abil",
+   "Berserk HP<40 d6 6 Rampage"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Immun Lightning, Posion, Physc Non Mag, Charm, Exh, Fri, Para, Petri, Pois",
+  "url": "https://roll20.net/compendium/dnd5e/Flesh%20Golem#content"
+ },
+ {
+  "name": "giant-shark",
+  "hp": 126,
+  "ac": 13,
+  "speed": "0/50sw",
+  "saves": {
+   "str": 6,
+   "dex": 0,
+   "con": 5,
+   "int": -5,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +9 3d10+6"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Blood Frenzy (Adv against injured target)",
+  "url": ""
+ },
+ {
+  "name": "hulking-crab",
+  "hp": 76,
+  "ac": 17,
+  "speed": "20",
+  "saves": {
+   "str": 4,
+   "dex": -1,
+   "con": 3,
+   "int": -4,
+   "wis": 0,
+   "cha": -4
+  },
+  "init": -1,
+  "attacks": [
+   "Claw +7 3d10+4 Grapple (esc 15) Rc10"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Mlt Atk (2)",
+  "url": ""
+ },
+ {
+  "name": "kraken-priest",
+  "hp": 75,
+  "ac": 10,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 0,
+   "con": 3,
+   "int": 0,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 0,
+  "attacks": [
+   "Thunder Touch +5 5d10 thunder",
+   "Voice of Kraken DC14 Cha Fear 1 Min",
+   "3/D cont wa, darkness, wat bre, wat walk 1/d Call Ligh, Evard Black"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "+5 perp, breathe wat, 30 swm, Resis non mag phys",
+  "url": ""
+ },
+ {
+  "name": "master-thief",
+  "hp": 83,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 7,
+   "con": 2,
+   "int": 3,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": 4,
+  "attacks": [
+   "ShrtSwd +7 1d6+4",
+   "L Xbow +7 1d8+4 (80/320)"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Mlt Attack 3 SSwd, Cunning Action, Sneak Atk 4d6, Uncanny Dodge",
+  "url": ""
+ },
+ {
+  "name": "red-slaad",
+  "hp": 93,
+  "ac": 14,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 3,
+   "int": -2,
+   "wis": -2,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +6 2d4+3",
+   "Claw +6 1d8+3 DC4 Con Egg",
+   "Resist Acd/Cld/Fir/Lig/Thn"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Mlt Atk 1-Bite 2-Claw Magic Resis, Regen 10HP/trn, DarkV 60, Tele 60 Perc +1",
+  "url": ""
+ },
+ {
+  "name": "revenant",
+  "hp": 136,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 7,
+   "dex": 2,
+   "con": 7,
+   "int": 1,
+   "wis": 6,
+   "cha": 7
+  },
+  "init": 2,
+  "attacks": [
+   "Fist +7 2d6+4 (+4d6 if vengence)",
+   "Glare 15Wis Para turn or 1 dmg/  Fright 1 minute Sve Disad"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Regen (10 Rad / Fire) Mlt Atk (fist / Meele)",
+  "url": ""
+ },
+ {
+  "name": "sahuagin-baron",
+  "hp": 76,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 5,
+   "con": 6,
+   "int": 5,
+   "wis": 4,
+   "cha": 3
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +7 2d4+4",
+   "Claws +7 2d6+4",
+   "Trident (20/60) +7 2d6+4  (versitle)"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Multi Atk (Bite + 2 meele) Perp +7 Darkvision 120 Swim 50ft Blood Frenzy (Adv against injured)",
+  "url": ""
+ },
+ {
+  "name": "swarm cranium rats",
+  "hp": 36,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 0,
+   "int": 2,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Bites +5 4d6 or 2d6<50%",
+   "DC13 At Will Cmd, Cmp Lang, Dtct Thgt,",
+   "DC 13 1/Day Conf, Dom Mon"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Res Physical, Imn Mental Para Pet Prn Rest Stnd",
+  "url": ""
+ },
+ {
+  "name": "troll",
+  "hp": 84,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 5,
+   "int": -2,
+   "wis": -1,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +7 1d6+4",
+   "Claw +7 2d6+4",
+   "Multi 1 Bite 2 Claw"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Regen 10 Negate acid / fire",
+  "url": "https://www.dndbeyond.com/monsters/troll"
+ },
+ {
+  "name": "vampire-spawn",
+  "hp": 82,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 6,
+   "con": 3,
+   "int": 0,
+   "wis": 3,
+   "cha": 1
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +6 1d6+3 pier 2d6 nec (life drain)",
+   "Claws +6 2d4+3 OR grapple (DC 13 escape)",
+   "Mlt Atk (2 claw/ Bit/clw)"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Regen (10 / Holy/ RN Wat) Rng Wat 20 Dmg, Sunlight, 20 Dmg Spd Clm",
+  "url": ""
+ },
+ {
+  "name": "water-elemental",
+  "hp": 114,
+  "ac": 14,
+  "speed": "30/90sw",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 4,
+   "int": -3,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "slam +7 2d8+4",
+   "whlem(4-6) DC15 str 2d8+4 + grapple (dc14)",
+   "Mlt Atk"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "Freezeable (20ft) res acid, BPS/NMag Immun: posion exa, grap, para, pet, unc, pois, pron, restr",
+  "url": ""
+ },
+ {
+  "name": "wraith",
+  "hp": 67,
+  "ac": 13,
+  "speed": "60fly",
+  "saves": {
+   "str": -2,
+   "dex": 3,
+   "con": 3,
+   "int": 1,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 3,
+  "attacks": [
+   "Life Drain +6 4d8+3 nec (14Con reduce max)",
+   "Create Specter",
+   "Incorporeal, Sunlight Sensitive"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "Akchar-5",
+  "hp": 52,
+  "ac": 19,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 0,
+   "con": 6,
+   "int": 0,
+   "wis": 0,
+   "cha": 6
+  },
+  "init": 0,
+  "attacks": [
+   "Hand Ax +6 1d6+3",
+   "Hand Ax +6 1d6+3"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Mage Slayer",
+  "url": ""
+ },
+ {
+  "name": "avacertops",
+  "hp": 78,
+  "ac": 16,
+  "speed": "45",
+  "saves": {
+   "str": 4,
+   "dex": -3,
+   "con": 5,
+   "int": -1,
+   "wis": 3,
+   "cha": 4
+  },
+  "init": -3,
+  "attacks": [
+   "Stomp +9 7d5+9 BldgDC16Str Prn",
+   "Charge +9 4d12+9 DC16 Str Prn if already prone 2stomp 1 gore",
+   "Gore +9 3d12+9 DC12 Dex grapple 2d12 bleed"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "black-pudding",
+  "hp": 85,
+  "ac": 7,
+  "speed": "20/20 Clmb",
+  "saves": {
+   "str": 3,
+   "dex": -3,
+   "con": 3,
+   "int": -5,
+   "wis": -2,
+   "cha": -5
+  },
+  "init": -3,
+  "attacks": [
+   "Psuedopod +5 1d6+3 Bld +4d8 Acid -1 AC",
+   "Split When slash or lighting split to 2 puddings half health"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "cobra-flower",
+  "hp": 45,
+  "ac": 14,
+  "speed": "5",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 3,
+   "int": -5,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +6 148+4 Bldg + 1d6 Acid Grapple"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "",
+  "url": "https://www.d20pfsrd.com/bestiary/monster-listings/plants/cobra-flower/"
+ },
+ {
+  "name": "Everan-5",
+  "hp": 38,
+  "ac": 19,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 1,
+   "con": 2,
+   "int": -1,
+   "wis": 6,
+   "cha": 3
+  },
+  "init": 2,
+  "attacks": [
+   "Mace +6 1d6+3",
+   "DC14"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Shield Master",
+  "url": ""
+ },
+ {
+  "name": "ghost",
+  "hp": 45,
+  "ac": 11,
+  "speed": "40 fly",
+  "saves": {
+   "str": -2,
+   "dex": 1,
+   "con": 0,
+   "int": 0,
+   "wis": 1,
+   "cha": 3
+  },
+  "init": 1,
+  "attacks": [
+   "Wither Touch +5 4d6+3 nec",
+   "Horrifying Visage all 60Ft DC13 Wis Frighten fail5 or more age 1d4*10 years",
+   "Possession Rec 6 DC13 Cha"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "Hasani-5",
+  "hp": 27,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 3,
+   "con": 1,
+   "int": 8,
+   "wis": 4,
+   "cha": -2
+  },
+  "init": 3,
+  "attacks": [
+   "Dagger +7 1d4+4"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Prodigy",
+  "url": ""
+ },
+ {
+  "name": "Kedami-5",
+  "hp": 38,
+  "ac": 17,
+  "speed": "25",
+  "saves": {
+   "str": -1,
+   "dex": 6,
+   "con": 2,
+   "int": 1,
+   "wis": 0,
+   "cha": 5
+  },
+  "init": 4,
+  "attacks": [
+   "Rapier +7 1d8+4"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Warcaster",
+  "url": ""
+ },
+ {
+  "name": "kelpie",
+  "hp": 67,
+  "ac": 14,
+  "speed": "10/30Sw",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 3,
+   "int": -2,
+   "wis": 1,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Slam +4 2d8+2 Pierce + Grapple Med DC12",
+   "Drowning Hypnsis 150 ft DC 11 Wis charm breath underwater"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "False Appearnace Seaweed Shape",
+  "url": ""
+ },
+ {
+  "name": "Kisandra-5",
+  "hp": 44,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 5,
+   "dex": 3,
+   "con": 5,
+   "int": 0,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 3,
+  "attacks": [
+   "Halbred +6 1d10+3",
+   "Backend +6 1d4+3"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Sentinal, Polearm Master",
+  "url": ""
+ },
+ {
+  "name": "orc-war-chief",
+  "hp": 93,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 6,
+   "dex": 1,
+   "con": 6,
+   "int": 0,
+   "wis": 2,
+   "cha": 3
+  },
+  "init": 1,
+  "attacks": [
+   "Greataxe +6 1d12 + 1d8 + 4",
+   "Spear +6 1d6+1d8+4 / 2d8+4 (20/60)",
+   "Battle Cry 1/d 30ft adv 1 turn + 1 attack as bns"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Multi Atk (2) Aggressive (bns atk dash twd) +5 intim",
+  "url": ""
+ },
+ {
+  "name": "black-knight",
+  "hp": 75,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 3,
+   "int": 1,
+   "wis": 1,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [
+   "Shadow Strike +7 1d10+4"
+  ],
+  "cr": 4,
+  "xp": 1100,
+  "special": "Multi Attack 2 shadow strike",
+  "url": ""
+ },
+ {
+  "name": "archer",
+  "hp": 75,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 4,
+   "con": 3,
+   "int": 0,
+   "wis": 1,
+   "cha": 0
+  },
+  "init": 4,
+  "attacks": [
+   "Longbow +6 1d8+4 (150/600)",
+   "Shortswd +6 1d6+4",
+   "Bns Act +1d10 next atk or dmg roll with rng"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Mlt Atk 2 Lngbow",
+  "url": ""
+ },
+ {
+  "name": "blue-dragon-wormling",
+  "hp": 52,
+  "ac": 17,
+  "speed": "30/15brw/60fly",
+  "saves": {
+   "str": 3,
+   "dex": 0,
+   "con": 2,
+   "int": 1,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +5 1d10+3 pierce",
+   "Light Breath (5-6) 30ft line DC12 dex 4d10 lightning"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Immune Lightning",
+  "url": "https://roll20.net/compendium/dnd5e/Blue%20Dragon%20Wyrmling#content"
+ },
+ {
+  "name": "gallows tree zombie",
+  "hp": 52,
+  "ac": 11,
+  "speed": "20",
+  "saves": {
+   "str": 4,
+   "dex": 0,
+   "con": 3,
+   "int": -3,
+   "wis": 0,
+   "cha": -5
+  },
+  "init": 0,
+  "attacks": [
+   "Multi Atk Slam +6 2d6+4",
+   "Spore Cloud (Rcg 6) DC13 con poison and slow"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Regen 5 hp unless cord to tree cut (AC 12 HP10)",
+  "url": ""
+ },
+ {
+  "name": "giant-scorpion",
+  "hp": 52,
+  "ac": 15,
+  "speed": "40",
+  "saves": {
+   "str": 2,
+   "dex": 1,
+   "con": 2,
+   "int": -5,
+   "wis": -1,
+   "cha": -4
+  },
+  "init": 1,
+  "attacks": [
+   "Claw +4 1d8+2 grapple DC12",
+   "Sting +4 1d10+2 DC12 con 4d10 poison sv half"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Multi Attack 2 claw 1 stinger",
+  "url": "https://roll20.net/compendium/dnd5e/Giant%20Scorpion#content"
+ },
+ {
+  "name": "githyanki-warrior",
+  "hp": 49,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 1,
+   "int": 1,
+   "wis": 1,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Greatsword +4 2d6+2 + 2d6 pshycic",
+   "3/day jump, mistystep, nondetection"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Multi Atk 2 Greatsword",
+  "url": "https://dnd-5e.herokuapp.com/monsters/githyanki-warrior"
+ },
+ {
+  "name": "green-hag",
+  "hp": 82,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 3,
+   "int": 1,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 1,
+  "attacks": [
+   "Claws +6 2d8+4",
+   "Vicious Mockery DC12 1d4 disadvantage"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Illusory Apperamce",
+  "url": ""
+ },
+ {
+  "name": "hell-hound",
+  "hp": 45,
+  "ac": 15,
+  "speed": "50",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 2,
+   "int": -2,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +5 1d8+3",
+   "Fire Breath (5-6) 15ft cone 6d6 DC12 Dex"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "PAck Tactics ,Fire Immune, Keen hearing smell, Darkvision 60 Perc +5",
+  "url": ""
+ },
+ {
+  "name": "illusionist",
+  "hp": 38,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 5,
+   "int": 2,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [
+   "Quarterstaff +1 1d6-1",
+   "DC13 +5 spll, Pois Spry, Mage Hand, Dnc Light, Min Ill",
+   "1(4) Clr Spr, Dis Slf, Mge Arm (15), Mg Miss,"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "2(3) Inv, Mir Img, Phant Force (1d6/rnd) 3(3) Maj Img, Phnt Std, 4(1) Phant Kill 4d10/rnd sv each",
+  "url": ""
+ },
+ {
+  "name": "knight",
+  "hp": 52,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 0,
+   "con": 2,
+   "int": 0,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 0,
+  "attacks": [
+   "Greatsword +5 2d6+3",
+   "Hvy Cross +2 100/400 1d10"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Leadership 1min d4/round to ally, Parry +2 AC 1/round",
+  "url": "https://roll20.net/compendium/dnd5e/Knight#content"
+ },
+ {
+  "name": "mummy",
+  "hp": 59,
+  "ac": 11,
+  "speed": "8",
+  "saves": {
+   "str": 3,
+   "dex": -1,
+   "con": 2,
+   "int": -2,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": -1,
+  "attacks": [
+   "Rotting Fist +5 2d6+3 Bldg +3d6 Necro DC12 Rotting Curse",
+   "Dreadful Glare DC11 Wis frighten 1 turn fail 5 paralyzed 24 hr immune on success"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "",
+  "url": "https://roll20.net/compendium/dnd5e/Mummy#content"
+ },
+ {
+  "name": "neogi",
+  "hp": 33,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": -2,
+   "dex": 3,
+   "con": 2,
+   "int": 1,
+   "wis": 1,
+   "cha": 2
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +5 1d6+3 DC12 4d6 poisn 1 min",
+   "Claw +5 2d4+3",
+   "Enslave (rest) DC 14 wis charm 1 day (sv on dmg)"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Mlt Atk Bite + Claw",
+  "url": ""
+ },
+ {
+  "name": "nightmare",
+  "hp": 68,
+  "ac": 13,
+  "speed": "60/90Fly",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 3,
+   "int": 0,
+   "wis": 1,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Hooves +6 2d8+4 bldg +2d6 fire"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Immune Fire, Confire Fire resist, Illumantion 10/10, Etheral Stride",
+  "url": ""
+ },
+ {
+  "name": "phase-spider",
+  "hp": 32,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 1,
+   "int": -2,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +4 1d10+2 peirce DC11 Con 4d8 Poison, Paralize 1 hour on incap"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "",
+  "url": "https://5e.tools/bestiary/phase-spider-mm.html"
+ },
+ {
+  "name": "psurlon common",
+  "hp": 45,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 2,
+   "int": 6,
+   "wis": 6,
+   "cha": 6
+  },
+  "init": 2,
+  "attacks": [
+   "Bite (grapple) +6 1d8+4",
+   "Psychic Crush DC18 (4d6) psychic"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Blindsight 120 ft",
+  "url": "https://dnd-wiki.org/wiki/Psurlon_Common_(5e)"
+ },
+ {
+  "name": "siren",
+  "hp": 38,
+  "ac": 14,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 4,
+   "con": 1,
+   "int": 1,
+   "wis": 2,
+   "cha": 3
+  },
+  "init": 4,
+  "attacks": [
+   "Shortsword +6 1d6+4",
+   "Stupefying Touch DC13 Int 3d6+3 + stun turn",
+   "Magic Res, 1/d Chrm Prs, Fg Cld, Greater Inv, Polymorph, DC13"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "water-weird",
+  "hp": 58,
+  "ac": 13,
+  "speed": "0",
+  "saves": {
+   "str": 3,
+   "dex": 3,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": 3,
+  "attacks": [
+   "Constrict rch10f  +5 3d6+3 grap rest DC13 escp 1 max",
+   "resist fire, non mag phys"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "white-dragon-wormling",
+  "hp": 45,
+  "ac": 17,
+  "speed": "30/60fly",
+  "saves": {
+   "str": 4,
+   "dex": 0,
+   "con": 3,
+   "int": 1,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +6 1d10+4 pierce",
+   "Cold (5-6) 15ft cone DC13 con 4d8 cold",
+   "Paralyzing Breath 15ft cone DC13 paralyzed 1 minute save each turn"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Immune Lightning",
+  "url": "https://roll20.net/compendium/dnd5e/Blue%20Dragon%20Wyrmling#content"
+ },
+ {
+  "name": "wight",
+  "hp": 45,
+  "ac": 14,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 3,
+   "int": 0,
+   "wis": 1,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "LifeDrain +4 1d6+2 13Con Red Life",
+   "Longsword +4 1d8+2 (1d10+2)",
+   "Longbow +4 1d8+2 (150/600)"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Sunlight Sensitive",
+  "url": ""
+ },
+ {
+  "name": "windharrow",
+  "hp": 55,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 3,
+   "con": 1,
+   "int": 2,
+   "wis": 0,
+   "cha": 3
+  },
+  "init": 3,
+  "attacks": [
+   "Rapier +5 1d8+3",
+   "Cnt Frnd, Pst, VM, 1Dis Slf,Dis Wsp, Thnd Wv",
+   "2 Inv Sht Slc, 3: nonD,sndg, tng 4:Cnf, DimDr"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Mtl Atk 2Rapier",
+  "url": ""
+ },
+ {
+  "name": "yeti",
+  "hp": 51,
+  "ac": 12,
+  "speed": "40/40clmb",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 3,
+   "int": -1,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Claw +6 1d6+4 +ad6 cold",
+   "Chilling Gze DC 13 con 3d6 cold parayze (save immune all)",
+   "Multi 2 Claw 1 Chill"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Fear of Fire, fire give disadvatage to attack and ability 1 turn, snow camo, keen smell",
+  "url": ""
+ },
+ {
+  "name": "deep-summoner",
+  "hp": 60,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 2,
+   "con": 2,
+   "int": 2,
+   "wis": 2,
+   "cha": 4
+  },
+  "init": 2,
+  "attacks": [
+   "Dagger +5 1d4+2",
+   "Summon Tendril 60ft"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "crabulus",
+  "hp": 150,
+  "ac": 12,
+  "speed": "40",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 4,
+   "int": -3,
+   "wis": 2,
+   "cha": -3
+  },
+  "init": 1,
+  "attacks": [
+   "Pincer +7 1d6+3 DC18 Grapple"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Multi Attack 2 seperate enemies",
+  "url": ""
+ },
+ {
+  "name": "bandit-captain",
+  "hp": 65,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 5,
+   "con": 2,
+   "int": 2,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 3,
+  "attacks": [
+   "Scimitar +5 ad6+3",
+   "Dagger +5 1d4+3 (20/60)"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "MultiAtk 2 Sci 1 dag / 2 dag, Parry (+2 AC)",
+  "url": ""
+ },
+ {
+  "name": "berserker",
+  "hp": 67,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 3,
+   "int": -1,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 1,
+  "attacks": [
+   "Greataxe +5 1d12+3"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Reckless Attack (gain adv on attack / adv against you)",
+  "url": ""
+ },
+ {
+  "name": "crushing-wave-priest",
+  "hp": 52,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 0,
+   "con": 2,
+   "int": 0,
+   "wis": 0,
+   "cha": 3
+  },
+  "init": 0,
+  "attacks": [
+   "Ray Frost +5 1d8 chill",
+   "Chill Touch 120 ft +5 1d8 nec no regen",
+   "Quarterstaff +4 1d8+2"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Sth+2 1(4) Exp ret, ice knf, mag mis, shld 2(3) blr, hold p, 3(2) Slt strm",
+  "url": ""
+ },
+ {
+  "name": "cult-fanatic",
+  "hp": 33,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 1,
+   "int": 0,
+   "wis": 1,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Dagger +4 1d4+2 (20/60)",
+   "Sacred Flame 1d8 DC11 dec",
+   "1-4 cmd, inf wound, sh o fth, 2-3 hold p, spr wpn"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Mult Atk 2 dag",
+  "url": ""
+ },
+ {
+  "name": "druid",
+  "hp": 27,
+  "ac": null,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 1,
+   "con": 1,
+   "int": 1,
+   "wis": 2,
+   "cha": 0
+  },
+  "init": 1,
+  "attacks": [
+   "Produce Flame +5 1d6+2",
+   "Sjillelagh +5 1d8+2",
+   "Thunderwave 2d8 DC 13"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Slots: 4/3 Entalge, barkskin",
+  "url": "https://roll20.net/compendium/dnd5e/Monsters:Druid#content"
+ },
+ {
+  "name": "egg-hunter-hatchling",
+  "hp": 28,
+  "ac": 14,
+  "speed": "30/10br/30Clmb",
+  "saves": {
+   "str": -1,
+   "dex": 3,
+   "con": 1,
+   "int": -5,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 3,
+  "attacks": [
+   "Egg Tooth +5 2d6+3 / 4d6+3 obj"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Multi Attack",
+  "url": "https://5e.tools/bestiary.html#egg%20hunter%20hatchling_ftd"
+ },
+ {
+  "name": "gelatinous-cube",
+  "hp": 84,
+  "ac": 6,
+  "speed": "15",
+  "saves": {
+   "str": 2,
+   "dex": -4,
+   "con": 5,
+   "int": -5,
+   "wis": -2,
+   "cha": -5
+  },
+  "init": -4,
+  "attacks": [
+   "Pseudopod +4 3d6 Acid",
+   "Englf Move up to speed DC12 Dex save or engulf 3d6 acid now 6d6 each cube turn start.  DC12 Str Skill Escape"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "DC 15 perc to see if not moved",
+  "url": "https://roll20.net/compendium/dnd5e/Gelatinous%20Cube#content"
+ },
+ {
+  "name": "ghast",
+  "hp": 36,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 3,
+   "con": 0,
+   "int": 0,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +3 2d8+3",
+   "Claws +5 2d6+3 DC10 con sv paralized"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Stench 5ft DC10 con sv poison next turn Suc immune for 24 hour, Immune necrotic  poisoned",
+  "url": ""
+ },
+ {
+  "name": "giant-constrictor-snake",
+  "hp": 60,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 1,
+   "int": -5,
+   "wis": 0,
+   "cha": -4
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +6 2d6+4 prc",
+   "Constrict +6 2d8+4 bld gra / rstn DC16 Escp"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Blndsight 10, perc +2, swm 30",
+  "url": ""
+ },
+ {
+  "name": "gibbering-mouther",
+  "hp": 67,
+  "ac": 9,
+  "speed": "10/10 sw",
+  "saves": {
+   "str": 0,
+   "dex": -1,
+   "con": 3,
+   "int": -4,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": -1,
+  "attacks": [
+   "Bite +2 5d6 DC10 STR prone",
+   "Blinding Sittle DC 13 Dex Blind 15 ft range 5ft radius",
+   "Gibbering 20ft radius DC10 wis 1-4 null 5-6 random direction 7-8 random attack"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Aberrant Ground 10 ft radius difficult terrain DC 10 Str save or no movement",
+  "url": ""
+ },
+ {
+  "name": "grisha",
+  "hp": 33,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 1,
+   "con": 1,
+   "int": 0,
+   "wis": 4,
+   "cha": 5
+  },
+  "init": 1,
+  "attacks": [
+   "+1 Flail +5 1d8+3 X2",
+   "Cnt SacFlm DC12 (1d8), Gud, Lgt, Thaum,",
+   "1(4) Cure Wounds, Div Fav, Inf Wnd, Pro Gd/Ev, Shd Fth"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "2(3) Con Flm, Hld Prs, Mg Wpn, Spr Wpn 3(3)  Bes Cur, Dis Mag, Spr Grd",
+  "url": ""
+ },
+ {
+  "name": "hobgoblin-iron-shadow",
+  "hp": 32,
+  "ac": 15,
+  "speed": "40",
+  "saves": {
+   "str": 2,
+   "dex": 3,
+   "con": 2,
+   "int": 2,
+   "wis": 2,
+   "cha": 0
+  },
+  "init": 3,
+  "attacks": [
+   "Unarmed +5 1d4+3",
+   "Dart +5 1d4+3 (20/60)",
+   "Shadow Jaunt (teleport 30 ft in dim/dark light)"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Mult Atk (4) Snt Mnr Illus, Tr Strk, Prest, 1-(3) Chrm P, Dig Slf, Exp Rt, Slt Img",
+  "url": ""
+ },
+ {
+  "name": "ice-spider-queen",
+  "hp": 44,
+  "ac": 14,
+  "speed": "30/30 clm",
+  "saves": {
+   "str": 2,
+   "dex": 3,
+   "con": 1,
+   "int": -4,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +5 1d8+3 pierce DC11Con 2d8 cold psn",
+   "Icy Web (5-6)30/60  +5 restrain 1d4 cold/trn DC12 Str"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Res Cold Cold Aura 2d4 meele start",
+  "url": "https://5e.tools/bestiary.html#ice%20spider%20queen_skt"
+ },
+ {
+  "name": "lizardfolk-shaman",
+  "hp": 27,
+  "ac": 13,
+  "speed": "30/30sw",
+  "saves": {
+   "str": 2,
+   "dex": 0,
+   "con": 1,
+   "int": 0,
+   "wis": 2,
+   "cha": -1
+  },
+  "init": 0,
+  "attacks": [
+   "Liz Bite +4 1d6+2",
+   "Liz claw +4 +14+2",
+   "croc bite 1d40+2"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "cant prd flm, thrn wip, \nentangle fog cloud\nheat metal spike growth\nconjure animals (reptiles) plant growth",
+  "url": "https://www.kassoon.com/dnd/monster-stat-block/293/lizardfolk-shaman/"
+ },
+ {
+  "name": "minotaur-skeleton",
+  "hp": 67,
+  "ac": 12,
+  "speed": "40",
+  "saves": {
+   "str": 4,
+   "dex": 0,
+   "con": 2,
+   "int": -2,
+   "wis": -1,
+   "cha": -3
+  },
+  "init": 0,
+  "attacks": [
+   "Great Axe +6 2d12+4",
+   "Gore +6 2d8+4"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Vul Bldg, Charge 10ft + Gore = +2d8  DC14 push 10ft + prone, Immune poison, exhaustion",
+  "url": ""
+ },
+ {
+  "name": "ogre",
+  "hp": 42,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 4,
+   "int": 1,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": 1,
+  "attacks": [
+   "Greataxe +6 1d12 + 4",
+   "Javelin +6 1d6+4 (30/120)"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Multi Atk (greate axe) Aggressive (bns act dash twd)",
+  "url": ""
+ },
+ {
+  "name": "sahuagin-priestess",
+  "hp": 33,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 0,
+   "con": 1,
+   "int": 1,
+   "wis": 2,
+   "cha": 1
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +3 1d4+1",
+   "Claws +3 1d4+1",
+   "1 Bless, Gd Blt 2 Hold Per, Spir Weap 3 Ms Hl Wrd"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Percp +6 Relig +3 Multi Attack (Bite + Claw) Spells (4/3/3) Swim 40 Bld Frenzy",
+  "url": ""
+ },
+ {
+  "name": "tormented-soul",
+  "hp": 39,
+  "ac": 12,
+  "speed": "0/60fly",
+  "saves": {
+   "str": -4,
+   "dex": 2,
+   "con": 2,
+   "int": 1,
+   "wis": 1,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [
+   "Life Drain +4 2d10 Nec Reduce Max",
+   "Necro Breath (Rcg 5-6) 15ft cne DC12 Dex 4d8 Necro Slain raise as zombie in 24 hr"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Resis Acid Cold Fire Thunder Phys Nonmagic Nonsilver Immune Necro Poison Charm Exha Grap Para Petri Pois Prone Restr Uncons",
+  "url": "https://www.dandwiki.com/wiki/Tormented_Soul_(5e_Creature)"
+ },
+ {
+  "name": "uthgardt-shaman",
+  "hp": 38,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 1,
+   "con": 1,
+   "int": 10,
+   "wis": 2,
+   "cha": 1
+  },
+  "init": 1,
+  "attacks": [
+   "Spear +4 1d6+2 (20/60)",
+   "Shortbow +3 1d6+1 (80/320",
+   "Ct DncL, Msg, MgHd, Tht 1/D: Aug Bst Crs, Crd Arrow, Dtc Mg, Hx, PoHeal, Spk Dd, Spr Gr"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "bugbear",
+  "hp": 27,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 1,
+   "int": -1,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Morningstar +4 2d8+2",
+   "Jaelin +4 2d6+2 (1d6+2 rng 30/120)"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "Surprise Attack +2d6 surprise round",
+  "url": ""
+ },
+ {
+  "name": "dire-wolf",
+  "hp": 37,
+  "ac": 14,
+  "speed": "50",
+  "saves": {
+   "str": 3,
+   "dex": 2,
+   "con": 2,
+   "int": -4,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +5 2d6+3 DC13 STR Prone"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "Keen Hearing / Smell, Pack Tactics Percp +3 Stlht +4",
+  "url": ""
+ },
+ {
+  "name": "fire-snake",
+  "hp": 22,
+  "ac": 14,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 2,
+   "con": 0,
+   "int": -2,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Mult",
+   "Bite +3 1d4+1 piece +1d6fire",
+   "Tail +3 1d4+1 bld +1f6 fire"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "Vuln Cold Resist Pfy Imune Fire Meele atks take 1d6 fire damage",
+  "url": "https://www.aidedd.org/dnd/monstres.php?vo=fire-snake"
+ },
+ {
+  "name": "giant-octopus",
+  "hp": 52,
+  "ac": 11,
+  "speed": "10/60sw",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 1,
+   "int": -3,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 1,
+  "attacks": [
+   "Tentacles +5 2d6+3 grapple (esc DC16) Reach 15",
+   "Ink Cloud 20 ft radius ink cloud Heavily Odscured Bns Action Dash Shrt Rest"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "giant-spider",
+  "hp": 26,
+  "ac": 14,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 3,
+   "con": 1,
+   "int": -4,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +5 1d8 +3 p DC 11 Con 2d8 Poison",
+   "Web (5-6) +5 (30/60) DC 12 Str Restrianed",
+   "AC10 hp5 Vul fire Immune bludg, posi, psychic"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "+7 slth Spider Climb, Web Sense, Web Walker,",
+  "url": ""
+ },
+ {
+  "name": "giant-toad",
+  "hp": 39,
+  "ac": 11,
+  "speed": "20/40sw",
+  "saves": {
+   "str": 2,
+   "dex": 1,
+   "con": 1,
+   "int": -4,
+   "wis": 0,
+   "cha": -4
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +4 1d10+2 pierce 1d10 poison grapple restrain DC13",
+   "swallow already grappled 3d6 acid toad turn"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": "https://roll20.net/compendium/dnd5e/Giant%20Toad#content"
+ },
+ {
+  "name": "half-ogre",
+  "hp": 30,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 0,
+   "con": 2,
+   "int": -2,
+   "wis": -1,
+   "cha": 0
+  },
+  "init": 0,
+  "attacks": [
+   "Battleaxe +5 2d8+3 / 2d10+3 2mand",
+   "Javelin +5 2d6+3"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": "https://www.kassoon.com/dnd/monster-stat-block/432/half-ogre/"
+ },
+ {
+  "name": "harpy",
+  "hp": 28,
+  "ac": 11,
+  "speed": "20/40",
+  "saves": {
+   "str": 1,
+   "dex": 1,
+   "con": 1,
+   "int": -2,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": 1,
+  "attacks": [
+   "claw +3 2d4+1",
+   "Club +3 1d4+1",
+   "Luring Song DC11 Wis Charm"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "Mtl Atk claw + club",
+  "url": ""
+ },
+ {
+  "name": "scarecrow",
+  "hp": 36,
+  "ac": 11,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 1,
+   "con": 0,
+   "int": 0,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": 0,
+  "attacks": [
+   "Claw +3 2d4+1 DC11 Wis Fear 1 turn",
+   "Glare 30ft DC11 Wis Fighten + Paralyzed 1 turn"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "small-earth-elemental",
+  "hp": 13,
+  "ac": 17,
+  "speed": "20",
+  "saves": {
+   "str": 3,
+   "dex": -1,
+   "con": 1,
+   "int": -3,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": -1,
+  "attacks": [
+   "Slam +6 1d6+4"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "resist physical",
+  "url": "https://www.d20pfsrd.com/bestiary/monster-listings/outsiders/elemental/elemental-earth/small-earth-elemental/"
+ },
+ {
+  "name": "snow-leapard",
+  "hp": 37,
+  "ac": 12,
+  "speed": "40",
+  "saves": {
+   "str": 3,
+   "dex": 2,
+   "con": 2,
+   "int": -4,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +5 ad10 +3",
+   "Claw +5 1d8+3"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "Pounce run 20 DC13 Str prone, +bonus Bite attack",
+  "url": "https://5e.tools/bestiary.html#snow%20leopard_tftyp"
+ },
+ {
+  "name": "specter",
+  "hp": 22,
+  "ac": 12,
+  "speed": "50fly",
+  "saves": {
+   "str": -5,
+   "dex": 2,
+   "con": 0,
+   "int": 0,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Life Drain +4 3d6 (10Con reduce max)",
+   "Resis / Imun Incorp Move"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "spy",
+  "hp": 27,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 0,
+   "int": 1,
+   "wis": 2,
+   "cha": 3
+  },
+  "init": 2,
+  "attacks": [
+   "Shortsword +4 1d6+2",
+   "Hand Crossbow (30/120) +4 1d6+2"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "Multi Atk (2 sword) Sneak attack(2d6) Cunning Action, Perc +6, Stlh +4",
+  "url": ""
+ },
+ {
+  "name": "tendril",
+  "hp": 15,
+  "ac": 10,
+  "speed": "0",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 2,
+   "int": -2,
+   "wis": -2,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Slam +6 1d6+4 15ft line"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "ambush-drake",
+  "hp": 22,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 2,
+   "con": 2,
+   "int": -3,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +4 1d6+1 Pierce"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Pack Tactics. Surprise Attack (2d6 ambush round)",
+  "url": "https://www.kassoon.com/dnd/monster-stat-block/197/ambush-drake/"
+ },
+ {
+  "name": "ape",
+  "hp": 19,
+  "ac": 12,
+  "speed": "30/30climb",
+  "saves": {
+   "str": 3,
+   "dex": 2,
+   "con": 2,
+   "int": -2,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Fist +5 1d6+3",
+   "Rock 25/50 +5 1d6+3"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Multi Atk 2 Fist",
+  "url": "https://roll20.net/compendium/dnd5e/Ape#content"
+ },
+ {
+  "name": "crushing-wave-reaver",
+  "hp": 22,
+  "ac": 14,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "L sword +4 1d8+2 (1d10+2)",
+   "Javelin (30/120) +4  1d6+2"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Ath +4 Stlh +4",
+  "url": ""
+ },
+ {
+  "name": "fire-mephit",
+  "hp": 27,
+  "ac": 12,
+  "speed": "30/40fly",
+  "saves": {
+   "str": 1,
+   "dex": 2,
+   "con": 1,
+   "int": -2,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Claws +4 1d4+2 Slash +1d6 Fire",
+   "Fire Breah 30x5ft line DC11 Dex Save 3d6 (Recharge 6)",
+   "Death Burst 5ft DC11 Dex 1d10 fire"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Heat Metal 1/day",
+  "url": ""
+ },
+ {
+  "name": "giant-wasp",
+  "hp": 13,
+  "ac": 12,
+  "speed": "10/50fly",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 0,
+   "int": -5,
+   "wis": 0,
+   "cha": -4
+  },
+  "init": 2,
+  "attacks": [
+   "Sting +4 ad6+2 pier + 3d6 posion DC11 (save half) paralyize 1 hr if reduced to 0"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "",
+  "url": "https://roll20.net/compendium/dnd5e/Giant%20Wasp"
+ },
+ {
+  "name": "hobgoblin",
+  "hp": 11,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 1,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 1,
+  "attacks": [
+   "Longswd +3 1d8+1 (2d6)",
+   "Longbow +3 (1d8+1) (150/600)"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Matial Adv +2d6 if ally next to target",
+  "url": ""
+ },
+ {
+  "name": "orc",
+  "hp": 15,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 3,
+   "int": -2,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": 1,
+  "attacks": [
+   "Greataxe +5 1d12+3 slash",
+   "Javelin (4)(30/120) +5 1d6+3 pierce"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "",
+  "url": "https://5e.tools/bestiary.html#orc_mm"
+ },
+ {
+  "name": "sahuagin",
+  "hp": 22,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 0,
+   "con": 1,
+   "int": 1,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +3 1d4+1",
+   "Claw +3 1d4+1",
+   "Spear 20/60 +3 1d6+1 (vers)"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Mlt Atk (Bt + Meele) Prec +5, Dark 120, Bld Frenzy",
+  "url": ""
+ },
+ {
+  "name": "scout",
+  "hp": 16,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 1,
+   "int": 0,
+   "wis": 1,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Shortsword +4 1d6+2",
+   "Longbow (150/600) +4 1d8+2"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Multi Atk (2 sword) Perc +5 Stlt +6 Surv +5 Nature +4",
+  "url": ""
+ },
+ {
+  "name": "swarm-of-centipedes",
+  "hp": 22,
+  "ac": 12,
+  "speed": "20",
+  "saves": {
+   "str": -4,
+   "dex": 1,
+   "con": 0,
+   "int": -5,
+   "wis": -2,
+   "cha": -5
+  },
+  "init": 1,
+  "attacks": [
+   "Bites +3 4d4 or 2d4<50% Pierce Stable but poison/paralyzed"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Res Physical, Blindisght 10 ft",
+  "url": "https://5e.tools/bestiary.html#swarm%20of%20centipedes_mm"
+ },
+ {
+  "name": "velociraptor",
+  "hp": 14,
+  "ac": 13,
+  "speed": "50",
+  "saves": {
+   "str": -2,
+   "dex": 3,
+   "con": 0,
+   "int": -4,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +5 1d8+3",
+   "Claw +5 1d6+3",
+   "Pounce 20ft claw + DC10Str Prone + Bns Bite"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "Pack Tactics",
+  "url": ""
+ },
+ {
+  "name": "vine-blight",
+  "hp": 30,
+  "ac": 14,
+  "speed": "10",
+  "saves": {
+   "str": 2,
+   "dex": -1,
+   "con": 2,
+   "int": -3,
+   "wis": 0,
+   "cha": -4
+  },
+  "init": -1,
+  "attacks": [
+   "Constrict +4 2d6+2 bldg DC12 DEX / STR grapple + restrain",
+   "entagle plants 15ft radius DC 12 STR restrain"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "",
+  "url": "https://www.kassoon.com/dnd/monster-stat-block/292/vine-blight/"
+ },
+ {
+  "name": "boar",
+  "hp": 11,
+  "ac": 11,
+  "speed": "40",
+  "saves": {
+   "str": 1,
+   "dex": 0,
+   "con": 1,
+   "int": -4,
+   "wis": -1,
+   "cha": -3
+  },
+  "init": 0,
+  "attacks": [
+   "Tusk +3 1d6+1 slash (chrg 20ft, 1d6 DC11 prone)"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Relentless Dmg<7 -> 1 hp 1/rest",
+  "url": "https://5e.tools/bestiary.html#boar_mm"
+ },
+ {
+  "name": "giant-bat",
+  "hp": 22,
+  "ac": 13,
+  "speed": "10/60 fly",
+  "saves": {
+   "str": 2,
+   "dex": 3,
+   "con": 0,
+   "int": -4,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +4 1d6+2 Pierce"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "",
+  "url": "https://roll20.net/compendium/dnd5e/Giant%20Bat#content"
+ },
+ {
+  "name": "goblin",
+  "hp": 7,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": -1,
+   "dex": 2,
+   "con": 0,
+   "int": 0,
+   "wis": -1,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Scimiar +4 1d6+2",
+   "Shrt Bw +4 1d6+2 (80/320)"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Bns Atk Disengage / Hide",
+  "url": ""
+ },
+ {
+  "name": "kobold-inventor",
+  "hp": 13,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -2,
+   "dex": 2,
+   "con": 1,
+   "int": -1,
+   "wis": -2,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Dagger +4 1d4+2",
+   "Sling (30/120)  +4 1d4+2",
+   "random skill check"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "",
+  "url": "https://www.kassoon.com/dnd/monster-stat-block/435/kobold-inventor/"
+ },
+ {
+  "name": "skeleton",
+  "hp": 13,
+  "ac": 13,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 2,
+   "int": -2,
+   "wis": -1,
+   "cha": -3
+  },
+  "init": 2,
+  "attacks": [
+   "Shortsword +4 1d6+2",
+   "S-bow +4 1d6+2 (80/320)"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Vulnerable bludgeon",
+  "url": ""
+ },
+ {
+  "name": "smoke-mephit",
+  "hp": 22,
+  "ac": 12,
+  "speed": "30/30fly",
+  "saves": {
+   "str": -2,
+   "dex": 2,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Claws +4 1d4+2 Slash",
+   "Cinder Breath 15ft cone DC10 Blind",
+   "Death Burst 5ft sphere heavy obscure space"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Dancing Lights",
+  "url": "https://www.aidedd.org/dnd/monstres.php?vo=smoke-mephit"
+ },
+ {
+  "name": "violet-fungus",
+  "hp": 18,
+  "ac": 5,
+  "speed": "5",
+  "saves": {
+   "str": -4,
+   "dex": -5,
+   "con": 0,
+   "int": -5,
+   "wis": -4,
+   "cha": -5
+  },
+  "init": -5,
+  "attacks": [
+   "Rotting Touch +2 1d8 necro"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Blindsight 30, MultiAttack 1d4 rotting Touch, False Appearnace",
+  "url": ""
+ },
+ {
+  "name": "wolf",
+  "hp": 11,
+  "ac": 13,
+  "speed": "40",
+  "saves": {
+   "str": 1,
+   "dex": 2,
+   "con": 1,
+   "int": -4,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +4 2d4+2 DC11 STR Prone"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Keen Hearing / Smell, Pack Tactics Percp +3 Stlht +4",
+  "url": ""
+ },
+ {
+  "name": "zombie",
+  "hp": 22,
+  "ac": 8,
+  "speed": "20",
+  "saves": {
+   "str": 1,
+   "dex": -2,
+   "con": 3,
+   "int": -4,
+   "wis": -2,
+   "cha": -3
+  },
+  "init": -2,
+  "attacks": [
+   "Slam +3 1d6+1",
+   "Undead Fort DC 5+Dmg Con save drop to 1 unless divine or crit"
+  ],
+  "cr": 0.25,
+  "xp": 50,
+  "special": "Undead Fort DC 5+Dmg Con save drop to 1 unless divine or crit",
+  "url": "https://roll20.net/compendium/dnd5e/zombie#content"
+ },
+ {
+  "name": "bandit",
+  "hp": 11,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 1,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": 2,
+  "attacks": [
+   "Scimitar +3 1d6+1",
+   "Light X-bow +3 1d8+1 (80/320)"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "giant-crab",
+  "hp": 13,
+  "ac": 15,
+  "speed": "30/30sw",
+  "saves": {
+   "str": 1,
+   "dex": 2,
+   "con": 0,
+   "int": -2,
+   "wis": -5,
+   "cha": -1
+  },
+  "init": -4,
+  "attacks": [
+   "Claw +3 1d6+1 grapple DC11"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "",
+  "url": "https://roll20.net/compendium/dnd5e/Giant%20Crab#content"
+ },
+ {
+  "name": "giant-rat",
+  "hp": 7,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -2,
+   "dex": 2,
+   "con": 0,
+   "int": -4,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +4 ad4+2"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "Pack Tactic, Keen Smell, DarkVision 60",
+  "url": ""
+ },
+ {
+  "name": "guard",
+  "hp": 11,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 1,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": 0
+  },
+  "init": 1,
+  "attacks": [
+   "Spear +3  1d6+1 (1d8 2hnd)"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "kobold",
+  "hp": 5,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -2,
+   "dex": 2,
+   "con": -1,
+   "int": -1,
+   "wis": -2,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Dagger +4 1d4+2 (20/60)",
+   "Sling +4 1d4+2(3-/120)"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "Pack Tactics Sunlight Sensativity",
+  "url": ""
+ },
+ {
+  "name": "slaad-tadpole",
+  "hp": 10,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -2,
+   "dex": 2,
+   "con": 0,
+   "int": -4,
+   "wis": -3,
+   "cha": -4
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +4 1d4+2"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "Magic Resist,  Resist Acid, Cold, Fire, Lightning, Thunder, Darkvision 60",
+  "url": ""
+ },
+ {
+  "name": "tribal-warrior",
+  "hp": 11,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 0,
+   "con": 1,
+   "int": -1,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 0,
+  "attacks": [
+   "Spear +3 20/60 1d6+1 / 1d8+1"
+  ],
+  "cr": 0.125,
+  "xp": 25,
+  "special": "",
+  "url": "https://www.kassoon.com/dnd/monster-stat-block/434/tribal-warrior/"
+ },
+ {
+  "name": "rat",
+  "hp": 1,
+  "ac": 10,
+  "speed": "20",
+  "saves": {
+   "str": -4,
+   "dex": 0,
+   "con": -1,
+   "int": -4,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +0 1 P"
+  ],
+  "cr": 0,
+  "xp": 10,
+  "special": "Keen Smell, Darkvision 30",
+  "url": ""
+ },
+ {
+  "name": "Alister-5",
+  "hp": 50,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 1,
+   "dex": 6,
+   "con": 2,
+   "int": -1,
+   "wis": 2,
+   "cha": 2
+  },
+  "init": 3,
+  "attacks": [
+   "Sniper + 6 1d12 + 3",
+   "Pistol +6 1d8+3"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "cranium-rat",
+  "hp": 2,
+  "ac": 12,
+  "speed": "30",
+  "saves": {
+   "str": -4,
+   "dex": 2,
+   "con": 0,
+   "int": -3,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +4 1 pierce"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "displacer-beast",
+  "hp": 85,
+  "ac": 13,
+  "speed": "40",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 3,
+   "int": -2,
+   "wis": 1,
+   "cha": -1
+  },
+  "init": 2,
+  "attacks": [
+   "Tentacle +6 1d6+4",
+   "Multi Atk (2 Tentacle)"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "Displacement gives disadvantae to attackers until hit this round or speed reduced to 0.",
+  "url": ""
+ },
+ {
+  "name": "Mustang-5",
+  "hp": 30,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 0,
+   "dex": 6,
+   "con": 2,
+   "int": 2,
+   "wis": -1,
+   "cha": 2
+  },
+  "init": 3,
+  "attacks": [
+   "Shortsword +6 1d6 (+3d6 sneak)",
+   "Pistol +6 1d8+3"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "pshycic-manta",
+  "hp": 75,
+  "ac": 15,
+  "speed": "60 fly",
+  "saves": {
+   "str": 0,
+   "dex": 2,
+   "con": 2,
+   "int": 3,
+   "wis": 3,
+   "cha": 3
+  },
+  "init": 2,
+  "attacks": [
+   "Bite +6 1d8 +3",
+   "Mental Bullet +8 2d8+3",
+   "Paralyze 1rd DC 15 Wis"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "Psychic Resist",
+  "url": ""
+ },
+ {
+  "name": "mad-golem",
+  "hp": 264,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": 6,
+   "dex": -1,
+   "con": 5,
+   "int": -1,
+   "wis": 0,
+   "cha": -1
+  },
+  "init": -1,
+  "attacks": [
+   "Slam +10 4d8+6 Multi Atk 2",
+   "Slow (5-6 recg) DC 17 Wis10ft nova"
+  ],
+  "cr": 12,
+  "xp": 8400,
+  "special": "Immune Poison Psychic, Physical (non magic) Charm Exaust, Fright, Para, Petri. Magical Resistence, Immutable Form, Magic Weapons",
+  "url": "https://5e.tools/bestiary.html#mad%20golem_wdmm"
+ },
+ {
+  "name": "rot-troll",
+  "hp": 138,
+  "ac": 16,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 1,
+   "con": 6,
+   "int": -3,
+   "wis": -1,
+   "cha": -3
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +8 1d10+4 phys 3d10 necro",
+   "Claws +8 2d6+4 Slash 2d6 Necro",
+   "1 bite 2 claws"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "Immune Necro. At end of tern all creatures withing 5 ft take 2d10 necro dmg unless fire / acid since last turn",
+  "url": "https://5e.tools/bestiary.html#rot%20troll_mpmm"
+ },
+ {
+  "name": "frost-salamander",
+  "hp": 168,
+  "ac": 17,
+  "speed": "60/40brw/40clm",
+  "saves": {
+   "str": 5,
+   "dex": 1,
+   "con": 8,
+   "int": -2,
+   "wis": 4,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +9 1d8+5 Pierce + 1d10 cold",
+   "Claws +9 1d6+5 Pierce",
+   "Frz Brth (6 rchg) 60ft cone DC17 con 8d10 cold"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "Multi Atk 1Bite + 4 Claws. Immune Cold, Vuln Fire. Fire recharge freeze breath",
+  "url": ""
+ },
+ {
+  "name": "marid",
+  "hp": 230,
+  "ac": 18,
+  "speed": "40fly/60swm",
+  "saves": {
+   "str": 8,
+   "dex": 7,
+   "con": 6,
+   "int": 2,
+   "wis": 6,
+   "cha": 9
+  },
+  "init": 7,
+  "attacks": [
+   "Scimitar +12 2d6+7 + 3d6 cold",
+   "Water Whip (25 ft) +12 2d4+7 + 3d6cold",
+   "Whirlpool 20ft radius DC17 dex 16d6 prone"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "Multi Atk 1 Scimitar 1 whip. Frigid Aura. At the start of each of the marid’s turns, each creature within 10 feet of it takes 7 (2d6) cold damage. A creature that touches the marid or hits it with a melee attack while within 10 feet of it takes 7 (2d6) cold damage. A creature must succeed on a DC 17 Constitution saving throw each minute it spends in the aura or gain one level of exhaustion.",
+  "url": "https://www.5esrd.com/database/creature/marid/"
+ },
+ {
+  "name": "barbed-devil",
+  "hp": 110,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 6,
+   "dex": 7,
+   "con": 4,
+   "int": 1,
+   "wis": 5,
+   "cha": 5
+  },
+  "init": 3,
+  "attacks": [
+   "Claw +6 1d6+3",
+   "Tail 2d6+3",
+   "Flame +5 3d6"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "",
+  "url": "https://www.dndbeyond.com/monsters/16800-barbed-devil"
+ },
+ {
+  "name": "archdruid",
+  "hp": 300,
+  "ac": 19,
+  "speed": "40",
+  "saves": {
+   "str": 2,
+   "dex": 12,
+   "con": 16,
+   "int": 5,
+   "wis": 14,
+   "cha": 6
+  },
+  "init": 4,
+  "attacks": [],
+  "cr": 25,
+  "xp": 75000,
+  "special": "",
+  "url": "https://www.5esrd.com/database/creature/archdruid/"
+ },
+ {
+  "name": "modron-squad",
+  "hp": 40,
+  "ac": 15,
+  "speed": "30/30fly",
+  "saves": {
+   "str": 0,
+   "dex": 1,
+   "con": 1,
+   "int": -3,
+   "wis": 0,
+   "cha": -3
+  },
+  "init": 1,
+  "attacks": [
+   "Dagger +3 1d4+1",
+   "Javelin 30/120 +3 1d6+1"
+  ],
+  "cr": 1,
+  "xp": 200,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "pentadrone",
+  "hp": 32,
+  "ac": 16,
+  "speed": "40",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 1,
+   "int": 0,
+   "wis": 0,
+   "cha": 1
+  },
+  "init": 2,
+  "attacks": [
+   "Arm + 41d6+2",
+   "Paralysis Gas (5-6) 30ft cone DC15 con save Paralyzed"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "andreska-2",
+  "hp": 130,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": 8,
+   "dex": 3,
+   "con": 7,
+   "int": -1,
+   "wis": -1,
+   "cha": -1
+  },
+  "init": 3,
+  "attacks": [
+   "Glaive +10 1d10+5",
+   "Butt +10 1d4+5",
+   "Action Surge, Indomitable Second, Wind (1d10+10) Clairvoyance (2 charges), Crown of Madness (1 charge), Disintegrate (4 charges), Dominate Monster (5 charges), or Eyebite (4 charges)"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "Multi Atk, Sentinal, Polearm Master",
+  "url": "http://dnd5e.wikidot.com/wondrous-items:eye-and-hand-of-vecna"
+ },
+ {
+  "name": "djinni",
+  "hp": 161,
+  "ac": 17,
+  "speed": "30/90Fly",
+  "saves": {
+   "str": 5,
+   "dex": 6,
+   "con": 6,
+   "int": 2,
+   "wis": 7,
+   "cha": 9
+  },
+  "init": 2,
+  "attacks": [
+   "Scimitar +9 2d6+5 Slash 1d6 lightning or thunder",
+   "Create Whirlwind DC18 Str restrain"
+  ],
+  "cr": 11,
+  "xp": 7200,
+  "special": "Multi Atk 3 scimitar. Legendary action Whirlwind",
+  "url": ""
+ },
+ {
+  "name": "raphael",
+  "hp": 163,
+  "ac": 19,
+  "speed": "70",
+  "saves": {
+   "str": 7,
+   "dex": 11,
+   "con": 9,
+   "int": 6,
+   "wis": 10,
+   "cha": 5
+  },
+  "init": 5,
+  "attacks": [
+   "Longbow + 13 1d10+7",
+   "Longsword +13 1d10+7",
+   "Stun Strike DC18,Deflect Missile 1d10+25, Unerring Accuracy"
+  ],
+  "cr": 20,
+  "xp": 25000,
+  "special": "mobility",
+  "url": ""
+ },
+ {
+  "name": "monet",
+  "hp": 123,
+  "ac": 18,
+  "speed": "65",
+  "saves": {
+   "str": 6,
+   "dex": 10,
+   "con": 8,
+   "int": 5,
+   "wis": 8,
+   "cha": 4
+  },
+  "init": 5,
+  "attacks": [
+   "Longbow + 11 1d8+6",
+   "Longsword +11 1d8+6",
+   "Stun Strike DC16,Deflect Missile 1d10+20"
+  ],
+  "cr": 15,
+  "xp": 13000,
+  "special": "mobility",
+  "url": ""
+ },
+ {
+  "name": "bracquemond",
+  "hp": 99,
+  "ac": 18,
+  "speed": "60",
+  "saves": {
+   "str": 5,
+   "dex": 9,
+   "con": 2,
+   "int": 0,
+   "wis": 3,
+   "cha": -1
+  },
+  "init": 5,
+  "attacks": [
+   "Longbow + 10 1d8+6",
+   "Longsword +10 1d8+6",
+   "Stun Strike DC15,Deflect Missile 1d10+17"
+  ],
+  "cr": 12,
+  "xp": 8400,
+  "special": "mobility",
+  "url": ""
+ },
+ {
+  "name": "renoir",
+  "hp": 99,
+  "ac": 18,
+  "speed": "60",
+  "saves": {
+   "str": 5,
+   "dex": 9,
+   "con": 2,
+   "int": 0,
+   "wis": 3,
+   "cha": -1
+  },
+  "init": 5,
+  "attacks": [
+   "Longbow + 10 1d8+6",
+   "Longsword +10 1d8+6",
+   "Stun Strike DC15,Deflect Missile 1d10+17"
+  ],
+  "cr": 12,
+  "xp": 8400,
+  "special": "mobility",
+  "url": ""
+ },
+ {
+  "name": "monk-adept",
+  "hp": 38,
+  "ac": 16,
+  "speed": "50",
+  "saves": {
+   "str": 4,
+   "dex": 7,
+   "con": 2,
+   "int": 0,
+   "wis": 2,
+   "cha": -1
+  },
+  "init": 5,
+  "attacks": [
+   "Longbow + 7 1d8+4",
+   "Longsword + 7 1d8+4",
+   "Deflect missile 1d10+9, Unarmed +7 1d6+4"
+  ],
+  "cr": 5,
+  "xp": 1800,
+  "special": "mobility",
+  "url": ""
+ },
+ {
+  "name": "hydra",
+  "hp": 250,
+  "ac": 17,
+  "speed": "30/30swm",
+  "saves": {
+   "str": 5,
+   "dex": 1,
+   "con": 5,
+   "int": -4,
+   "wis": 0,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Bite +8 1d12+5",
+   "res status if 2+ heads"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "Multi Atk 1/head. Start with 5 heads. 25 dmg take head. regrow 2/head destroyed less fire. regain 10hp per head.",
+  "url": "https://www.dndbeyond.com/monsters/16929-hydra"
+ },
+ {
+  "name": "arbiter",
+  "hp": 150,
+  "ac": 20,
+  "speed": "30",
+  "saves": {
+   "str": 2,
+   "dex": 2,
+   "con": 2,
+   "int": 4,
+   "wis": 4,
+   "cha": 4
+  },
+  "init": 2,
+  "attacks": [
+   "Cone burst 6d6 psychic 15ft cone DC18 wis save",
+   "Extract +13 2d10+4",
+   "Citation +13 1d10+6"
+  ],
+  "cr": 12,
+  "xp": 8400,
+  "special": "Multi Atk",
+  "url": ""
+ },
+ {
+  "name": "owlbear",
+  "hp": 59,
+  "ac": 13,
+  "speed": "40",
+  "saves": {
+   "str": 5,
+   "dex": 1,
+   "con": 3,
+   "int": -4,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 1,
+  "attacks": [
+   "Beak +7 1d10+5",
+   "Claws +7 2d8+5"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Multi Atk Beak + Claw. Keen sign and smell",
+  "url": "https://www.dndbeyond.com/monsters/16975-owlbear"
+ },
+ {
+  "name": "adult-silver-dragon",
+  "hp": 243,
+  "ac": 19,
+  "speed": "40/80fly",
+  "saves": {
+   "str": 8,
+   "dex": 5,
+   "con": 12,
+   "int": 3,
+   "wis": 6,
+   "cha": 10
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +13 10ft 2d10+8",
+   "Claw +13 2d6+8",
+   "Tail +13 15ft 2d8+8"
+  ],
+  "cr": 16,
+  "xp": 15000,
+  "special": "Cold Breath, Paraly Breath, Frightful Presensce, Legendary Actions Cold Immune",
+  "url": "https://www.dndbeyond.com/monsters/16772-adult-silver-dragon"
+ },
+ {
+  "name": "silver-dragon-wyrmling",
+  "hp": 45,
+  "ac": 17,
+  "speed": "30/60Fly",
+  "saves": {
+   "str": 4,
+   "dex": 2,
+   "con": 5,
+   "int": 1,
+   "wis": 2,
+   "cha": 4
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +6 1d10+4",
+   "Cold Breath (5-6) 15ft con DC13 4d8 cold",
+   "Paralyze Breath 15ft cone DC13 Con Paralyze 1 min"
+  ],
+  "cr": 2,
+  "xp": 450,
+  "special": "Cold Immune",
+  "url": "https://www.dndbeyond.com/monsters/17014-silver-dragon-wyrmling"
+ },
+ {
+  "name": "cave-fisher",
+  "hp": 59,
+  "ac": 16,
+  "speed": "20",
+  "saves": {
+   "str": 3,
+   "dex": 1,
+   "con": 2,
+   "int": 0,
+   "wis": -4,
+   "cha": -4
+  },
+  "init": 1,
+  "attacks": [
+   "Claw +5 2d6+3",
+   "Filament 60ft DC13 Grapple. DisVg to escape",
+   "2 Claw Or Filament + Claw"
+  ],
+  "cr": 3,
+  "xp": 700,
+  "special": "Flammable Blood (Fire Vuln at half health)",
+  "url": "https://www.dndwiki.io/monsters/cave-fisher"
+ },
+ {
+  "name": "dao",
+  "hp": 187,
+  "ac": 18,
+  "speed": "30/30/30",
+  "saves": {
+   "str": 6,
+   "dex": 1,
+   "con": 7,
+   "int": 5,
+   "wis": 5,
+   "cha": 6
+  },
+  "init": 1,
+  "attacks": [
+   "Fist +10 2d8+6",
+   "Maul +10 4d6+6 DC18 STR prone"
+  ],
+  "cr": 11,
+  "xp": 7200,
+  "special": "Earth Glide Phantasmal killer 1/day",
+  "url": "https://www.aidedd.org/dnd/monstres.php?vo=dao"
+ },
+ {
+  "name": "dimensional-devourer",
+  "hp": 168,
+  "ac": 15,
+  "speed": "40",
+  "saves": {
+   "str": 6,
+   "dex": 0,
+   "con": 9,
+   "int": -2,
+   "wis": 1,
+   "cha": -2
+  },
+  "init": 0,
+  "attacks": [
+   "Bite +10 (10ft) 3d10+6 Dc17 +5hp Str grapple",
+   "Swallow 12d6 acid/turn",
+   "Dimensional Rip DC17 wis banish 1 turn"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "Dimensional step Bns action",
+  "url": "https://docs.google.com/spreadsheets/d/1bWx1mwmFyltaFsT_ziqG8doPAQ23j-ihwvU4kwEicq8/edit#gid=328403889"
+ },
+ {
+  "name": "drifloon",
+  "hp": 27,
+  "ac": 13,
+  "speed": "30/60fly",
+  "saves": {
+   "str": -2,
+   "dex": 4,
+   "con": 1,
+   "int": -2,
+   "wis": 0,
+   "cha": 2
+  },
+  "init": 2,
+  "attacks": [
+   "Constrict +2 1d8+2 DC10 grpl",
+   "Gust +4 60ft 2d6+2 force",
+   "Ominous Wind (5-6) DC12 Dex 4d6 half save"
+  ],
+  "cr": 0.5,
+  "xp": 100,
+  "special": "",
+  "url": "https://docs.google.com/document/d/1S7iQZqrBamo6DM7MXAhczzsQdbpC-F2IbmohJtky34w/edit"
+ },
+ {
+  "name": "night-hag",
+  "hp": 82,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": 4,
+   "dex": 3,
+   "con": 3,
+   "int": 3,
+   "wis": 5,
+   "cha": 6
+  },
+  "init": 3,
+  "attacks": [
+   "Claw +8 2d6+2d6 necr",
+   "MagMis, HoldPrs, Mir Img, Cntr Spll, LgtBlt",
+   "Pht Kl, Plymp (4/3/3/3/2)"
+  ],
+  "cr": 7,
+  "xp": 2900,
+  "special": "imn ncro, psn, resis phys nm cold fire",
+  "url": "https://chat.openai.com/c/6fdf4879-1839-46d1-9cf2-f14362508fe6"
+ },
+ {
+  "name": "elder-air-elemental",
+  "hp": 189,
+  "ac": 17,
+  "speed": "90fly",
+  "saves": {
+   "str": 5,
+   "dex": 7,
+   "con": 4,
+   "int": 0,
+   "wis": 2,
+   "cha": -2
+  },
+  "init": 7,
+  "attacks": [
+   "Slam +12 3d10+7 DC17 str prone"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "imn lghtng psn thnd, resis phys",
+  "url": "https://www.5esrd.com/database/creature/elemental-air-elder/"
+ },
+ {
+  "name": "astral-serpent",
+  "hp": 190,
+  "ac": 17,
+  "speed": "50fly",
+  "saves": {
+   "str": 5,
+   "dex": 8,
+   "con": 9,
+   "int": 1,
+   "wis": 7,
+   "cha": 8
+  },
+  "init": 3,
+  "attacks": [
+   "Bite +10 2d10+5 DC18con 12d6 radiant",
+   "Tail Swipe+10 15ft 2d6+5 +5 DC18 str prn",
+   "Astral Shift Bns"
+  ],
+  "cr": 14,
+  "xp": 11500,
+  "special": "",
+  "url": "https://chat.openai.com/c/dc40c113-493a-4205-bfca-dfa977f75bb0"
+ },
+ {
+  "name": "astral-specter",
+  "hp": 136,
+  "ac": 15,
+  "speed": "60fly",
+  "saves": {
+   "str": 0,
+   "dex": 8,
+   "con": 4,
+   "int": 2,
+   "wis": 6,
+   "cha": 7
+  },
+  "init": 4,
+  "attacks": [
+   "Life Drain +7 4d8+3 nec DC15 con max rdc",
+   "Astral Shift Bns"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "",
+  "url": "https://chat.openai.com/c/dc40c113-493a-4205-bfca-dfa977f75bb0"
+ },
+ {
+  "name": "astral-watcher",
+  "hp": 168,
+  "ac": 18,
+  "speed": "60fly",
+  "saves": {
+   "str": 5,
+   "dex": 1,
+   "con": 9,
+   "int": -4,
+   "wis": 0,
+   "cha": -5
+  },
+  "init": 1,
+  "attacks": [
+   "Slam +9 10ft 2d8+5 bldg",
+   "Astral Shift Bns"
+  ],
+  "cr": 9,
+  "xp": 5000,
+  "special": "",
+  "url": "https://chat.openai.com/c/dc40c113-493a-4205-bfca-dfa977f75bb0"
+ },
+ {
+  "name": "kur'ath",
+  "hp": 250,
+  "ac": 19,
+  "speed": "40/60fly",
+  "saves": {
+   "str": 12,
+   "dex": 10,
+   "con": 12,
+   "int": 3,
+   "wis": 4,
+   "cha": 7
+  },
+  "init": 4,
+  "attacks": [
+   "Bite +12 2d8+6 pierce 4d6 fire (+2claw)",
+   "Claw +12 2d6+6 slash",
+   "Hellfire Burst 30ft radius DC21 dex 16d6 fire"
+  ],
+  "cr": 15,
+  "xp": 13000,
+  "special": "Fireball, Wal Fire, (((Chain Light, Teleport))), (Meteor Swarm, Time stop)",
+  "url": "https://chat.openai.com/c/a46af9ec-a338-4a87-bd73-793227e8b06a"
+ },
+ {
+  "name": "zythara",
+  "hp": 120,
+  "ac": 18,
+  "speed": "30/60",
+  "saves": {
+   "str": 3,
+   "dex": 8,
+   "con": 7,
+   "int": 2,
+   "wis": 7,
+   "cha": 9
+  },
+  "init": 4,
+  "attacks": [
+   "Bite +7 2d8+3 pierce 2d6 fire (+2claw)",
+   "Claw +7 2d6+3 slash",
+   "Fire Aura 5ft 3d6"
+  ],
+  "cr": 10,
+  "xp": 5900,
+  "special": "Produce Flame, Flame Strike, (((Fireball Wall of Fire))) (Fire Storm, Teleport)",
+  "url": "https://chat.openai.com/c/a46af9ec-a338-4a87-bd73-793227e8b06a"
+ },
+ {
+  "name": "morphic-shadowweaver",
+  "hp": 189,
+  "ac": 16,
+  "speed": "40",
+  "saves": {
+   "str": 4,
+   "dex": 5,
+   "con": 5,
+   "int": 3,
+   "wis": 2,
+   "cha": 4
+  },
+  "init": 5,
+  "attacks": [
+   "Tendril +9 10ft 2d10+4 psychin DC 16 wis fri",
+   "Bite +9 3d10+4 pierce",
+   "Shadowmeld bns action go invis"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "quantum-miragefiend",
+  "hp": 195,
+  "ac": 17,
+  "speed": "60fly",
+  "saves": {
+   "str": 4,
+   "dex": 5,
+   "con": 5,
+   "int": 3,
+   "wis": 2,
+   "cha": 4
+  },
+  "init": 5,
+  "attacks": [
+   "2 Claw +9 2d8+5 slash",
+   "Tail swipe 15ft +9 2d10+5 Blg DC16 STR prn",
+   "Create 4 duplicates randomly 1 is real each round"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "formless-devourer",
+  "hp": 212,
+  "ac": 15,
+  "speed": "30",
+  "saves": {
+   "str": 6,
+   "dex": -1,
+   "con": 7,
+   "int": -4,
+   "wis": 0,
+   "cha": -5
+  },
+  "init": -1,
+  "attacks": [
+   "2 Slam +10 3d10+6 Bldg DC16 grapple",
+   "Assimilation Drain +10 3d8+6 nec + tmp hp",
+   "Regen Adaptation 20 hp temp resis to previous turn damage types"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "eclipse-enchantress",
+  "hp": 180,
+  "ac": 18,
+  "speed": "60fly",
+  "saves": {
+   "str": 1,
+   "dex": 4,
+   "con": 3,
+   "int": 5,
+   "wis": 4,
+   "cha": 5
+  },
+  "init": 4,
+  "attacks": [
+   "Staff +8 2d8+4 DC17 Con stn",
+   "Radiant Burst +11 6ft 6d8 radi DC 17 Dex Blind"
+  ],
+  "cr": 13,
+  "xp": 10000,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Iron Fist\"",
+  "hp": 60,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "2",
+   "d8",
+   "DC16 Prone"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Wildcat\"",
+  "hp": 40,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "3",
+   "d6",
+   "DC16 Feint"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Silent Shadow\"",
+  "hp": 60,
+  "ac": 18,
+  "speed": "35",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "4",
+   "d6",
+   "DC12Con stun"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Bulldozer\"",
+  "hp": 50,
+  "ac": 17,
+  "speed": "25",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "2",
+   "d8",
+   "DC16 Shove"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Swift Blade\"",
+  "hp": 50,
+  "ac": 18,
+  "speed": "40",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "5",
+   "d4",
+   "Mobility"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"The Professor\"",
+  "hp": 50,
+  "ac": 18,
+  "speed": "30",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "4",
+   "d4",
+   "DC12Con stun"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Mad Dog\"",
+  "hp": 60,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "1",
+   "d12",
+   "DC15 Stun"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ },
+ {
+  "name": "\"Phoenix\"",
+  "hp": 60,
+  "ac": 17,
+  "speed": "30",
+  "saves": {
+   "str": null,
+   "dex": null,
+   "con": null,
+   "int": null,
+   "wis": null,
+   "cha": null
+  },
+  "init": null,
+  "attacks": [
+   "2",
+   "d8",
+   "DC16 Prone"
+  ],
+  "cr": null,
+  "xp": null,
+  "special": "",
+  "url": ""
+ }
+]

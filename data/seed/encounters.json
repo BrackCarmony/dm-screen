@@ -1,0 +1,499 @@
+[
+ {
+  "id": "room-0",
+  "group": "Dungeon Rooms",
+  "name": "Room 1",
+  "note": "+1 Hob and Owlbear round 3",
+  "monsters": [
+   "astral-serpent",
+   "astral-specter",
+   "astral-watcher"
+  ]
+ },
+ {
+  "id": "room-1",
+  "group": "Dungeon Rooms",
+  "name": "Room 2",
+  "note": "",
+  "monsters": [
+   "adult-silver-dragon",
+   "silver-dragon-wyrmling",
+   "silver-dragon-wyrmling",
+   "silver-dragon-wyrmling"
+  ]
+ },
+ {
+  "id": "room-2",
+  "group": "Dungeon Rooms",
+  "name": "Room 4",
+  "note": "3 Hob and Fisher round 3",
+  "monsters": [
+   "hobgoblin",
+   "hobgoblin",
+   "hobgoblin",
+   "hobgoblin",
+   "hobgoblin",
+   "cave-fisher",
+   "cave-fisher",
+   "cave-fisher",
+   "cave-fisher",
+   "cave-fisher"
+  ]
+ },
+ {
+  "id": "room-3",
+  "group": "Dungeon Rooms",
+  "name": "Room 8",
+  "note": "2 Orc round 3",
+  "monsters": [
+   "orc-war-chief",
+   "orc",
+   "orc",
+   "orc",
+   "orc",
+   "orc",
+   "orc",
+   "orc",
+   "orc",
+   "orc"
+  ]
+ },
+ {
+  "id": "room-4",
+  "group": "Dungeon Rooms",
+  "name": "Room 9",
+  "note": "",
+  "monsters": [
+   "dao",
+   "earth-elemental",
+   "earth-elemental",
+   "earth-elemental"
+  ]
+ },
+ {
+  "id": "room-5",
+  "group": "Dungeon Rooms",
+  "name": "Room 10",
+  "note": "2 wight round 3",
+  "monsters": [
+   "wight",
+   "wight",
+   "wight",
+   "wight",
+   "wight",
+   "wight",
+   "wight",
+   "wight",
+   "wight",
+   "wight"
+  ]
+ },
+ {
+  "id": "room-6",
+  "group": "Dungeon Rooms",
+  "name": "Room 14",
+  "note": "",
+  "monsters": [
+   "night-hag",
+   "night-hag",
+   "night-hag",
+   "night-hag",
+   "elder-air-elemental"
+  ]
+ },
+ {
+  "id": "table-7",
+  "group": "Combat Tables",
+  "name": "Table A · 1",
+  "note": "",
+  "monsters": [
+   "fire-snake",
+   "fire-snake",
+   "goblin",
+   "goblin"
+  ]
+ },
+ {
+  "id": "table-8",
+  "group": "Combat Tables",
+  "name": "Table A · 2",
+  "note": "",
+  "monsters": [
+   "dire-wolf",
+   "kobold-inventor",
+   "boar",
+   "boar",
+   "boar"
+  ]
+ },
+ {
+  "id": "table-9",
+  "group": "Combat Tables",
+  "name": "Table A · 3",
+  "note": "",
+  "monsters": [
+   "giant-wasp",
+   "small-earth-elemental",
+   "small-earth-elemental",
+   "ambush-drake"
+  ]
+ },
+ {
+  "id": "table-10",
+  "group": "Combat Tables",
+  "name": "Table A · 4",
+  "note": "",
+  "monsters": [
+   "chupacabra"
+  ]
+ },
+ {
+  "id": "table-11",
+  "group": "Combat Tables",
+  "name": "Table A · 5",
+  "note": "",
+  "monsters": [
+   "half-ogre",
+   "tribal-warrior",
+   "tribal-warrior",
+   "tribal-warrior",
+   "vine-blight",
+   "vine-blight",
+   "vine-blight",
+   "vine-blight",
+   "vine-blight"
+  ]
+ },
+ {
+  "id": "table-12",
+  "group": "Combat Tables",
+  "name": "Table A · 6",
+  "note": "",
+  "monsters": [
+   "cobra-flower",
+   "harpy",
+   "harpy",
+   "giant-bat",
+   "giant-bat"
+  ]
+ },
+ {
+  "id": "table-13",
+  "group": "Combat Tables",
+  "name": "Table A · 7",
+  "note": "",
+  "monsters": [
+   "lizardfolk-shaman",
+   "orc",
+   "orc"
+  ]
+ },
+ {
+  "id": "table-14",
+  "group": "Combat Tables",
+  "name": "Table A · 8",
+  "note": "",
+  "monsters": [
+   "bandit-captain",
+   "bandit-captain",
+   "giant-rat",
+   "giant-rat",
+   "giant-rat"
+  ]
+ },
+ {
+  "id": "table-15",
+  "group": "Combat Tables",
+  "name": "Table A · 9",
+  "note": "",
+  "monsters": [
+   "gallows tree zombie",
+   "gallows tree zombie",
+   "phase-spider",
+   "phase-spider"
+  ]
+ },
+ {
+  "id": "table-16",
+  "group": "Combat Tables",
+  "name": "Table A · 10",
+  "note": "",
+  "monsters": [
+   "mind-flayer"
+  ]
+ },
+ {
+  "id": "table-17",
+  "group": "Combat Tables",
+  "name": "Table A · 11",
+  "note": "",
+  "monsters": [
+   "mind-flayer",
+   "kraken-priest",
+   "red-wizard"
+  ]
+ },
+ {
+  "id": "table-18",
+  "group": "Combat Tables",
+  "name": "Table A · extra",
+  "note": "",
+  "monsters": [
+   "Awet",
+   "Bubana"
+  ]
+ },
+ {
+  "id": "table-19",
+  "group": "Combat Tables",
+  "name": "Table A · extra",
+  "note": "",
+  "monsters": [
+   "Andreska",
+   "fire-mephit",
+   "fire-mephit",
+   "smoke-mephit",
+   "smoke-mephit"
+  ]
+ },
+ {
+  "id": "table-20",
+  "group": "Combat Tables",
+  "name": "Table A · extra",
+  "note": "",
+  "monsters": [
+   "Baerish",
+   "bandit",
+   "bandit",
+   "bandit",
+   "bandit"
+  ]
+ },
+ {
+  "id": "table-21",
+  "group": "Combat Tables",
+  "name": "Table A · extra",
+  "note": "",
+  "monsters": [
+   "Menkor",
+   "ghast",
+   "ghast",
+   "minotaur-skeleton"
+  ]
+ },
+ {
+  "id": "table-22",
+  "group": "Combat Tables",
+  "name": "Table A · extra",
+  "note": "",
+  "monsters": [
+   "gibbering-mouther",
+   "gibbering-mouther",
+   "gibbering-mouther"
+  ]
+ },
+ {
+  "id": "table-23",
+  "group": "Combat Tables",
+  "name": "Table B · 1",
+  "note": "",
+  "monsters": [
+   "giant-ape",
+   "giant-ape",
+   "ape",
+   "ape",
+   "ape",
+   "ape",
+   "druid",
+   "druid",
+   "druid"
+  ]
+ },
+ {
+  "id": "table-24",
+  "group": "Combat Tables",
+  "name": "Table B · 2",
+  "note": "",
+  "monsters": [
+   "troll",
+   "troll",
+   "troll",
+   "ogre",
+   "ogre",
+   "half-ogre",
+   "half-ogre",
+   "half-ogre",
+   "half-ogre"
+  ]
+ },
+ {
+  "id": "table-25",
+  "group": "Combat Tables",
+  "name": "Table B · 3",
+  "note": "",
+  "monsters": [
+   "yeti",
+   "yeti",
+   "yeti",
+   "yeti",
+   "yeti"
+  ]
+ },
+ {
+  "id": "table-26",
+  "group": "Combat Tables",
+  "name": "Table B · 4",
+  "note": "",
+  "monsters": [
+   "mind-flayer",
+   "carnium-wolf",
+   "carnium-wolf"
+  ]
+ },
+ {
+  "id": "table-27",
+  "group": "Combat Tables",
+  "name": "Table B · extra",
+  "note": "",
+  "monsters": [
+   "fire-elemental",
+   "fire-mephit",
+   "fire-mephit",
+   "fire-mephit",
+   "fire-mephit"
+  ]
+ },
+ {
+  "id": "table-28",
+  "group": "Combat Tables",
+  "name": "Table C · 1",
+  "note": "",
+  "monsters": [
+   "tyrannosaurus-rex",
+   "tyrannosaurus-rex",
+   "tyrannosaurus-rex",
+   "tyrannosaurus-rex"
+  ]
+ },
+ {
+  "id": "table-29",
+  "group": "Combat Tables",
+  "name": "Table C · 2",
+  "note": "",
+  "monsters": [
+   "velociraptor",
+   "velociraptor",
+   "velociraptor",
+   "velociraptor"
+  ]
+ },
+ {
+  "id": "table-30",
+  "group": "Combat Tables",
+  "name": "Table C · 3",
+  "note": "",
+  "monsters": [
+   "giant-constrictor-snake",
+   "giant-constrictor-snake",
+   "giant-constrictor-snake",
+   "giant-constrictor-snake",
+   "giant-toad",
+   "giant-toad",
+   "giant-toad",
+   "giant-toad"
+  ]
+ },
+ {
+  "id": "table-31",
+  "group": "Combat Tables",
+  "name": "Table C · 4",
+  "note": "",
+  "monsters": [
+   "displacer-beast",
+   "displacer-beast",
+   "displacer-beast",
+   "displacer-beast",
+   "displacer-beast",
+   "displacer-beast",
+   "displacer-beast",
+   "displacer-beast"
+  ]
+ },
+ {
+  "id": "table-32",
+  "group": "Combat Tables",
+  "name": "Table C · 5",
+  "note": "",
+  "monsters": [
+   "red-slaad",
+   "green-slaad"
+  ]
+ },
+ {
+  "id": "table-33",
+  "group": "Combat Tables",
+  "name": "Table C · 6",
+  "note": "",
+  "monsters": [
+   "giant-crab",
+   "giant-crab",
+   "giant-crab",
+   "giant-crab"
+  ]
+ },
+ {
+  "id": "table-34",
+  "group": "Combat Tables",
+  "name": "Table C · 7",
+  "note": "",
+  "monsters": [
+   "harpy",
+   "harpy",
+   "harpy",
+   "harpy",
+   "harpy",
+   "harpy",
+   "harpy",
+   "harpy",
+   "harpy"
+  ]
+ },
+ {
+  "id": "table-35",
+  "group": "Combat Tables",
+  "name": "Table C · 8",
+  "note": "",
+  "monsters": [
+   "tyrannosaurus-rex"
+  ]
+ },
+ {
+  "id": "table-36",
+  "group": "Combat Tables",
+  "name": "Table C · 9",
+  "note": "",
+  "monsters": [
+   "gallow tree",
+   "gallows tree zombie",
+   "gallows tree zombie",
+   "gallows tree zombie"
+  ]
+ },
+ {
+  "id": "table-37",
+  "group": "Combat Tables",
+  "name": "Table C · 10",
+  "note": "",
+  "monsters": [
+   "sahuagin-priestess",
+   "sahuagin",
+   "sahuagin",
+   "sahuagin",
+   "sahuagin",
+   "sahuagin",
+   "sahuagin",
+   "sahuagin",
+   "sahuagin"
+  ]
+ }
+]

@@ -1,0 +1,57 @@
+// Game math lifted from the battle sheet formulas.
+export const SAVES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+export const d = (sides) => 1 + Math.floor(Math.random() * sides);
+
+export const fmtMod = (n) => (n === null || n === undefined || n === '' ? '–' : n >= 0 ? `+${n}` : `${n}`);
+
+export const fmtCr = (cr) => ({ 0.125: '1/8', 0.25: '1/4', 0.5: '1/2' })[cr] ?? (cr ?? '–');
+
+export function beastMap(bestiary) {
+  return new Map(bestiary.map((m) => [m.name, m]));
+}
+
+export function maxHp(c, beasts) {
+  return c.maxHp ?? beasts.get(c.name)?.hp ?? 0;
+}
+
+export function damageTaken(c) {
+  return (c.damage ?? []).reduce((a, b) => a + (Number(b) || 0), 0);
+}
+
+export function currentHp(c, beasts) {
+  return maxHp(c, beasts) - damageTaken(c);
+}
+
+export function initMod(c, beasts) {
+  return c.kind === 'monster' ? beasts.get(c.name)?.init ?? 0 : c.initMod ?? 0;
+}
+
+export function initiativeOrder(combatants, beasts) {
+  return combatants
+    .filter((c) => c.init !== null && c.init !== undefined && c.init !== '')
+    .slice()
+    .sort((a, b) => b.init - a.init || initMod(b, beasts) - initMod(a, beasts));
+}
+
+// Party Size / XP per Player / Scale / XP Award, as on the sheet.
+export function xpSummary(battle, beasts) {
+  const monsters = battle.combatants.filter((c) => c.kind === 'monster');
+  const total = monsters.reduce((s, c) => s + (beasts.get(c.name)?.xp ?? 0), 0);
+  const party = Math.max(1, Number(battle.partySize) || 1);
+  const perPlayer = total / party;
+  const scale = Math.max(1, monsters.length / party);
+  const remaining = monsters.reduce((s, c) => s + Math.max(0, currentHp(c, beasts)), 0);
+  const dmg = Number(battle.partyDamage) || 0;
+  return {
+    total,
+    perPlayer,
+    scale,
+    award: Math.floor(perPlayer * scale),
+    remaining,
+    rounds: dmg > 0 ? remaining / dmg : null,
+  };
+}
+
+let seq = 0;
+export const uid = (prefix = 'id') => `${prefix}-${Date.now().toString(36)}-${(seq++).toString(36)}`;

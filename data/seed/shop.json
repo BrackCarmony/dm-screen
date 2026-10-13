@@ -1,0 +1,1321 @@
+{
+ "tables": [
+  {
+   "id": "major-items",
+   "name": "Major items",
+   "multiplier": 1,
+   "goldTarget": 15000,
+   "rolls": 3,
+   "items": [
+    {
+     "name": "Vicious Weapon",
+     "price": 350
+    },
+    {
+     "name": "Adamantine Armor",
+     "price": 500
+    },
+    {
+     "name": "Mithral Armor",
+     "price": 800
+    },
+    {
+     "name": "+1 Weapon",
+     "price": 1000
+    },
+    {
+     "name": "Sword of Life-Stealing",
+     "price": 1000
+    },
+    {
+     "name": "Ioun Stone Protection",
+     "price": 1200
+    },
+    {
+     "name": "Wand of the War Mage +1",
+     "price": 1200
+    },
+    {
+     "name": "Bracers of Archery",
+     "price": 1500
+    },
+    {
+     "name": "Circlet of Blasting",
+     "price": 1500
+    },
+    {
+     "name": "Javelin of Lightning",
+     "price": 1500
+    },
+    {
+     "name": "Prayer Bead - Smiting",
+     "price": 1500
+    },
+    {
+     "name": "Wind Fan",
+     "price": 1500
+    },
+    {
+     "name": "Sword of Sharpness",
+     "price": 1700
+    },
+    {
+     "name": "Staff of the Adder",
+     "price": 1800
+    },
+    {
+     "name": "Dancing Sword",
+     "price": 2000
+    },
+    {
+     "name": "Glamoured Studded Leather",
+     "price": 2000
+    },
+    {
+     "name": "Pipes of the Sewers",
+     "price": 2000
+    },
+    {
+     "name": "Prayer Bead - Bless",
+     "price": 2000
+    },
+    {
+     "name": "Saddle of the Cavalier",
+     "price": 2000
+    },
+    {
+     "name": "Sword of Wounding",
+     "price": 2000
+    },
+    {
+     "name": "Frost Brand",
+     "price": 2200
+    },
+    {
+     "name": "Dagger of Venom",
+     "price": 2500
+    },
+    {
+     "name": "Gloves of Missile Snaring",
+     "price": 3000
+    },
+    {
+     "name": "Ioun Stone Agility",
+     "price": 3000
+    },
+    {
+     "name": "Ioun Stone Fortitude",
+     "price": 3000
+    },
+    {
+     "name": "Ioun Stone Insight",
+     "price": 3000
+    },
+    {
+     "name": "Ioun Stone Intellect",
+     "price": 3000
+    },
+    {
+     "name": "Ioun Stone Leadership",
+     "price": 3000
+    },
+    {
+     "name": "Ioun Stone Strength",
+     "price": 3000
+    },
+    {
+     "name": "Staff of Withering",
+     "price": 3000
+    },
+    {
+     "name": "+1 Armor",
+     "price": 3000
+    },
+    {
+     "name": "+1 Shield",
+     "price": 3000
+    },
+    {
+     "name": "Cloak of Protection",
+     "price": 3500
+    },
+    {
+     "name": "Oathbow",
+     "price": 3500
+    },
+    {
+     "name": "Ring of Protection",
+     "price": 3500
+    },
+    {
+     "name": "+2 Weapon",
+     "price": 4000
+    },
+    {
+     "name": "Boots of Speed",
+     "price": 4000
+    },
+    {
+     "name": "Dragon Scale Mail",
+     "price": 4000
+    },
+    {
+     "name": "Elven Chain",
+     "price": 4000
+    },
+    {
+     "name": "Ioun Stone Regeneration",
+     "price": 4000
+    },
+    {
+     "name": "Iron Bands of Bilarro",
+     "price": 4000
+    },
+    {
+     "name": "Prayer Bead - Curing",
+     "price": 4000
+    },
+    {
+     "name": "Rope of Entanglement",
+     "price": 4000
+    },
+    {
+     "name": "Wand of Enemy Detection",
+     "price": 4000
+    },
+    {
+     "name": "Sending Stones",
+     "price": 4000
+    },
+    {
+     "name": "Luckstone",
+     "price": 4200
+    },
+    {
+     "name": "Wand of the War Mage +2",
+     "price": 4800
+    },
+    {
+     "name": "Flame Tongue",
+     "price": 5000
+    },
+    {
+     "name": "Periapt of Wound Closure",
+     "price": 5000
+    },
+    {
+     "name": "Ring of Evasion",
+     "price": 5000
+    },
+    {
+     "name": "Ring of the Ram",
+     "price": 5000
+    },
+    {
+     "name": "Tentacle Rod",
+     "price": 5000
+    },
+    {
+     "name": "Animated Shield",
+     "price": 6000
+    },
+    {
+     "name": "Armor of Resistance",
+     "price": 6000
+    },
+    {
+     "name": "Arrow-Catching Shield",
+     "price": 6000
+    },
+    {
+     "name": "Belt of Dwarvenkind",
+     "price": 6000
+    },
+    {
+     "name": "Bracers of Defense",
+     "price": 6000
+    },
+    {
+     "name": "Ioun Stone Reserve",
+     "price": 6000
+    },
+    {
+     "name": "Pearl of Power",
+     "price": 6000
+    },
+    {
+     "name": "Pipes of Haunting",
+     "price": 6000
+    },
+    {
+     "name": "Ring of Resistance",
+     "price": 6000
+    },
+    {
+     "name": "Robe of Scintillating Colors",
+     "price": 6000
+    },
+    {
+     "name": "Scimitar of Speed",
+     "price": 6000
+    },
+    {
+     "name": "Shield of Missile Attraction",
+     "price": 6000
+    },
+    {
+     "name": "Giant Slayer",
+     "price": 7000
+    },
+    {
+     "name": "Mace of Smiting",
+     "price": 7000
+    },
+    {
+     "name": "Brooch of Shielding",
+     "price": 7500
+    },
+    {
+     "name": "Amulet of Health",
+     "price": 8000
+    },
+    {
+     "name": "Dragon Slayer",
+     "price": 8000
+    },
+    {
+     "name": "Gauntlets of Ogre Power",
+     "price": 8000
+    },
+    {
+     "name": "Headband of Intellect",
+     "price": 8000
+    },
+    {
+     "name": "Mace of Disruption",
+     "price": 8000
+    },
+    {
+     "name": "Mace of Terror",
+     "price": 8000
+    },
+    {
+     "name": "Nine Lives Stealer(Fully Charged)",
+     "price": 8000
+    },
+    {
+     "name": "Wand of Magic Missiles",
+     "price": 8000
+    },
+    {
+     "name": "Wand of Web",
+     "price": 8000
+    },
+    {
+     "name": "Staff of Thunder and Lightning",
+     "price": 10000
+    },
+    {
+     "name": "Wand of Binding",
+     "price": 10000
+    },
+    {
+     "name": "Wand of Fear",
+     "price": 10000
+    },
+    {
+     "name": "Wings of Flying",
+     "price": 10000
+    },
+    {
+     "name": "Ioun Stone Awareness",
+     "price": 12000
+    },
+    {
+     "name": "Rod of the Pact Keeper +1",
+     "price": 12000
+    },
+    {
+     "name": "Staff of Charming",
+     "price": 12000
+    },
+    {
+     "name": "Sunblade",
+     "price": 12000
+    },
+    {
+     "name": "Alchemy Jug",
+     "price": 12000
+    },
+    {
+     "name": "+2 Armor",
+     "price": 12000
+    },
+    {
+     "name": "+2 Shield",
+     "price": 12000
+    },
+    {
+     "name": "Ebony Fly",
+     "price": 12000
+    },
+    {
+     "name": "Staff of Healing",
+     "price": 13000
+    },
+    {
+     "name": "Ring of Shooting Stars",
+     "price": 14000
+    },
+    {
+     "name": "Ioun Stone Mastery",
+     "price": 15000
+    },
+    {
+     "name": "+3 Weapon",
+     "price": 16000
+    },
+    {
+     "name": "Hammer of Thunderbolts",
+     "price": 16000
+    },
+    {
+     "name": "Rod of the Pact Keeper +2",
+     "price": 16000
+    },
+    {
+     "name": "Staff of Fire",
+     "price": 16000
+    },
+    {
+     "name": "Staff of Swarming Insects",
+     "price": 16000
+    },
+    {
+     "name": "Wand of Paralysis",
+     "price": 16000
+    },
+    {
+     "name": "Bronze Griffon",
+     "price": 16000
+    },
+    {
+     "name": "Broom of Flying",
+     "price": 16000
+    },
+    {
+     "name": "Serpentine Owl",
+     "price": 16000
+    },
+    {
+     "name": "Winged Boots",
+     "price": 16000
+    },
+    {
+     "name": "Ring of Fire Elemental Command",
+     "price": 17000
+    },
+    {
+     "name": "Dwarven Thrower",
+     "price": 18000
+    },
+    {
+     "name": "Dwarven Plate",
+     "price": 18000
+    },
+    {
+     "name": "Potion of Longevity",
+     "price": 18000
+    },
+    {
+     "name": "Wand of the War Mage +3",
+     "price": 19200
+    },
+    {
+     "name": "Efreeti Chain",
+     "price": 20000
+    },
+    {
+     "name": "Ring of Free Action",
+     "price": 20000
+    },
+    {
+     "name": "Sentinel Shield",
+     "price": 20000
+    },
+    {
+     "name": "Staff of Striking",
+     "price": 21000
+    },
+    {
+     "name": "Ring of Spell Storing",
+     "price": 24000
+    },
+    {
+     "name": "Vorpal Sword",
+     "price": 24000
+    },
+    {
+     "name": "Carpet of Flying",
+     "price": 24000
+    },
+    {
+     "name": "Ring of Regeneration",
+     "price": 24000
+    },
+    {
+     "name": "Ring of Water Elemental Command",
+     "price": 25000
+    },
+    {
+     "name": "Rod of Alertness",
+     "price": 25000
+    },
+    {
+     "name": "Staff of Frost",
+     "price": 26000
+    },
+    {
+     "name": "Instrument of the Bards - Fochulan Bandlore",
+     "price": 26500
+    },
+    {
+     "name": "Instrument of the Bards - Mac-Fuirmidh Cittern",
+     "price": 27000
+    },
+    {
+     "name": "Rod of Lordly Might",
+     "price": 28000
+    },
+    {
+     "name": "Rod of the Pact Keeper +2",
+     "price": 28000
+    },
+    {
+     "name": "Instrument of the Bards - Doss Lute",
+     "price": 28500
+    },
+    {
+     "name": "Instrument of the Bards - Canaith Mandolin",
+     "price": 30000
+    },
+    {
+     "name": "Mantle of Spell Resistance",
+     "price": 30000
+    },
+    {
+     "name": "Ring of Spell Turning",
+     "price": 30000
+    },
+    {
+     "name": "Sphere of Annihilation",
+     "price": 30000
+    },
+    {
+     "name": "Prayer Bead - Favor",
+     "price": 32000
+    },
+    {
+     "name": "Wand of Fireballs",
+     "price": 32000
+    },
+    {
+     "name": "Wand of Lightning Bolts",
+     "price": 32000
+    },
+    {
+     "name": "Wand of Polymorph",
+     "price": 32000
+    },
+    {
+     "name": "Instrument of the Bards - Cli Lyre",
+     "price": 35000
+    },
+    {
+     "name": "Scarab of Protection",
+     "price": 36000
+    },
+    {
+     "name": "Sword of Answering",
+     "price": 36000
+    },
+    {
+     "name": "Armor of Invulnerability",
+     "price": 36000
+    },
+    {
+     "name": "Talisman of the Sphere",
+     "price": 40000
+    },
+    {
+     "name": "Staff of the Woodlands",
+     "price": 44000
+    },
+    {
+     "name": "+3 Armor",
+     "price": 48000
+    },
+    {
+     "name": "+3 Shield",
+     "price": 48000
+    },
+    {
+     "name": "Defender",
+     "price": 48000
+    },
+    {
+     "name": "Spellguard Shield",
+     "price": 50000
+    },
+    {
+     "name": "Cloak of Displacement",
+     "price": 60000
+    },
+    {
+     "name": "Robe of Stars",
+     "price": 60000
+    },
+    {
+     "name": "Weapon of Warning",
+     "price": 60000
+    },
+    {
+     "name": "Ring of Earth Elemental Command",
+     "price": 62000
+    },
+    {
+     "name": "Robe of the Archmagi",
+     "price": 68000
+    },
+    {
+     "name": "Ring of Air Elemental Command",
+     "price": 70000
+    },
+    {
+     "name": "Cubic Gate",
+     "price": 80000
+    },
+    {
+     "name": "Prayer Bead - Wind Walking",
+     "price": 96000
+    },
+    {
+     "name": "Crystal Ball",
+     "price": 100000
+    },
+    {
+     "name": "Instrument of the Bards - Anstruth Harp",
+     "price": 109000
+    },
+    {
+     "name": "Instrument of the Bards - Ollamh Harp",
+     "price": 125000
+    },
+    {
+     "name": "Prayer Bead - Summons",
+     "price": 128000
+    },
+    {
+     "name": "Helm of Teleportation",
+     "price": 128000
+    },
+    {
+     "name": "Daern's Instant Fortress",
+     "price": 150000
+    },
+    {
+     "name": "Ring of Telekinesis",
+     "price": 160000
+    },
+    {
+     "name": "Cloak of Invisibility",
+     "price": 160000
+    },
+    {
+     "name": "Holy Avenger",
+     "price": 165000
+    },
+    {
+     "name": "Rod of Security",
+     "price": 180000
+    },
+    {
+     "name": "Staff of Power",
+     "price": 191000
+    },
+    {
+     "name": "Obsidian Steed",
+     "price": 256000
+    },
+    {
+     "name": "Decanter of Endless Water",
+     "price": 270000
+    },
+    {
+     "name": "Amulet of the Planes",
+     "price": 320000
+    }
+   ]
+  },
+  {
+   "id": "minor-items",
+   "name": "Minor items",
+   "multiplier": 2,
+   "goldTarget": 500,
+   "rolls": 3,
+   "items": [
+    {
+     "name": "Spell Scroll Level 0",
+     "price": 10
+    },
+    {
+     "name": "Ammunition +1(each)",
+     "price": 25
+    },
+    {
+     "name": "Potion of Healing",
+     "price": 50
+    },
+    {
+     "name": "Quaal's Feather Token Anchor",
+     "price": 50
+    },
+    {
+     "name": "Spell Scroll Level 1",
+     "price": 60
+    },
+    {
+     "name": "Philter of Love",
+     "price": 90
+    },
+    {
+     "name": "Ammunition +2(ea)",
+     "price": 100
+    },
+    {
+     "name": "Potion of Poison",
+     "price": 100
+    },
+    {
+     "name": "Dust of Dryness(1 pellet)",
+     "price": 120
+    },
+    {
+     "name": "Elixir of Health",
+     "price": 120
+    },
+    {
+     "name": "Keoghtom's Ointment(Per dose)",
+     "price": 120
+    },
+    {
+     "name": "Spell Scroll Level 2",
+     "price": 120
+    },
+    {
+     "name": "Potion of Fire Breath",
+     "price": 150
+    },
+    {
+     "name": "Potion of Greater Healing",
+     "price": 150
+    },
+    {
+     "name": "Potion of Climbing",
+     "price": 180
+    },
+    {
+     "name": "Potion of Heroism",
+     "price": 180
+    },
+    {
+     "name": "Potion of Invisibility",
+     "price": 180
+    },
+    {
+     "name": "Potion of Mind Reading",
+     "price": 180
+    },
+    {
+     "name": "Potion of Water Breathing",
+     "price": 180
+    },
+    {
+     "name": "Scroll of Protection",
+     "price": 180
+    },
+    {
+     "name": "Nolzur's Marvelous Pigments",
+     "price": 200
+    },
+    {
+     "name": "Potion of Animal Friendship",
+     "price": 200
+    },
+    {
+     "name": "Spell Scroll Level 3",
+     "price": 200
+    },
+    {
+     "name": "Quaal's Feather Token Fan",
+     "price": 250
+    },
+    {
+     "name": "Quaal's Feather Token Whip",
+     "price": 250
+    },
+    {
+     "name": "Potion of Diminution",
+     "price": 270
+    },
+    {
+     "name": "Potion of Growth",
+     "price": 270
+    },
+    {
+     "name": "Dust of Disappearance",
+     "price": 300
+    },
+    {
+     "name": "Necklace of Fireballs(One bead)",
+     "price": 300
+    },
+    {
+     "name": "Potion of Gaseous Form",
+     "price": 300
+    },
+    {
+     "name": "Potion of Resistance",
+     "price": 300
+    },
+    {
+     "name": "Universal Solvent",
+     "price": 300
+    },
+    {
+     "name": "Spell Scroll Level 4",
+     "price": 320
+    },
+    {
+     "name": "Ammunition +3(ea)",
+     "price": 400
+    },
+    {
+     "name": "Potion of Speed",
+     "price": 400
+    },
+    {
+     "name": "Sovereign Glue",
+     "price": 400
+    },
+    {
+     "name": "Ivory Goat(Travail)",
+     "price": 400
+    },
+    {
+     "name": "Horn of Blasting",
+     "price": 450
+    },
+    {
+     "name": "Potion of Superior Healing",
+     "price": 450
+    },
+    {
+     "name": "Dust of Sneezing and Choking",
+     "price": 480
+    },
+    {
+     "name": "Necklace of Fireballs(Two beads)",
+     "price": 480
+    },
+    {
+     "name": "Oil of Slipperiness",
+     "price": 480
+    },
+    {
+     "name": "Potion of Flying",
+     "price": 500
+    },
+    {
+     "name": "Helm of Comprehend Languages",
+     "price": 500
+    },
+    {
+     "name": "Arrow of Slaying(ea)",
+     "price": 600
+    },
+    {
+     "name": "Golden Lion(ea)",
+     "price": 600
+    },
+    {
+     "name": "Spell Scroll Level 5",
+     "price": 640
+    },
+    {
+     "name": "Driftglobe",
+     "price": 750
+    },
+    {
+     "name": "Trident of Fish Command",
+     "price": 800
+    },
+    {
+     "name": "Bead of Force",
+     "price": 960
+    },
+    {
+     "name": "Elemental Gem",
+     "price": 960
+    },
+    {
+     "name": "Necklace of Fireballs(Three beads)",
+     "price": 960
+    },
+    {
+     "name": "Potion of Clairvoyance",
+     "price": 960
+    },
+    {
+     "name": "Potion of Vitality",
+     "price": 960
+    },
+    {
+     "name": "Cap of Water Breathing",
+     "price": 1000
+    },
+    {
+     "name": "Eversmoking Bottle",
+     "price": 1000
+    },
+    {
+     "name": "Quiver of Ehlonna",
+     "price": 1000
+    },
+    {
+     "name": "Ioun Stone Sustenance",
+     "price": 1000
+    },
+    {
+     "name": "Ring of Warmth",
+     "price": 1000
+    },
+    {
+     "name": "Ivory Goat(Traveling)",
+     "price": 1000
+    },
+    {
+     "name": "Spell Scroll Level 6",
+     "price": 1280
+    },
+    {
+     "name": "Potion of Supreme Healing",
+     "price": 1350
+    },
+    {
+     "name": "Chime of Opening",
+     "price": 1500
+    },
+    {
+     "name": "Goggles of Night",
+     "price": 1500
+    },
+    {
+     "name": "Horseshoes of the Zephyr",
+     "price": 1500
+    },
+    {
+     "name": "Mariner's Armor",
+     "price": 1500
+    },
+    {
+     "name": "Necklace of Adaption",
+     "price": 1500
+    },
+    {
+     "name": "Ring of Water Walking",
+     "price": 1500
+    },
+    {
+     "name": "Wand of Magic Detection",
+     "price": 1500
+    },
+    {
+     "name": "Wand of Secrets",
+     "price": 1500
+    },
+    {
+     "name": "Necklace of Fireballs(Four beads)",
+     "price": 1600
+    },
+    {
+     "name": "Oil of Etherealness",
+     "price": 1920
+    },
+    {
+     "name": "Gloves of Swimming and Climbing",
+     "price": 2000
+    },
+    {
+     "name": "Heward's Handy Haversack",
+     "price": 2000
+    },
+    {
+     "name": "Rope of Climbing",
+     "price": 2000
+    },
+    {
+     "name": "Ring of Feather Falling",
+     "price": 2000
+    },
+    {
+     "name": "Staff of the Python",
+     "price": 2000
+    },
+    {
+     "name": "Ioun Stone Absorption",
+     "price": 2400
+    },
+    {
+     "name": "Boots of Elvenkind",
+     "price": 2500
+    },
+    {
+     "name": "Eyes of Minute Seeing",
+     "price": 2500
+    },
+    {
+     "name": "Eyes of the Eagle",
+     "price": 2500
+    },
+    {
+     "name": "Ring of Jumping",
+     "price": 2500
+    },
+    {
+     "name": "Spell Scroll Level 7",
+     "price": 2560
+    },
+    {
+     "name": "Quaal's Feather Token Bird",
+     "price": 3000
+    },
+    {
+     "name": "Quaal's Feather Token Swan Boat",
+     "price": 3000
+    },
+    {
+     "name": "Dimensional Shackles",
+     "price": 3000
+    },
+    {
+     "name": "Eyes of Charming",
+     "price": 3000
+    },
+    {
+     "name": "Medallion of Thoughts",
+     "price": 3000
+    },
+    {
+     "name": "Ring of Swimming",
+     "price": 3000
+    },
+    {
+     "name": "Onyx Dog",
+     "price": 3000
+    },
+    {
+     "name": "Oil of Sharpness",
+     "price": 3200
+    },
+    {
+     "name": "Necklace of Fireballs(Five beads)",
+     "price": 3840
+    },
+    {
+     "name": "Potion of Invulnerability",
+     "price": 3840
+    },
+    {
+     "name": "Bag of Holding",
+     "price": 4000
+    },
+    {
+     "name": "Boots of Levitation",
+     "price": 4000
+    },
+    {
+     "name": "Ring of Animal Influence",
+     "price": 4000
+    },
+    {
+     "name": "Gem of Brightness",
+     "price": 5000
+    },
+    {
+     "name": "Boots of Striding and Springing",
+     "price": 5000
+    },
+    {
+     "name": "Cloak of Arachnida",
+     "price": 5000
+    },
+    {
+     "name": "Cloak of Elvenkind",
+     "price": 5000
+    },
+    {
+     "name": "Gloves of Thievery",
+     "price": 5000
+    },
+    {
+     "name": "Hat of Disguise",
+     "price": 5000
+    },
+    {
+     "name": "Horseshoes of Speed",
+     "price": 5000
+    },
+    {
+     "name": "Immovable Rod",
+     "price": 5000
+    },
+    {
+     "name": "Lantern of Revealing",
+     "price": 5000
+    },
+    {
+     "name": "Periapt of Health",
+     "price": 5000
+    },
+    {
+     "name": "Periapt of Proof Against Poison",
+     "price": 5000
+    },
+    {
+     "name": "Slippers of Spider Climbing",
+     "price": 5000
+    },
+    {
+     "name": "Silver Raven",
+     "price": 5000
+    },
+    {
+     "name": "Spell Scroll Level 8",
+     "price": 5120
+    },
+    {
+     "name": "Silver Horn of Valhalla",
+     "price": 5600
+    },
+    {
+     "name": "Cloak of the Bat",
+     "price": 6000
+    },
+    {
+     "name": "Cloak of the Manta Ray",
+     "price": 6000
+    },
+    {
+     "name": "Ring of X-Ray Vision",
+     "price": 6000
+    },
+    {
+     "name": "Marble Elephant",
+     "price": 6000
+    },
+    {
+     "name": "Deck of Illusions",
+     "price": 6120
+    },
+    {
+     "name": "Necklace of Fireballs(Six beads)",
+     "price": 7680
+    },
+    {
+     "name": "Cape of the Mountebank",
+     "price": 8000
+    },
+    {
+     "name": "Portable Hole",
+     "price": 8000
+    },
+    {
+     "name": "Bowl of Commanding Water Elementals",
+     "price": 8000
+    },
+    {
+     "name": "Brazier of Commanding Fire Elementals",
+     "price": 8000
+    },
+    {
+     "name": "Censer of Controlling Air Elementals",
+     "price": 8000
+    },
+    {
+     "name": "Stone of Controlling Earth Elementals",
+     "price": 8000
+    },
+    {
+     "name": "Brass Horn of Valhalla",
+     "price": 8400
+    },
+    {
+     "name": "Apparatus of Kwalish",
+     "price": 10000
+    },
+    {
+     "name": "Boots of the Winterlands",
+     "price": 10000
+    },
+    {
+     "name": "Folding Boat",
+     "price": 10000
+    },
+    {
+     "name": "Ring of Invisibility",
+     "price": 10000
+    },
+    {
+     "name": "Spell Scroll Level 9",
+     "price": 10240
+    },
+    {
+     "name": "Bronze Horn of Valhalla",
+     "price": 11200
+    },
+    {
+     "name": "Helm of Telepathy",
+     "price": 12000
+    },
+    {
+     "name": "Iron Horn of Valhalla",
+     "price": 14000
+    },
+    {
+     "name": "Cube of Force",
+     "price": 16000
+    },
+    {
+     "name": "Ring of Mind Shielding",
+     "price": 16000
+    },
+    {
+     "name": "Rod of Rulership",
+     "price": 16000
+    },
+    {
+     "name": "Mirror of Life Trapping",
+     "price": 18000
+    },
+    {
+     "name": "Amulet of Proof Against Detection and Location",
+     "price": 20000
+    },
+    {
+     "name": "Ivory Goat(Terror)",
+     "price": 20000
+    },
+    {
+     "name": "Robe of Eyes",
+     "price": 30000
+    },
+    {
+     "name": "Ioun Stone Greater Absorption",
+     "price": 31000
+    },
+    {
+     "name": "Gem of Seeing",
+     "price": 32000
+    },
+    {
+     "name": "Plate Armor of Etherealness",
+     "price": 48000
+    },
+    {
+     "name": "Rod of Absorption",
+     "price": 50000
+    },
+    {
+     "name": "Talisman of Ultimate Evil",
+     "price": 61440
+    },
+    {
+     "name": "Talisman of Pure Good",
+     "price": 71680
+    }
+   ]
+  }
+ ],
+ "saved": [
+  {
+   "id": "illsay-current-shop",
+   "name": "Illsay",
+   "items": [
+    {
+     "name": "Prayer Bead - (4 beads) Brand Smite, Brand Smite, Bless, Cure",
+     "price": 3000
+    },
+    {
+     "name": "Vicious Weapon (Rapier) +2d6 on crit",
+     "price": 750
+    },
+    {
+     "name": "Dagger of Venom +1 Dagger, 1/day DC15 Con 2d10 + poison 1 min",
+     "price": 5000
+    },
+    {
+     "name": "Outerplane Arrow of Slaying(ea) (3) Abberation DC17 Con 6d10 pierce",
+     "price": 1200
+    },
+    {
+     "name": "Ammunition +1(each) 20 Bolts, 20 Arrows, 20 Darts",
+     "price": 50
+    },
+    {
+     "name": "Universal Solvent (disolves any glue or adhesive)",
+     "price": 600
+    }
+   ]
+  },
+  {
+   "id": "polaris",
+   "name": "Polaris",
+   "items": [
+    {
+     "name": "Staff of the Adder",
+     "price": 3600
+    },
+    {
+     "name": "Dancing Sword",
+     "price": 4000
+    },
+    {
+     "name": "Gloves of Missile Snaring",
+     "price": 6000
+    },
+    {
+     "name": "Ioun Stone Sustenance",
+     "price": 2000
+    },
+    {
+     "name": "Scroll of Protection",
+     "price": 360
+    },
+    {
+     "name": "Potion of Heroism",
+     "price": 360
+    },
+    {
+     "name": "Oathbow",
+     "price": 7000
+    },
+    {
+     "name": "Ammunition +1(each)",
+     "price": 50
+    }
+   ]
+  }
+ ],
+ "note": "500 gold/reset"
+}

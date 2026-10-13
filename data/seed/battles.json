@@ -1,0 +1,451 @@
+[
+ {
+  "id": "army",
+  "name": "army",
+  "save": "wis",
+  "partySize": 4,
+  "partyDamage": null,
+  "round": 1,
+  "turn": null,
+  "combatants": [
+   {
+    "id": "m1",
+    "kind": "monster",
+    "name": "kur'ath",
+    "mask": "",
+    "damage": [
+     16,
+     19,
+     8,
+     31,
+     8,
+     2,
+     26,
+     8,
+     15,
+     5,
+     24,
+     10,
+     2,
+     22,
+     15,
+     25,
+     56
+    ],
+    "init": 20
+   },
+   {
+    "id": "m2",
+    "kind": "monster",
+    "name": "zythara",
+    "mask": "",
+    "damage": [
+     26,
+     31,
+     5,
+     30,
+     41
+    ],
+    "init": 4
+   },
+   {
+    "id": "m3",
+    "kind": "monster",
+    "name": "barbed-devil",
+    "mask": "",
+    "damage": [
+     60,
+     10,
+     22,
+     14,
+     15
+    ],
+    "init": 17
+   },
+   {
+    "id": "m6",
+    "kind": "monster",
+    "name": "death-slaad",
+    "mask": "ashen-demon",
+    "damage": [
+     30,
+     14,
+     25
+    ],
+    "init": 2
+   },
+   {
+    "id": "p03",
+    "kind": "player",
+    "name": "Jerellian",
+    "mask": "",
+    "damage": [],
+    "init": 19
+   },
+   {
+    "id": "p01",
+    "kind": "player",
+    "name": "Ulf",
+    "mask": "",
+    "damage": [],
+    "init": 13
+   },
+   {
+    "id": "p04",
+    "kind": "player",
+    "name": "Chungus",
+    "mask": "",
+    "damage": [],
+    "init": 8
+   },
+   {
+    "id": "p02",
+    "kind": "player",
+    "name": "Nick",
+    "mask": "",
+    "damage": [],
+    "init": 5
+   }
+  ]
+ },
+ {
+  "id": "death-slaad",
+  "name": "death slaad",
+  "save": "con",
+  "partySize": 4,
+  "partyDamage": null,
+  "round": 1,
+  "turn": null,
+  "combatants": [
+   {
+    "id": "m1",
+    "kind": "monster",
+    "name": "death-slaad",
+    "mask": "Raphael",
+    "damage": [],
+    "init": 10
+   },
+   {
+    "id": "p04",
+    "kind": "player",
+    "name": "Chungus",
+    "mask": "",
+    "damage": [],
+    "init": 22
+   },
+   {
+    "id": "p03",
+    "kind": "player",
+    "name": "Jerellian",
+    "mask": "",
+    "damage": [],
+    "init": 20
+   },
+   {
+    "id": "p02",
+    "kind": "player",
+    "name": "Nick",
+    "mask": "",
+    "damage": [],
+    "init": 19
+   },
+   {
+    "id": "p01",
+    "kind": "player",
+    "name": "Ulf",
+    "mask": "",
+    "damage": [],
+    "init": 13
+   }
+  ]
+ },
+ {
+  "id": "salamander",
+  "name": "salamander",
+  "save": "cha",
+  "partySize": 4,
+  "partyDamage": null,
+  "round": 1,
+  "turn": null,
+  "combatants": [
+   {
+    "id": "m1",
+    "kind": "monster",
+    "name": "tyrannosaurus-rex",
+    "mask": "",
+    "damage": [
+     22,
+     12,
+     12,
+     34,
+     31,
+     9,
+     16
+    ],
+    "init": 6
+   },
+   {
+    "id": "m2",
+    "kind": "monster",
+    "name": "minotaur-skeleton",
+    "mask": "",
+    "damage": [
+     31,
+     28,
+     26
+    ],
+    "init": 13
+   },
+   {
+    "id": "m3",
+    "kind": "monster",
+    "name": "white-dragon-wormling",
+    "mask": "",
+    "damage": [
+     22,
+     6,
+     22
+    ],
+    "init": 8
+   },
+   {
+    "id": "p03",
+    "kind": "player",
+    "name": "Jerellian",
+    "mask": "",
+    "damage": [],
+    "init": 16
+   },
+   {
+    "id": "p01",
+    "kind": "player",
+    "name": "Ulf",
+    "mask": "",
+    "damage": [],
+    "init": 9
+   },
+   {
+    "id": "p04",
+    "kind": "player",
+    "name": "Chungus",
+    "mask": "",
+    "damage": [],
+    "init": 9
+   },
+   {
+    "id": "p02",
+    "kind": "player",
+    "name": "Nick",
+    "mask": "",
+    "damage": [],
+    "init": 7
+   }
+  ]
+ },
+ {
+  "id": "trolls",
+  "name": "trolls",
+  "save": "con",
+  "partySize": 4,
+  "partyDamage": null,
+  "round": 1,
+  "turn": null,
+  "combatants": [
+   {
+    "id": "m1",
+    "kind": "monster",
+    "name": "rot-troll",
+    "mask": "",
+    "damage": [
+     12,
+     17,
+     14,
+     22,
+     19,
+     5,
+     13,
+     11,
+     24,
+     25
+    ],
+    "init": 10
+   },
+   {
+    "id": "m2",
+    "kind": "monster",
+    "name": "rot-troll",
+    "mask": "",
+    "damage": [
+     26,
+     23,
+     7,
+     17,
+     14,
+     12,
+     6,
+     11,
+     30
+    ],
+    "init": null
+   },
+   {
+    "id": "p01",
+    "kind": "player",
+    "name": "Ulf",
+    "mask": "",
+    "damage": [],
+    "init": 20
+   },
+   {
+    "id": "p02",
+    "kind": "player",
+    "name": "Nick",
+    "mask": "",
+    "damage": [],
+    "init": 18
+   },
+   {
+    "id": "p04",
+    "kind": "player",
+    "name": "Chungus",
+    "mask": "",
+    "damage": [],
+    "init": 15
+   },
+   {
+    "id": "p03",
+    "kind": "player",
+    "name": "Jerellian",
+    "mask": "",
+    "damage": [],
+    "init": 13
+   }
+  ]
+ },
+ {
+  "id": "golem",
+  "name": "golem",
+  "save": "con",
+  "partySize": 4,
+  "partyDamage": null,
+  "round": 1,
+  "turn": null,
+  "combatants": [
+   {
+    "id": "m1",
+    "kind": "monster",
+    "name": "mad-golem",
+    "mask": "",
+    "damage": [
+     9,
+     13,
+     11,
+     14,
+     16,
+     21,
+     15,
+     10,
+     10,
+     12,
+     22,
+     6,
+     5,
+     26,
+     10,
+     4,
+     5,
+     23,
+     15,
+     8,
+     18
+    ],
+    "init": 17
+   },
+   {
+    "id": "p03",
+    "kind": "player",
+    "name": "Jerellian",
+    "mask": "",
+    "damage": [],
+    "init": 18
+   },
+   {
+    "id": "p01",
+    "kind": "player",
+    "name": "Ulf",
+    "mask": "",
+    "damage": [],
+    "init": 13
+   },
+   {
+    "id": "p04",
+    "kind": "player",
+    "name": "Chungus",
+    "mask": "",
+    "damage": [],
+    "init": 11
+   },
+   {
+    "id": "p02",
+    "kind": "player",
+    "name": "Nick",
+    "mask": "",
+    "damage": [],
+    "init": 8
+   }
+  ]
+ },
+ {
+  "id": "copy-of-golem",
+  "name": "Copy of golem",
+  "save": "con",
+  "partySize": 3,
+  "partyDamage": null,
+  "round": 1,
+  "turn": null,
+  "combatants": [
+   {
+    "id": "m1",
+    "kind": "monster",
+    "name": "beholder",
+    "mask": "",
+    "damage": [
+     -50
+    ],
+    "init": 6
+   },
+   {
+    "id": "p02",
+    "kind": "player",
+    "name": "Nick",
+    "mask": "",
+    "damage": [],
+    "init": 18
+   },
+   {
+    "id": "p03",
+    "kind": "player",
+    "name": "Jerellian",
+    "mask": "",
+    "damage": [],
+    "init": 17
+   },
+   {
+    "id": "p04",
+    "kind": "player",
+    "name": "Chungus",
+    "mask": "",
+    "damage": [],
+    "init": 11
+   },
+   {
+    "id": "p01",
+    "kind": "player",
+    "name": "Ulf",
+    "mask": "",
+    "damage": [],
+    "init": 5
+   }
+  ]
+ }
+]

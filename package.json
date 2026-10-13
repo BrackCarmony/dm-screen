@@ -1,0 +1,26 @@
+{
+  "name": "dm-screen",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A web DM screen built from Brack's Battle Sheets: bestiary, battle tracker, encounters, magic shops and a live player view.",
+  "scripts": {
+    "dev": "concurrently -k -n server,client \"node --watch server/index.js\" \"vite --config client/vite.config.js\"",
+    "build": "vite build --config client/vite.config.js",
+    "start": "node server/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^6.0.7"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

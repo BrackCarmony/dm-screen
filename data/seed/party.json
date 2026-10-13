@@ -1,0 +1,27 @@
+[
+ {
+  "id": "P01",
+  "name": "Ulf",
+  "inParty": true
+ },
+ {
+  "id": "P02",
+  "name": "Nick",
+  "inParty": true
+ },
+ {
+  "id": "P03",
+  "name": "Jerellian",
+  "inParty": true
+ },
+ {
+  "id": "P04",
+  "name": "Chungus",
+  "inParty": true
+ },
+ {
+  "id": "P05",
+  "name": "Uzriel",
+  "inParty": true
+ }
+]

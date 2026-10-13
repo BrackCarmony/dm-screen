@@ -1,0 +1,14 @@
+[Unit]
+Description=DM Screen
+After=network.target
+
+[Service]
+Type=simple
+User=dmscreen
+WorkingDirectory=/opt/dm-screen
+EnvironmentFile=/etc/dm-screen.env
+ExecStart=/usr/bin/node server/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
