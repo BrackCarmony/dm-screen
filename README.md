@@ -10,6 +10,12 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 - Later accounts start with a copy of the bestiary, XP tables and magic item tables, and an empty party, encounters, battles and shops.
 - Each DM's players follow `/p/<link>`, for example `/p/brack`. The link is set on the Account page.
 
+### Passwords
+
+- **Change:** on the Account page. This signs the DM out on their other devices.
+- **Forgot:** "Forgot password?" on the login screen emails a reset link that works once, for one hour. Email needs `SMTP_URL` (for example `smtps://user:pass@smtp.example.com:465`), `MAIL_FROM` and `APP_URL` (the site's public address, used to build the link). Without SMTP the link is written to the server log instead.
+- **By hand:** on the server, `DATA_DIR=/var/lib/dm-screen APP_URL=https://dm.example.com npm run reset-link -- someone@example.com` prints a reset link you can send yourself.
+
 ## Pages
 
 - **Battle**: add monsters from the bestiary, track damage and healing per monster, set a name players see, roll and run initiative, and see the XP award (total XP ÷ party size × max(1, enemies ÷ party size), as on the sheet).

@@ -4,14 +4,15 @@ import fs from 'node:fs';
 import express from 'express';
 import { createDmStore, createUserStore } from './store.js';
 import { publicView } from './public.js';
-import { hashPassword, loadSecret, rateLimit, sessionCookie, verifyPassword } from './auth.js';
+import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
+import { createMailer } from './mailer.js';
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,30}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'dm';
 
-export function createApp({ dataDir, seedDir, distDir }) {
+export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer() }) {
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
   const session = sessionCookie(loadSecret(dataDir));
@@ -19,20 +20,20 @@ export function createApp({ dataDir, seedDir, distDir }) {
   app.set('trust proxy', 'loopback');
   app.use(express.json({ limit: '5mb' }));
 
-  const currentUser = (req) => {
-    const id = session.read(req.headers.cookie);
-    return id ? users.byId(id) : null;
-  };
+  const currentUser = (req) => session.read(req.headers.cookie, users.byId);
   const requireDm = (req, res, next) => {
     req.user = currentUser(req);
     if (req.user) return next();
     res.status(401).json({ error: 'login required' });
   };
-  const setSession = (req, res, userId) => {
+  const setSession = (req, res, user) => {
     const secure = req.secure ? '; Secure' : '';
-    const value = userId ? encodeURIComponent(session.issue(userId)) : '';
-    res.setHeader('Set-Cookie', `sid=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${userId ? 31536000 : 0}${secure}`);
+    const value = user ? encodeURIComponent(session.issue(user)) : '';
+    res.setHeader('Set-Cookie', `sid=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${user ? 31536000 : 0}${secure}`);
   };
+  // New password: bump sessionVersion so other devices are signed out, and drop any reset token.
+  const changePassword = (user, password) =>
+    users.update(user.id, { password: hashPassword(password), sessionVersion: (user.sessionVersion ?? 0) + 1, resetHash: null, resetExpires: null });
   const publicUser = (u) => u && { id: u.id, email: u.email, name: u.name, slug: u.slug };
 
   function uniqueSlug(base) {
@@ -61,10 +62,11 @@ export function createApp({ dataDir, seedDir, distDir }) {
       name,
       slug: uniqueSlug(name),
       password: hashPassword(password),
+      sessionVersion: 0,
       createdAt: new Date().toISOString(),
     });
     dms.create(user.id, { full: first });
-    setSession(req, res, user.id);
+    setSession(req, res, user);
     res.json({ user: publicUser(user) });
   });
 
@@ -73,8 +75,35 @@ export function createApp({ dataDir, seedDir, distDir }) {
     if (!user || !verifyPassword(String(req.body?.password ?? ''), user.password)) {
       return res.status(401).json({ error: 'Wrong email or password.' });
     }
-    setSession(req, res, user.id);
+    setSession(req, res, user);
     res.json({ user: publicUser(user) });
+  });
+
+  // Always answers the same way, so it doesn't reveal which emails have accounts.
+  app.post('/api/forgot', limiter, async (req, res) => {
+    const user = users.byEmail(String(req.body?.email ?? '').trim());
+    if (user) {
+      // Links are only emailed when APP_URL is set, so a forged Host header can't redirect them.
+      const base = appUrl || `http://localhost:${req.socket.localPort}`;
+      const link = resetLink(base, createResetToken(users, user));
+      try {
+        if (appUrl || !mailer.enabled) await mailer.sendReset(user.email, link);
+        else console.warn('[password reset] APP_URL is not set, so no email was sent. Run: npm run reset-link --', user.email);
+      } catch (e) {
+        console.error('[password reset] email failed:', e.message);
+      }
+    }
+    res.json({ ok: true });
+  });
+
+  app.post('/api/reset', limiter, (req, res) => {
+    const user = findByResetToken(users, req.body?.token);
+    if (!user) return res.status(400).json({ error: 'This reset link is invalid or has expired. Ask for a new one.' });
+    const password = String(req.body?.password ?? '');
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    const updated = changePassword(user, password);
+    setSession(req, res, updated);
+    res.json({ user: publicUser(updated) });
   });
 
   app.post('/api/logout', (req, res) => {
@@ -98,10 +127,13 @@ export function createApp({ dataDir, seedDir, distDir }) {
     if (newPassword !== undefined) {
       if (!verifyPassword(String(currentPassword ?? ''), req.user.password)) return res.status(401).json({ error: 'Current password is wrong.' });
       if (String(newPassword).length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
-      patch.password = hashPassword(String(newPassword));
     }
     const oldSlug = req.user.slug;
-    const user = users.update(req.user.id, patch);
+    let user = users.update(req.user.id, patch);
+    if (newPassword !== undefined) {
+      user = changePassword(user, String(newPassword));
+      setSession(req, res, user);
+    }
     if (patch.slug) {
       broadcast(oldSlug, { battle: null, order: [], moved: true });
       broadcast(user.slug);

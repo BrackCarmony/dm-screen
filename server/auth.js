@@ -27,25 +27,48 @@ export function loadSecret(dataDir) {
   return fs.readFileSync(file, 'utf8').trim();
 }
 
+// Cookie is "<userId>.<hmac>". The HMAC covers the user's sessionVersion, so bumping
+// it (on a password change or reset) signs out every other device.
 export function sessionCookie(secret) {
-  const sign = (value) => crypto.createHmac('sha256', secret).update(value).digest('hex');
+  const sign = (user) => crypto.createHmac('sha256', secret).update(`${user.id}:${user.sessionVersion ?? 0}`).digest('hex');
   return {
-    issue(userId) {
-      return `${userId}.${sign(userId)}`;
+    issue(user) {
+      return `${user.id}.${sign(user)}`;
     },
-    read(cookieHeader) {
+    read(cookieHeader, findUser) {
       const m = (cookieHeader || '').match(/(?:^|;\s*)sid=([^;]+)/);
       if (!m) return null;
       const raw = decodeURIComponent(m[1]);
       const dot = raw.lastIndexOf('.');
       if (dot < 1) return null;
-      const id = raw.slice(0, dot);
+      const user = findUser(raw.slice(0, dot));
+      if (!user) return null;
       const sig = Buffer.from(raw.slice(dot + 1));
-      const want = Buffer.from(sign(id));
-      return sig.length === want.length && crypto.timingSafeEqual(sig, want) ? id : null;
+      const want = Buffer.from(sign(user));
+      return sig.length === want.length && crypto.timingSafeEqual(sig, want) ? user : null;
     },
   };
 }
+
+const RESET_TTL_MS = 60 * 60 * 1000;
+const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
+
+// Returns the raw token to put in a link; only its hash is stored on the user.
+export function createResetToken(users, user) {
+  const token = crypto.randomBytes(32).toString('base64url');
+  users.update(user.id, { resetHash: sha256(token), resetExpires: Date.now() + RESET_TTL_MS });
+  return token;
+}
+
+export function findByResetToken(users, token) {
+  if (!token) return null;
+  const hash = sha256(String(token));
+  const user = users.all().find((u) => u.resetHash && u.resetHash.length === hash.length &&
+    crypto.timingSafeEqual(Buffer.from(u.resetHash), Buffer.from(hash)));
+  return user && user.resetExpires > Date.now() ? user : null;
+}
+
+export const resetLink = (baseUrl, token) => `${baseUrl.replace(/\/+$/, '')}/reset?token=${token}`;
 
 // Small in-memory limiter for login and sign-up attempts per IP.
 export function rateLimit({ windowMs, max }) {

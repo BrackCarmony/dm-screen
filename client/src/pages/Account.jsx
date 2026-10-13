@@ -45,6 +45,7 @@ export default function Account({ user, onChange }) {
 
       <section className="panel">
         <h2>Change password</h2>
+        <p className="muted small">This signs you out on your other devices.</p>
         <form className="editor" onSubmit={save('pw', pw, () => setPw({ currentPassword: '', newPassword: '' }))}>
           <input type="password" placeholder="Current password" autoComplete="current-password" value={pw.currentPassword} onChange={(e) => setPw({ ...pw, currentPassword: e.target.value })} required />
           <input type="password" placeholder="New password (8+ characters)" autoComplete="new-password" value={pw.newPassword} onChange={(e) => setPw({ ...pw, newPassword: e.target.value })} required />

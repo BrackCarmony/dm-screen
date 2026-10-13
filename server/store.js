@@ -86,6 +86,7 @@ export function createUserStore(dataDir) {
 
   return {
     count: () => users.length,
+    all: () => users,
     byId: (id) => users.find((u) => u.id === id) ?? null,
     byEmail: (email) => users.find((u) => u.email === email.toLowerCase()) ?? null,
     bySlug: (slug) => users.find((u) => u.slug === slug.toLowerCase()) ?? null,

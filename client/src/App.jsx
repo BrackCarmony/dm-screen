@@ -59,6 +59,8 @@ export default function App() {
   }, []);
 
   if (!me) return <div className="center muted">Loading…</div>;
+  const resetToken = window.location.pathname === '/reset' ? new URLSearchParams(window.location.search).get('token') : null;
+  if (resetToken) return <Reset token={resetToken} />;
   if (!me.user) return <Auth firstAccount={me.firstAccount} onDone={load} />;
   if (!state) return <div className="center muted">Loading…</div>;
 
@@ -97,12 +99,31 @@ function Auth({ firstAccount, onDone }) {
   const [f, setF] = useState({ name: '', email: '', password: '' });
   const [err, setErr] = useState('');
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const [sent, setSent] = useState(false);
   const submit = (e) => {
     e.preventDefault();
     setErr('');
+    if (mode === 'forgot') return api.forgot(f.email).then(() => setSent(true)).catch((x) => setErr(x.message));
     const go = mode === 'signup' ? api.signup(f) : api.login(f.email, f.password);
     go.then(onDone).catch((x) => setErr(x.message));
   };
+  if (mode === 'forgot') {
+    return (
+      <form className="login" onSubmit={submit}>
+        <h1>Reset password</h1>
+        {sent ? (
+          <p>If that email has an account, a reset link is on its way. It works for one hour.</p>
+        ) : (
+          <>
+            <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required autoFocus />
+            <button className="primary">Send reset link</button>
+          </>
+        )}
+        {err && <p className="error-text">{err}</p>}
+        <button type="button" className="link" onClick={() => { setMode('login'); setSent(false); }}>Back to log in</button>
+      </form>
+    );
+  }
   return (
     <form className="login" onSubmit={submit}>
       <h1>DM Screen</h1>
@@ -116,7 +137,29 @@ function Auth({ firstAccount, onDone }) {
       <input type="password" placeholder={mode === 'signup' ? 'Password (8+ characters)' : 'Password'} value={f.password} onChange={set('password')} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required />
       <button className="primary">{mode === 'signup' ? 'Create account' : 'Log in'}</button>
       {err && <p className="error-text">{err}</p>}
+      {mode === 'login' && <button type="button" className="link" onClick={() => setMode('forgot')}>Forgot password?</button>}
       <p className="muted small">Players: ask your DM for their player link.</p>
+    </form>
+  );
+}
+
+function Reset({ token }) {
+  const [pw, setPw] = useState('');
+  const [err, setErr] = useState('');
+  return (
+    <form
+      className="login"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setErr('');
+        api.reset(token, pw).then(() => window.location.replace('/')).catch((x) => setErr(x.message));
+      }}
+    >
+      <h1>Choose a new password</h1>
+      <input type="password" placeholder="New password (8+ characters)" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} required autoFocus />
+      <button className="primary">Save and log in</button>
+      {err && <p className="error-text">{err}</p>}
+      <a href="/">Back to log in</a>
     </form>
   );
 }
