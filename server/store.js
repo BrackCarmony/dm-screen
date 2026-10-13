@@ -62,6 +62,7 @@ export function createDmStore(dataDir, seedDir) {
         if (!full) {
           const shop = readSeed(seedDir, 'shop');
           if (shop) state.shop = { ...shop, saved: [], note: '' };
+          state.encounters = readSeed(seedDir, 'starter-encounters') ?? [];
         }
       }
       state.settings = { activeBattleId: null, ...state.settings };
@@ -83,6 +84,20 @@ export function createUserStore(dataDir) {
   fs.mkdirSync(dataDir, { recursive: true });
   let users = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : [];
   const save = () => writeJson(file, users);
+  // Accounts made before email sign-up were stored as { users: [...] } with a username and no email.
+  if (!Array.isArray(users)) {
+    users = (users.users ?? []).map((u) => ({
+      id: u.id,
+      email: null,
+      username: u.username,
+      name: u.displayName || u.username,
+      slug: u.username,
+      password: `scrypt:${u.salt}:${u.hash}`,
+      sessionVersion: 0,
+      createdAt: u.createdAt,
+    }));
+    save();
+  }
 
   return {
     count: () => users.length,
@@ -90,6 +105,12 @@ export function createUserStore(dataDir) {
     byId: (id) => users.find((u) => u.id === id) ?? null,
     byEmail: (email) => users.find((u) => u.email === email.toLowerCase()) ?? null,
     bySlug: (slug) => users.find((u) => u.slug === slug.toLowerCase()) ?? null,
+    // An old account's username always matches. Names aren't unique, so a name only matches when one account has it.
+    byName(name) {
+      const lower = name.toLowerCase();
+      const hits = users.filter((u) => u.name.toLowerCase() === lower);
+      return users.find((u) => u.username === lower) ?? (hits.length === 1 ? hits[0] : null);
+    },
     add(user) {
       users.push(user);
       save();

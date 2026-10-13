@@ -71,9 +71,10 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   });
 
   app.post('/api/login', limiter, (req, res) => {
-    const user = users.byEmail(String(req.body?.email ?? '').trim());
+    const login = String(req.body?.email ?? '').trim();
+    const user = login.includes('@') ? users.byEmail(login) : users.byName(login);
     if (!user || !verifyPassword(String(req.body?.password ?? ''), user.password)) {
-      return res.status(401).json({ error: 'Wrong email or password.' });
+      return res.status(401).json({ error: 'Wrong email, name or password.' });
     }
     setSession(req, res, user);
     res.json({ user: publicUser(user) });
@@ -113,10 +114,17 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   app.put('/api/account', requireDm, (req, res) => {
     const patch = {};
-    const { name, slug, currentPassword, newPassword } = req.body ?? {};
+    const { name, email, slug, currentPassword, newPassword } = req.body ?? {};
     if (name !== undefined) {
       if (!String(name).trim()) return res.status(400).json({ error: 'Name cannot be empty.' });
       patch.name = String(name).trim();
+    }
+    if (email !== undefined) {
+      const e = String(email).trim().toLowerCase();
+      if (!EMAIL_RE.test(e)) return res.status(400).json({ error: 'Enter a valid email.' });
+      const owner = users.byEmail(e);
+      if (owner && owner.id !== req.user.id) return res.status(409).json({ error: 'That email already has an account.' });
+      patch.email = e;
     }
     if (slug !== undefined && slug !== req.user.slug) {
       const s = String(slug).toLowerCase();
@@ -134,10 +142,8 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
       user = changePassword(user, String(newPassword));
       setSession(req, res, user);
     }
-    if (patch.slug) {
-      broadcast(oldSlug, { battle: null, order: [], moved: true });
-      broadcast(user.slug);
-    }
+    if (patch.slug) broadcast(oldSlug, { battle: null, order: [], moved: true });
+    broadcast(user.slug); // the player view shows the DM's name
     res.json({ user: publicUser(user) });
   });
 
@@ -156,7 +162,8 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   const viewFor = (slug) => {
     const user = users.bySlug(slug);
-    return user ? { dm: user.name, ...publicView(dms.get(user.id)) } : null;
+    const state = user && dms.get(user.id);
+    return state ? { dm: user.name, ...publicView(state) } : null;
   };
 
   function broadcast(slug, override) {

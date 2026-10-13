@@ -3,18 +3,47 @@ import { SAVES, fmtCr, fmtMod } from '../rules.js';
 
 const BLANK = { name: '', hp: '', ac: '', speed: '30', saves: {}, init: '', attacks: [], cr: '', xp: '', special: '', url: '' };
 
+// Sortable columns. Names start A→Z; numbers start highest first.
+const COLUMNS = [
+  { key: 'name', label: 'Name', get: (m) => m.name.toLowerCase(), asc: true },
+  { key: 'cr', label: 'CR', get: (m) => m.cr },
+  { key: 'hp', label: 'HP', get: (m) => m.hp },
+  { key: 'ac', label: 'AC', get: (m) => m.ac },
+  { key: 'speed', label: 'Speed', get: (m) => parseInt(m.speed, 10) },
+  ...SAVES.map((s) => ({ key: s, label: s.toUpperCase(), get: (m) => m.saves?.[s] })),
+  { key: 'init', label: 'Init', get: (m) => m.init },
+  { key: 'xp', label: 'XP', get: (m) => m.xp },
+];
+const missing = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);
+
 export default function Bestiary({ state, update }) {
   const [q, setQ] = useState('');
-  const [sort, setSort] = useState('name');
+  const [sort, setSort] = useState({ key: 'name', asc: true });
+  const [crMin, setCrMin] = useState('');
+  const [crMax, setCrMax] = useState('');
+  const crs = useMemo(() => [...new Set(state.bestiary.map((m) => m.cr).filter((c) => !missing(c)))].sort((a, b) => a - b), [state.bestiary]);
   const [editing, setEditing] = useState(null);
   const [open, setOpen] = useState(null);
 
   const rows = useMemo(() => {
     const needle = q.toLowerCase();
-    const list = state.bestiary.filter((m) => !needle || m.name.toLowerCase().includes(needle) || m.special?.toLowerCase().includes(needle));
-    const key = { name: (m) => m.name, cr: (m) => m.cr ?? -1, hp: (m) => m.hp ?? 0, ac: (m) => m.ac ?? 0 }[sort];
-    return list.slice().sort((a, b) => (key(a) < key(b) ? -1 : key(a) > key(b) ? 1 : 0) * (sort === 'name' ? 1 : -1));
-  }, [state.bestiary, q, sort]);
+    // The two CR boxes work in either order, so 12 to 10 means 10 to 12.
+    const [lo, hi] = crMin !== '' && crMax !== '' && Number(crMin) > Number(crMax) ? [crMax, crMin] : [crMin, crMax];
+    const list = state.bestiary.filter((m) =>
+      (!needle || m.name.toLowerCase().includes(needle) || m.special?.toLowerCase().includes(needle)) &&
+      (lo === '' || (!missing(m.cr) && m.cr >= Number(lo))) &&
+      (hi === '' || (!missing(m.cr) && m.cr <= Number(hi))));
+    const get = COLUMNS.find((c) => c.key === sort.key).get;
+    // Blank values always go last, whichever way it's sorted.
+    return list.slice().sort((a, b) => {
+      const x = get(a), y = get(b);
+      if (missing(x) || missing(y)) return missing(x) - missing(y);
+      return (x < y ? -1 : x > y ? 1 : 0) * (sort.asc ? 1 : -1);
+    });
+  }, [state.bestiary, q, sort, crMin, crMax]);
+
+  const sortBy = (col) => setSort(sort.key === col.key ? { key: col.key, asc: !sort.asc } : { key: col.key, asc: !!col.asc });
+  const filtered = q || crMin !== '' || crMax !== '';
 
   function save(m) {
     update('bestiary', (all) => {
@@ -28,12 +57,24 @@ export default function Bestiary({ state, update }) {
     <div className="page">
       <div className="toolbar">
         <input placeholder={`Search ${state.bestiary.length} monsters…`} value={q} onChange={(e) => setQ(e.target.value)} />
-        <select value={sort} onChange={(e) => setSort(e.target.value)}>
-          <option value="name">Sort by name</option>
-          <option value="cr">Sort by CR</option>
-          <option value="hp">Sort by HP</option>
-          <option value="ac">Sort by AC</option>
-        </select>
+        <label className="cr-filter">
+          CR
+          <select value={crMin} onChange={(e) => setCrMin(e.target.value)} aria-label="Lowest CR">
+            <option value="">any</option>
+            {crs.map((c) => <option key={c} value={c}>{fmtCr(c)}</option>)}
+          </select>
+          to
+          <select value={crMax} onChange={(e) => setCrMax(e.target.value)} aria-label="Highest CR">
+            <option value="">any</option>
+            {crs.map((c) => <option key={c} value={c}>{fmtCr(c)}</option>)}
+          </select>
+        </label>
+        {filtered && (
+          <>
+            <span className="muted small">{rows.length} of {state.bestiary.length}</span>
+            <button className="link" onClick={() => { setQ(''); setCrMin(''); setCrMax(''); }}>Clear</button>
+          </>
+        )}
         <span className="spacer" />
         <button className="primary" onClick={() => setEditing({ original: null, m: { ...BLANK } })}>New monster</button>
       </div>
@@ -44,9 +85,14 @@ export default function Bestiary({ state, update }) {
         <table className="data">
           <thead>
             <tr>
-              <th>Name</th><th>CR</th><th>HP</th><th>AC</th><th>Speed</th>
-              {SAVES.map((s) => <th key={s}>{s.toUpperCase()}</th>)}
-              <th>Init</th><th>XP</th><th />
+              {COLUMNS.map((col) => (
+                <th key={col.key} aria-sort={sort.key === col.key ? (sort.asc ? 'ascending' : 'descending') : 'none'}>
+                  <button className="sort" onClick={() => sortBy(col)}>
+                    {col.label}<span className="arrow">{sort.key === col.key ? (sort.asc ? '▲' : '▼') : ''}</span>
+                  </button>
+                </th>
+              ))}
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -73,12 +119,18 @@ export default function Bestiary({ state, update }) {
           </tbody>
         </table>
       </div>
+      <p className="muted small">
+        Starter monsters are from the{' '}
+        <a href="https://dnd.wizards.com/resources/systems-reference-document" target="_blank" rel="noreferrer">System Reference Document 5.1</a>{' '}
+        by Wizards of the Coast LLC, licensed under{' '}
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" rel="noreferrer">CC BY 4.0</a>.
+      </p>
     </div>
   );
 }
 
 function Editor({ initial, names, original, onSave, onCancel }) {
-  const [m, setM] = useState({ ...initial, attacks: [...initial.attacks, '', '', ''].slice(0, Math.max(3, initial.attacks.length)) });
+  const [m, setM] = useState({ ...initial, attacks: [...initial.attacks] });
   const set = (k) => (e) => setM({ ...m, [k]: e.target.value });
   const n = (v) => (v === '' || v === null || v === undefined ? null : Number(v));
   const clash = m.name.trim() && m.name.trim() !== original && names.includes(m.name.trim());
@@ -111,8 +163,15 @@ function Editor({ initial, names, original, onSave, onCancel }) {
           <label key={s}>{s.toUpperCase()} save<input type="number" value={m.saves?.[s] ?? ''} onChange={(e) => setM({ ...m, saves: { ...m.saves, [s]: e.target.value } })} /></label>
         ))}
       </div>
-      {m.attacks.map((a, i) => (
-        <label key={i} className="wide">Attack {i + 1}<input value={a} onChange={(e) => setM({ ...m, attacks: m.attacks.map((x, j) => (j === i ? e.target.value : x)) })} /></label>
+      {/* Always one blank attack at the end; typing in it adds another. */}
+      {[...m.attacks, ''].map((a, i) => (
+        <label key={i} className="wide">
+          Attack {i + 1}
+          <span className="add-row">
+            <input value={a} onChange={(e) => { const attacks = [...m.attacks]; attacks[i] = e.target.value; while (attacks.at(-1) === '') attacks.pop(); setM({ ...m, attacks }); }} />
+            {i < m.attacks.length && <button type="button" className="icon" title="Remove attack" onClick={() => setM({ ...m, attacks: m.attacks.filter((_, j) => j !== i) })}>✕</button>}
+          </span>
+        </label>
       ))}
       <label className="wide">Special<textarea rows={3} value={m.special ?? ''} onChange={set('special')} /></label>
       <label className="wide">Link<input value={m.url ?? ''} onChange={set('url')} /></label>

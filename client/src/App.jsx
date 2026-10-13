@@ -133,7 +133,9 @@ function Auth({ firstAccount, onDone }) {
       </div>
       {mode === 'signup' && firstAccount && <p className="muted small">This is the first account, so it gets the campaign data already on this server.</p>}
       {mode === 'signup' && <input placeholder="Your name" value={f.name} onChange={set('name')} autoComplete="name" required />}
-      <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required />
+      {mode === 'signup'
+        ? <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required />
+        : <input placeholder="Email or name" value={f.email} onChange={set('email')} autoComplete="username" required />}
       <input type="password" placeholder={mode === 'signup' ? 'Password (8+ characters)' : 'Password'} value={f.password} onChange={set('password')} autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required />
       <button className="primary">{mode === 'signup' ? 'Create account' : 'Log in'}</button>
       {err && <p className="error-text">{err}</p>}

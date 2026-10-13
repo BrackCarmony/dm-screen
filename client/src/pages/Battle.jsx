@@ -220,7 +220,7 @@ function SavePicker({ save, saves, onPick }) {
   return (
     <div className="stat save-pick" ref={ref}>
       <button type="button" className="stat-btn" aria-haspopup="listbox" aria-expanded={open} title="Change save" onClick={() => setOpen(!open)}>
-        <span className="label">{save?.toUpperCase()} save ▾</span>
+        <span className="label">{save?.toUpperCase()} save</span>
         <span className="value">{fmtMod(saves?.[save])}</span>
       </button>
       {open && (
@@ -245,6 +245,27 @@ function Stat({ label, value }) {
       <span className="label">{label}</span>
       <span className="value">{value}</span>
     </div>
+  );
+}
+
+// Saves on blur or Enter, so the list doesn't re-sort (and move the box) mid-number.
+function InitInput({ c, onCommit }) {
+  const [draft, setDraft] = useState(c.init ?? '');
+  useEffect(() => setDraft(c.init ?? ''), [c.init]);
+  const commit = () => {
+    const init = draft === '' ? null : Number(draft);
+    if (init !== (c.init ?? null)) onCommit(init);
+  };
+  return (
+    <input
+      type="number"
+      className="narrow"
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
+      aria-label={`Initiative for ${c.name}`}
+    />
   );
 }
 
@@ -274,13 +295,7 @@ function Initiative({ battle, beasts, state, setBattle, setCombatant }) {
 
   const row = (c) => (
     <li key={c.id} className={`${c.kind} ${battle.turn === c.id ? 'current' : ''}`}>
-      <input
-        type="number"
-        className="narrow"
-        value={c.init ?? ''}
-        onChange={(e) => setCombatant(c.id, (x) => ({ ...x, init: e.target.value === '' ? null : Number(e.target.value) }))}
-        aria-label={`Initiative for ${c.name}`}
-      />
+      <InitInput c={c} onCommit={(init) => setCombatant(c.id, (x) => ({ ...x, init }))} />
       <span className="who">
         {c.kind === 'monster' ? c.mask || c.name : c.name}
         {c.kind === 'monster' && c.mask && <span className="muted"> ({c.name})</span>}
