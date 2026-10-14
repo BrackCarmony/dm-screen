@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import fs from 'node:fs';
 import express from 'express';
-import { createDmStore, createFeedbackStore, createUserStore } from './store.js';
+import { FEEDBACK_STATUSES, createDmStore, createFeedbackStore, createUserStore } from './store.js';
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
@@ -171,7 +171,9 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     res.json({ user: publicUser(user) });
   });
 
-  // Admin: who has signed up and whether they use it. Read-only; no campaign contents.
+  // Admin: who has signed up and whether they use it, and all feedback. No campaign contents.
+  const adminFeedback = (f) => ({ id: f.id, name: f.name, email: f.email ?? null, page: f.page, message: f.message, status: f.status, note: f.note ?? '', createdAt: f.createdAt, updatedAt: f.updatedAt });
+
   app.get('/api/admin/dms', requireAdmin, (req, res) => {
     const now = Date.now();
     const within = (iso, days) => !!iso && now - Date.parse(iso) < days * 86400000;
@@ -209,8 +211,18 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
         openFeedback: allFeedback.filter((f) => f.status === 'open').length,
       },
       dms: dmsList,
-      feedback: allFeedback.slice(-20).reverse().map((f) => ({ id: f.id, name: f.name, page: f.page, message: f.message, status: f.status, createdAt: f.createdAt })),
+      feedback: [...allFeedback].reverse().map(adminFeedback),
     });
+  });
+
+  // Mark feedback from the Admin page, as scripts/feedback.js does. The DM sees the status and note.
+  app.put('/api/admin/feedback/:id', requireAdmin, (req, res) => {
+    const { status, note } = req.body ?? {};
+    if (!FEEDBACK_STATUSES.includes(status)) return res.status(400).json({ error: `Status must be one of: ${FEEDBACK_STATUSES.join(', ')}.` });
+    if (note !== undefined && String(note).length > 2000) return res.status(400).json({ error: 'Keep the reply under 2,000 characters.' });
+    const item = feedback.update(req.params.id, { status, ...(note !== undefined ? { note: String(note).trim() } : {}) });
+    if (!item) return res.status(404).json({ error: 'No feedback with that id.' });
+    res.json(adminFeedback(item));
   });
 
   // Feedback: DMs send it and see what happened to theirs; scripts/feedback.js reviews it.

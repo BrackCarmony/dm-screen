@@ -227,3 +227,6 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .help li { margin: .3rem 0; }
 .help p { margin: .4rem 0; }
 .help a { overflow-wrap: anywhere; }
+.admin-feedback-head { margin-top: 1.5rem; }
+.admin-feedback-head h2 { margin: 0; }
+.admin-feedback-head .seg button { flex: none; padding: .3rem .7rem; white-space: nowrap; }

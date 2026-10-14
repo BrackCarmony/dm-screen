@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { api } from '../api.js';
+
+const STATUS = { open: 'Open', addressed: 'Addressed', rejected: "Won't do" };
+const FILTERS = [['open', 'Open'], ['addressed', 'Addressed'], ['rejected', "Won't do"], ['all', 'All']];
 
 const ago = (iso) => {
   if (!iso) return 'never';
@@ -14,16 +18,17 @@ const date = (iso) => (iso ? new Date(iso).toLocaleDateString(undefined, { year:
 export default function Admin() {
   const [data, setData] = useState(null);
   const [err, setErr] = useState('');
-  const load = () =>
-    fetch('/api/admin/dms')
-      .then((r) => (r.ok ? r.json() : r.json().then((b) => Promise.reject(new Error(b.error)))))
-      .then(setData)
-      .catch((e) => setErr(e.message));
+  const [filter, setFilter] = useState('open');
+  const load = () => api.adminDms().then(setData).catch((e) => setErr(e.message));
   useEffect(() => { load(); }, []);
 
   if (err) return <p className="error-text">{err}</p>;
   if (!data) return <p className="muted">Loading…</p>;
   const t = data.totals;
+  // Feedback counts come from the list, so they follow marks made on this page.
+  const count = (status) => (status === 'all' ? data.feedback.length : data.feedback.filter((f) => f.status === status).length);
+  const shown = data.feedback.filter((f) => filter === 'all' || f.status === filter);
+  const replace = (item) => setData({ ...data, feedback: data.feedback.map((f) => (f.id === item.id ? item : f)) });
   return (
     <div className="page">
       <div className="tiles">
@@ -32,7 +37,7 @@ export default function Admin() {
         <Tile label="New in 30 days" value={t.signups30} />
         <Tile label="Active this week" value={t.active7} />
         <Tile label="Have made a battle" value={t.withBattles} />
-        <Tile label="Open feedback" value={t.openFeedback} />
+        <Tile label="Open feedback" value={count('open')} />
       </div>
       <div className="toolbar">
         <h2>DMs</h2>
@@ -68,19 +73,18 @@ export default function Admin() {
       </div>
       <p className="muted small">Last active updates at most every 10 minutes while a DM uses the site.</p>
 
-      <h2>Recent feedback</h2>
-      {data.feedback.length === 0 ? <p className="muted">No feedback yet.</p> : (
-        <ul className="feedback-list">
-          {data.feedback.map((f) => (
-            <li key={f.id} className="panel">
-              <div className="panel-head">
-                <strong>{f.name}{f.page && <span className="muted"> · {f.page}</span>}</strong>
-                <span className={`status-pill ${f.status}`}>{f.status}</span>
-              </div>
-              <p className="feedback-text">{f.message}</p>
-              <span className="muted small">{date(f.createdAt)} · id {f.id}</span>
-            </li>
+      <div className="toolbar admin-feedback-head">
+        <h2>Feedback</h2>
+        <span className="spacer" />
+        <div className="seg">
+          {FILTERS.map(([id, label]) => (
+            <button key={id} type="button" className={filter === id ? 'on' : ''} onClick={() => setFilter(id)}>{label} {count(id)}</button>
           ))}
+        </div>
+      </div>
+      {!shown.length ? <p className="muted">Nothing here.</p> : (
+        <ul className="feedback-list">
+          {shown.map((f) => <FeedbackItem key={f.id} item={f} onChange={replace} />)}
         </ul>
       )}
     </div>
@@ -93,5 +97,40 @@ function Tile({ label, value }) {
       <span className="tile-value">{value}</span>
       <span className="tile-label">{label}</span>
     </div>
+  );
+}
+
+function FeedbackItem({ item, onChange }) {
+  const [note, setNote] = useState(item.note ?? '');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const mark = (status) => {
+    setBusy(true);
+    setErr('');
+    api.markFeedback(item.id, { status, note })
+      .then(onChange)
+      .catch((e) => setErr(e.message))
+      .finally(() => setBusy(false));
+  };
+
+  return (
+    <li className="panel">
+      <div className="panel-head">
+        <span className="small">
+          <strong>{item.name}</strong>{item.email && <span className="muted"> · {item.email}</span>}
+          <span className="muted"> · {date(item.createdAt)}{item.page ? ` · ${item.page}` : ''}</span>
+        </span>
+        <span className={`status-pill ${item.status}`}>{STATUS[item.status] ?? item.status}</span>
+      </div>
+      <p className="feedback-text">{item.message}</p>
+      <div className="add-row">
+        <input placeholder="Reply the DM will see (optional)" maxLength={2000} value={note} onChange={(e) => setNote(e.target.value)} />
+        {item.status !== 'addressed' && <button disabled={busy} onClick={() => mark('addressed')}>Addressed</button>}
+        {item.status !== 'rejected' && <button disabled={busy} onClick={() => mark('rejected')}>Won't do</button>}
+        {item.status !== 'open' && <button disabled={busy} onClick={() => mark(item.status)} title="Save the reply without changing the status">Save reply</button>}
+        {item.status !== 'open' && <button disabled={busy} onClick={() => mark('open')}>Reopen</button>}
+      </div>
+      {err && <p className="error-text small">{err}</p>}
+    </li>
   );
 }
