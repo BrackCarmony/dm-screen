@@ -3,6 +3,7 @@ import { api } from '../api.js';
 
 export default function Account({ user, onChange }) {
   const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email ?? '');
   const [slug, setSlug] = useState(user.slug);
   const [pw, setPw] = useState({ currentPassword: '', newPassword: '' });
   const [msg, setMsg] = useState({});
@@ -35,12 +36,17 @@ export default function Account({ user, onChange }) {
 
       <section className="panel">
         <h2>Profile</h2>
-        <p className="muted small">{user.email}</p>
         <form className="add-row" onSubmit={save('name', { name })}>
           <input value={name} onChange={(e) => setName(e.target.value)} aria-label="Name" />
           <button>Save</button>
         </form>
         {msg.name && <p className="muted small">{msg.name}</p>}
+        {!user.email && <p className="muted small">Add an email so you can reset your password.</p>}
+        <form className="add-row" onSubmit={save('email', { email })}>
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Email" autoComplete="email" required />
+          <button>Save</button>
+        </form>
+        {msg.email && <p className="muted small">{msg.email}</p>}
       </section>
 
       <section className="panel">

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { SAVES, beastMap, currentHp, d, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, uid, xpSummary } from '../rules.js';
+import { SAVES, beastMap, currentHp, d, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, syncParty, uid, xpSummary } from '../rules.js';
 
 export default function Battle({ state, update }) {
   const beasts = useMemo(() => beastMap(state.bestiary), [state.bestiary]);
@@ -29,6 +29,7 @@ export default function Battle({ state, update }) {
   }
 
   const monsters = battle.combatants.filter((c) => c.kind === 'monster');
+  const sync = syncParty(battle, state.party);
 
   return (
     <div className="battle">
@@ -55,6 +56,8 @@ export default function Battle({ state, update }) {
           {isLive ? '● Showing to players' : 'Show to players'}
         </button>
       </div>
+
+      {sync.changed && <PartyChanged sync={sync} onUpdate={() => setBattle((b) => syncParty(b, state.party).battle)} />}
 
       <div className="battle-grid">
         <section>
@@ -92,10 +95,26 @@ export function newMonster(name) {
 }
 
 export function partyCombatants(state) {
-  return state.party.filter((p) => p.inParty).map((p) => ({ id: uid('p'), kind: 'player', name: p.name, mask: '', damage: [], init: null }));
+  return state.party.filter((p) => p.inParty).map((p) => ({ id: uid('p'), kind: 'player', partyId: p.id, name: p.name, mask: '', damage: [], init: null }));
 }
 
 export const partyCount = (state) => state.party.filter((p) => p.inParty).length || 4;
+
+// Shown when the Party tab no longer matches this battle's players.
+function PartyChanged({ sync, onUpdate }) {
+  const parts = [
+    sync.added.length && `adds ${sync.added.join(', ')}`,
+    sync.removed.length && `removes ${sync.removed.join(', ')}`,
+    sync.renamed.length && `renames ${sync.renamed.map(([a, b]) => `${a} → ${b}`).join(', ')}`,
+    sync.partySize && `party size ${sync.partySize}`,
+  ].filter(Boolean);
+  return (
+    <div className="party-changed">
+      <span>The party has changed since this battle was set up: {parts.join('; ')}.</span>
+      <button className="primary" onClick={onUpdate}>Update battle</button>
+    </div>
+  );
+}
 
 function AddMonster({ bestiary, onAdd }) {
   const [name, setName] = useState('');
@@ -220,7 +239,7 @@ function SavePicker({ save, saves, onPick }) {
   return (
     <div className="stat save-pick" ref={ref}>
       <button type="button" className="stat-btn" aria-haspopup="listbox" aria-expanded={open} title="Change save" onClick={() => setOpen(!open)}>
-        <span className="label">{save?.toUpperCase()} save ▾</span>
+        <span className="label">{save?.toUpperCase()} save</span>
         <span className="value">{fmtMod(saves?.[save])}</span>
       </button>
       {open && (
@@ -245,6 +264,27 @@ function Stat({ label, value }) {
       <span className="label">{label}</span>
       <span className="value">{value}</span>
     </div>
+  );
+}
+
+// Saves on blur or Enter, so the list doesn't re-sort (and move the box) mid-number.
+function InitInput({ c, onCommit }) {
+  const [draft, setDraft] = useState(c.init ?? '');
+  useEffect(() => setDraft(c.init ?? ''), [c.init]);
+  const commit = () => {
+    const init = draft === '' ? null : Number(draft);
+    if (init !== (c.init ?? null)) onCommit(init);
+  };
+  return (
+    <input
+      type="number"
+      className="narrow"
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
+      aria-label={`Initiative for ${c.name}`}
+    />
   );
 }
 
@@ -274,13 +314,7 @@ function Initiative({ battle, beasts, state, setBattle, setCombatant }) {
 
   const row = (c) => (
     <li key={c.id} className={`${c.kind} ${battle.turn === c.id ? 'current' : ''}`}>
-      <input
-        type="number"
-        className="narrow"
-        value={c.init ?? ''}
-        onChange={(e) => setCombatant(c.id, (x) => ({ ...x, init: e.target.value === '' ? null : Number(e.target.value) }))}
-        aria-label={`Initiative for ${c.name}`}
-      />
+      <InitInput c={c} onCommit={(init) => setCombatant(c.id, (x) => ({ ...x, init }))} />
       <span className="who">
         {c.kind === 'monster' ? c.mask || c.name : c.name}
         {c.kind === 'monster' && c.mask && <span className="muted"> ({c.name})</span>}
@@ -314,7 +348,7 @@ function Initiative({ battle, beasts, state, setBattle, setCombatant }) {
         onSubmit={(e) => {
           e.preventDefault();
           if (!player.trim()) return;
-          setBattle((b) => ({ ...b, combatants: [...b.combatants, { id: uid('p'), kind: 'player', name: player.trim(), damage: [], init: null }] }));
+          setBattle((b) => ({ ...b, combatants: [...b.combatants, { id: uid('p'), kind: 'player', adhoc: true, name: player.trim(), damage: [], init: null }] }));
           setPlayer('');
         }}
       >
@@ -329,8 +363,22 @@ function Initiative({ battle, beasts, state, setBattle, setCombatant }) {
   );
 }
 
+const SCALE_HELP = 'Number of enemies ÷ party size, never below ×1. Outnumbered parties earn more XP: 8 enemies against 4 players is ×2. Use the unscaled XP if you would rather not scale.';
+const DAMAGE_HELP = 'Estimate how much damage your party deals in a round, and this works out roughly how many rounds the battle will last from the enemy HP left.';
+
+// An ⓘ that shows its text on hover, and toggles it open on tap for touch screens.
+function useInfo(text, label) {
+  const [open, setOpen] = useState(false);
+  const button = (
+    <button type="button" className="info" title={text} aria-label={label} aria-expanded={open} onClick={(e) => { e.preventDefault(); setOpen(!open); }}>ⓘ</button>
+  );
+  return [button, open && <span className="hint">{text}</span>];
+}
+
 function XpPanel({ battle, beasts, setBattle }) {
   const x = xpSummary(battle, beasts);
+  const [scaleInfo, scaleHint] = useInfo(SCALE_HELP, 'What is enemy scale?');
+  const [damageInfo, damageHint] = useInfo(DAMAGE_HELP, 'What is party damage per round for?');
   return (
     <div className="panel">
       <h2>Encounter</h2>
@@ -346,15 +394,18 @@ function XpPanel({ battle, beasts, setBattle }) {
       </label>
       <dl className="kv">
         <dt>Total XP</dt><dd>{x.total.toLocaleString()}</dd>
-        <dt>XP per player</dt><dd>{Math.round(x.perPlayer).toLocaleString()}</dd>
-        <dt>Scale</dt><dd>×{x.scale.toFixed(2)}</dd>
-        <dt>XP award (each)</dt><dd><strong>{x.award.toLocaleString()}</strong></dd>
+        <dt title="Total XP ÷ party size">XP each (unscaled)</dt><dd><strong>{Math.floor(x.perPlayer).toLocaleString()}</strong></dd>
+        <dt>Enemy scale {scaleInfo}</dt>
+        <dd>×{x.scale.toFixed(2)}</dd>
+        {scaleHint && <dd className="hint-row">{scaleHint}</dd>}
+        <dt title="XP each (unscaled) × enemy scale">XP each (scaled)</dt><dd><strong>{x.award.toLocaleString()}</strong></dd>
         <dt>Enemy HP left</dt><dd>{x.remaining}</dd>
       </dl>
       <label className="field">
-        Party damage / round
+        <span>Party damage / round {damageInfo}</span>
         <input type="number" min="0" className="narrow" value={battle.partyDamage ?? ''} onChange={(e) => setBattle((b) => ({ ...b, partyDamage: e.target.value === '' ? null : Number(e.target.value) }))} />
       </label>
+      {damageHint}
       {x.rounds !== null && <p className="muted">About {x.rounds.toFixed(1)} rounds left.</p>}
     </div>
   );

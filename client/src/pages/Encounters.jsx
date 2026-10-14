@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { beastMap, uid } from '../rules.js';
 import { newMonster, partyCombatants, partyCount } from './Battle.jsx';
 
+const NEW_GROUP = '\u0000new';
+
 export default function Encounters({ state, update }) {
   const beasts = useMemo(() => beastMap(state.bestiary), [state.bestiary]);
   const [draft, setDraft] = useState(null);
@@ -26,9 +28,9 @@ export default function Encounters({ state, update }) {
   return (
     <div className="page">
       <div className="toolbar">
-        <p className="muted">Saved groups from Dungeon Rooms and Combat Tables. Starting one creates a new battle with your party added.</p>
+        <p className="muted">Saved groups of monsters. Starting one creates a new battle with your party added.</p>
         <span className="spacer" />
-        <button className="primary" onClick={() => setDraft({ id: uid('enc'), group: 'Custom', name: '', note: '', monsters: '' })}>New encounter</button>
+        <button className="primary" onClick={() => setDraft({ id: uid('enc'), group: groups[0] ?? 'Custom', newGroup: !groups.length, name: '', note: '', monsters: [] })}>New encounter</button>
       </div>
 
       {draft && (
@@ -36,18 +38,35 @@ export default function Encounters({ state, update }) {
           className="panel editor"
           onSubmit={(e) => {
             e.preventDefault();
-            const monsters = draft.monsters.split(',').map((s) => s.trim()).filter(Boolean);
-            if (!draft.name.trim() || !monsters.length) return;
-            update('encounters', (all) => [...all, { ...draft, name: draft.name.trim(), monsters }]);
+            if (!draft.name.trim() || !draft.monsters.length) return;
+            const { newGroup, ...enc } = draft;
+            update('encounters', (all) => [...all, { ...enc, name: draft.name.trim(), group: draft.group.trim() || 'Custom' }]);
             setDraft(null);
           }}
         >
           <h2>New encounter</h2>
           <label className="wide">Name<input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} required /></label>
-          <label className="wide">Group<input value={draft.group} onChange={(e) => setDraft({ ...draft, group: e.target.value })} /></label>
+          {groups.length > 0 && (
+            <label className="wide">
+              Group
+              <select
+                value={draft.newGroup ? NEW_GROUP : draft.group}
+                onChange={(e) => setDraft(e.target.value === NEW_GROUP ? { ...draft, group: '', newGroup: true } : { ...draft, group: e.target.value, newGroup: false })}
+              >
+                {groups.map((g) => <option key={g} value={g}>{g}</option>)}
+                <option value={NEW_GROUP}>New group…</option>
+              </select>
+            </label>
+          )}
+          {draft.newGroup && (
+            <label className="wide">
+              {groups.length ? 'New group name' : 'Group'}
+              <input value={draft.group} onChange={(e) => setDraft({ ...draft, group: e.target.value })} placeholder="Custom" autoFocus={groups.length > 0} />
+            </label>
+          )}
           <label className="wide">Note<input value={draft.note} onChange={(e) => setDraft({ ...draft, note: e.target.value })} /></label>
-          <label className="wide">Monsters, comma separated<input value={draft.monsters} onChange={(e) => setDraft({ ...draft, monsters: e.target.value })} placeholder="orc, orc, orc-war-chief" required /></label>
-          <div className="btn-row"><button className="primary">Save</button><button type="button" onClick={() => setDraft(null)}>Cancel</button></div>
+          <MonsterPicker bestiary={state.bestiary} monsters={draft.monsters} onChange={(monsters) => setDraft({ ...draft, monsters })} />
+          <div className="btn-row form-actions"><button className="primary" disabled={!draft.monsters.length}>Save encounter</button><button type="button" onClick={() => setDraft(null)}>Cancel</button></div>
         </form>
       )}
 
@@ -80,8 +99,52 @@ export default function Encounters({ state, update }) {
   );
 }
 
-function summarize(names) {
+// One pill per monster with a count; adding a name already in the list bumps its count.
+function MonsterPicker({ bestiary, monsters, onChange }) {
+  const [name, setName] = useState('');
+  const counts = countNames(monsters);
+  const add = () => {
+    const n = name.trim();
+    if (!n) return;
+    onChange([...monsters, bestiary.find((m) => m.name.toLowerCase() === n.toLowerCase())?.name ?? n]);
+    setName('');
+  };
+  const removeOne = (n) => {
+    const i = monsters.lastIndexOf(n);
+    onChange(monsters.filter((_, j) => j !== i));
+  };
+  return (
+    <div>
+      <span className="muted small">Monsters</span>
+      {counts.size > 0 && (
+        <div className="pills">
+          {[...counts].map(([n, c]) => (
+            <span key={n} className="pill">
+              {/* The count keeps a fixed width, so − and + stay put while you click them. */}
+              <strong className="count">{c}×</strong>
+              <span className="pill-name">{n}</span>
+              <button type="button" className="icon" title={`One less ${n}`} onClick={() => removeOne(n)}>−</button>
+              <button type="button" className="icon" title={`One more ${n}`} onClick={() => onChange([...monsters, n])}>+</button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="add-row">
+        <input list="encounter-beasts" placeholder="Add monster…" value={name} onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} aria-label="Add monster" />
+        <button type="button" onClick={add}>Add</button>
+        <datalist id="encounter-beasts">{bestiary.map((m) => <option key={m.name} value={m.name} />)}</datalist>
+      </div>
+    </div>
+  );
+}
+
+function countNames(names) {
   const counts = new Map();
   names.forEach((n) => counts.set(n, (counts.get(n) ?? 0) + 1));
-  return [...counts].map(([n, c]) => (c > 1 ? `${c}× ${n}` : n)).join(', ');
+  return counts;
+}
+
+function summarize(names) {
+  return [...countNames(names)].map(([n, c]) => (c > 1 ? `${c}× ${n}` : n)).join(', ');
 }

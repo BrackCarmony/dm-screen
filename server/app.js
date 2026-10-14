@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import fs from 'node:fs';
 import express from 'express';
-import { createDmStore, createUserStore } from './store.js';
+import { createDmStore, createFeedbackStore, createUserStore } from './store.js';
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
@@ -16,6 +16,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   const extraAdmins = new Set(String(adminEmails ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean));
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
+  const feedback = createFeedbackStore(dataDir);
   const session = sessionCookie(loadSecret(dataDir));
   const app = express();
   app.set('trust proxy', 'loopback');
@@ -93,9 +94,10 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   });
 
   app.post('/api/login', limiter, (req, res) => {
-    const user = users.byEmail(String(req.body?.email ?? '').trim());
+    const login = String(req.body?.email ?? '').trim();
+    const user = login.includes('@') ? users.byEmail(login) : users.byName(login);
     if (!user || !verifyPassword(String(req.body?.password ?? ''), user.password)) {
-      return res.status(401).json({ error: 'Wrong email or password.' });
+      return res.status(401).json({ error: 'Wrong email, name or password.' });
     }
     const updated = users.update(user.id, { lastLogin: new Date().toISOString(), lastSeen: new Date().toISOString() });
     setSession(req, res, updated);
@@ -136,10 +138,17 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   app.put('/api/account', requireDm, (req, res) => {
     const patch = {};
-    const { name, slug, currentPassword, newPassword } = req.body ?? {};
+    const { name, email, slug, currentPassword, newPassword } = req.body ?? {};
     if (name !== undefined) {
       if (!String(name).trim()) return res.status(400).json({ error: 'Name cannot be empty.' });
       patch.name = String(name).trim();
+    }
+    if (email !== undefined) {
+      const e = String(email).trim().toLowerCase();
+      if (!EMAIL_RE.test(e)) return res.status(400).json({ error: 'Enter a valid email.' });
+      const owner = users.byEmail(e);
+      if (owner && owner.id !== req.user.id) return res.status(409).json({ error: 'That email already has an account.' });
+      patch.email = e;
     }
     if (slug !== undefined && slug !== req.user.slug) {
       const s = String(slug).toLowerCase();
@@ -157,10 +166,8 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
       user = changePassword(user, String(newPassword));
       setSession(req, res, user);
     }
-    if (patch.slug) {
-      broadcast(oldSlug, { battle: null, order: [], moved: true });
-      broadcast(user.slug);
-    }
+    if (patch.slug) broadcast(oldSlug, { battle: null, order: [], moved: true });
+    broadcast(user.slug); // the player view shows the DM's name
     res.json({ user: publicUser(user) });
   });
 
@@ -168,6 +175,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   app.get('/api/admin/dms', requireAdmin, (req, res) => {
     const now = Date.now();
     const within = (iso, days) => !!iso && now - Date.parse(iso) < days * 86400000;
+    const allFeedback = feedback.all();
     const dmsList = users.all().map((u) => {
       const st = dms.get(u.id) ?? {};
       return {
@@ -187,6 +195,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
           shops: st.shop?.saved?.length ?? 0,
         },
         live: !!st.settings?.activeBattleId,
+        feedback: allFeedback.filter((f) => f.userId === u.id).length,
       };
     });
     dmsList.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
@@ -197,9 +206,42 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
         signups30: dmsList.filter((d) => within(d.createdAt, 30)).length,
         active7: dmsList.filter((d) => within(d.lastSeen, 7)).length,
         withBattles: dmsList.filter((d) => d.counts.battles > 0).length,
+        openFeedback: allFeedback.filter((f) => f.status === 'open').length,
       },
       dms: dmsList,
+      feedback: allFeedback.slice(-20).reverse().map((f) => ({ id: f.id, name: f.name, page: f.page, message: f.message, status: f.status, createdAt: f.createdAt })),
     });
+  });
+
+  // Feedback: DMs send it and see what happened to theirs; scripts/feedback.js reviews it.
+  const feedbackLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 10 });
+  const ownFeedback = (f) => ({ id: f.id, page: f.page, message: f.message, status: f.status, note: f.note, createdAt: f.createdAt, updatedAt: f.updatedAt });
+
+  app.get('/api/feedback', requireDm, (req, res) => {
+    res.json(feedback.forUser(req.user.id).map(ownFeedback).reverse());
+  });
+
+  app.post('/api/feedback', requireDm, feedbackLimiter, (req, res) => {
+    const message = String(req.body?.message ?? '').trim();
+    const page = String(req.body?.page ?? '').trim().slice(0, 40);
+    if (!message) return res.status(400).json({ error: 'Write some feedback first.' });
+    if (message.length > 4000) return res.status(400).json({ error: 'Keep it under 4,000 characters.' });
+    const now = new Date().toISOString();
+    let id;
+    do id = crypto.randomBytes(4).toString('hex'); while (feedback.byId(id));
+    const item = feedback.add({
+      id,
+      userId: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      page,
+      message,
+      status: 'open',
+      note: '',
+      createdAt: now,
+      updatedAt: now,
+    });
+    res.json(ownFeedback(item));
   });
 
   app.get('/api/state', requireDm, (req, res) => res.json(dms.get(req.user.id)));
@@ -217,7 +259,8 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   const viewFor = (slug) => {
     const user = users.bySlug(slug);
-    return user ? { dm: user.name, ...publicView(dms.get(user.id)) } : null;
+    const state = user && dms.get(user.id);
+    return state ? { dm: user.name, ...publicView(state) } : null;
   };
 
   function broadcast(slug, override) {

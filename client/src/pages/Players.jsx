@@ -5,16 +5,30 @@ export default function Players({ slug }) {
   const [live, setLive] = useState(false);
 
   useEffect(() => {
-    const es = new EventSource(`/api/public/${encodeURIComponent(slug)}/stream`);
-    es.onmessage = (e) => {
-      setView(JSON.parse(e.data));
-      setLive(true);
+    const url = `/api/public/${encodeURIComponent(slug)}`;
+    let es, retry, delay = 1000, stopped = false;
+    // The browser retries a dropped stream by itself, but gives up for good if the server answers
+    // with an error (e.g. while it restarts), so reconnect by hand when that happens.
+    const connect = () => {
+      es = new EventSource(`${url}/stream`);
+      es.onmessage = (e) => {
+        delay = 1000;
+        setView(JSON.parse(e.data));
+        setLive(true);
+      };
+      es.onerror = () => {
+        setLive(false);
+        fetch(url).then((r) => {
+          if (r.status === 404) { stopped = true; es.close(); setView({ missing: true }); }
+        }).catch(() => {}).finally(() => {
+          if (stopped || es.readyState !== EventSource.CLOSED) return;
+          retry = setTimeout(connect, delay);
+          delay = Math.min(delay * 2, 15000);
+        });
+      };
     };
-    es.onerror = () => {
-      setLive(false);
-      fetch(`/api/public/${encodeURIComponent(slug)}`).then((r) => r.status === 404 && (es.close(), setView({ missing: true })));
-    };
-    return () => es.close();
+    connect();
+    return () => { stopped = true; clearTimeout(retry); es.close(); };
   }, [slug]);
 
   if (!view) return <div className="center muted">Connecting…</div>;
@@ -23,7 +37,7 @@ export default function Players({ slug }) {
     <div className="players">
       <header>
         <h1>{view.battle ?? 'No battle running'}</h1>
-        {view.battle ? <div className="muted">Round {view.round}</div> : <div className="muted">{view.dm}</div>}
+        <div className="muted">{view.battle ? `Round ${view.round} · ` : ''}DM: {view.dm}</div>
         <span className={`dot ${live ? 'on' : ''}`} title={live ? 'Live' : 'Reconnecting'} />
       </header>
       <ol className="order">

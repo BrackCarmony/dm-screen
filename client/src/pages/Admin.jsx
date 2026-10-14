@@ -32,6 +32,7 @@ export default function Admin() {
         <Tile label="New in 30 days" value={t.signups30} />
         <Tile label="Active this week" value={t.active7} />
         <Tile label="Have made a battle" value={t.withBattles} />
+        <Tile label="Open feedback" value={t.openFeedback} />
       </div>
       <div className="toolbar">
         <h2>DMs</h2>
@@ -43,14 +44,14 @@ export default function Admin() {
           <thead>
             <tr>
               <th>Name</th><th>Email</th><th>Signed up</th><th>Last active</th>
-              <th>Battles</th><th>Party</th><th>Monsters</th><th>Encounters</th><th>Shops</th><th>Player link</th>
+              <th>Battles</th><th>Party</th><th>Monsters</th><th>Encounters</th><th>Shops</th><th>Feedback</th><th>Player link</th>
             </tr>
           </thead>
           <tbody>
             {data.dms.map((d) => (
               <tr key={d.id}>
                 <td><strong>{d.name}</strong>{d.admin && <span className="tag">admin</span>}</td>
-                <td>{d.email}</td>
+                <td>{d.email ?? <span className="muted">none yet</span>}</td>
                 <td>{date(d.createdAt)}</td>
                 <td title={d.lastSeen ?? ''}>{ago(d.lastSeen)}</td>
                 <td>{d.counts.battles}{d.live && <span className="tag live-tag">live</span>}</td>
@@ -58,6 +59,7 @@ export default function Admin() {
                 <td>{d.counts.monsters}</td>
                 <td>{d.counts.encounters}</td>
                 <td>{d.counts.shops}</td>
+                <td>{d.feedback}</td>
                 <td><a href={`/p/${d.slug}`} target="_blank" rel="noreferrer">/p/{d.slug}</a></td>
               </tr>
             ))}
@@ -65,6 +67,22 @@ export default function Admin() {
         </table>
       </div>
       <p className="muted small">Last active updates at most every 10 minutes while a DM uses the site.</p>
+
+      <h2>Recent feedback</h2>
+      {data.feedback.length === 0 ? <p className="muted">No feedback yet.</p> : (
+        <ul className="feedback-list">
+          {data.feedback.map((f) => (
+            <li key={f.id} className="panel">
+              <div className="panel-head">
+                <strong>{f.name}{f.page && <span className="muted"> · {f.page}</span>}</strong>
+                <span className={`status-pill ${f.status}`}>{f.status}</span>
+              </div>
+              <p className="feedback-text">{f.message}</p>
+              <span className="muted small">{date(f.createdAt)} · id {f.id}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

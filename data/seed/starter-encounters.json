@@ -1,0 +1,44 @@
+[
+ {
+  "id": "example-goblin-ambush",
+  "group": "Examples",
+  "name": "Goblin Ambush",
+  "note": "4 players, level 1-2",
+  "monsters": ["Goblin", "Goblin", "Goblin", "Goblin"]
+ },
+ {
+  "id": "example-owlbear-den",
+  "group": "Examples",
+  "name": "Owlbear Den",
+  "note": "4 players, level 3",
+  "monsters": ["Owlbear"]
+ },
+ {
+  "id": "example-bandit-roadblock",
+  "group": "Examples",
+  "name": "Bandit Roadblock",
+  "note": "4 players, level 3-4",
+  "monsters": ["Bandit Captain", "Bandit", "Bandit", "Bandit"]
+ },
+ {
+  "id": "example-restless-crypt",
+  "group": "Examples",
+  "name": "Restless Crypt",
+  "note": "4 players, level 4-5",
+  "monsters": ["Ghoul", "Ghoul", "Skeleton", "Skeleton", "Skeleton", "Skeleton", "Zombie", "Zombie"]
+ },
+ {
+  "id": "example-troll-bridge",
+  "group": "Examples",
+  "name": "Troll Bridge",
+  "note": "4 players, level 5-6",
+  "monsters": ["Troll", "Worg", "Worg"]
+ },
+ {
+  "id": "example-dragons-lair",
+  "group": "Examples",
+  "name": "Dragon's Lair",
+  "note": "4 players, level 9-10",
+  "monsters": ["Young Red Dragon", "Hell Hound", "Hell Hound"]
+ }
+]

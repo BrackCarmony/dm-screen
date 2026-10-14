@@ -55,3 +55,41 @@ export function xpSummary(battle, beasts) {
 
 let seq = 0;
 export const uid = (prefix = 'id') => `${prefix}-${Date.now().toString(36)}-${(seq++).toString(36)}`;
+
+// Bring a battle's players in line with the Party tab. Players are linked by partyId (or, for
+// battles made before that existed, by name); players added by hand in the battle (adhoc) are left alone.
+// Initiative and damage are kept. The party size used for XP follows along, but a hand-set size
+// alone doesn't count as a change. Returns the updated battle and what changed.
+export function syncParty(battle, party) {
+  const byId = new Map(party.map((p) => [p.id, p]));
+  const byName = new Map(party.map((p) => [p.name.trim().toLowerCase(), p]));
+  const linked = new Set();
+  const added = [], removed = [], renamed = [];
+  const combatants = [];
+  for (const c of battle.combatants) {
+    if (c.kind !== 'player' || c.adhoc) { combatants.push(c); continue; }
+    const p = c.partyId ? byId.get(c.partyId) : byName.get(c.name.trim().toLowerCase());
+    if (!p) {
+      if (c.partyId) removed.push(c.name); else combatants.push(c);
+    } else if (!p.inParty || linked.has(p.id)) {
+      removed.push(c.name);
+    } else {
+      linked.add(p.id);
+      if (p.name !== c.name) renamed.push([c.name, p.name]);
+      combatants.push({ ...c, partyId: p.id, name: p.name });
+    }
+  }
+  for (const p of party) {
+    if (!p.inParty || linked.has(p.id)) continue;
+    added.push(p.name);
+    combatants.push({ id: uid('p'), kind: 'player', partyId: p.id, name: p.name, mask: '', damage: [], init: null });
+  }
+  const partySize = party.filter((p) => p.inParty).length || 4;
+  const sizeChanged = battle.partySize !== partySize;
+  const changed = added.length > 0 || removed.length > 0 || renamed.length > 0;
+  const ids = new Set(combatants.map((c) => c.id));
+  return {
+    battle: { ...battle, combatants, partySize, turn: ids.has(battle.turn) ? battle.turn : null },
+    changed, added, removed, renamed, partySize: sizeChanged ? partySize : null,
+  };
+}
