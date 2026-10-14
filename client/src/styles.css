@@ -230,3 +230,11 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .admin-feedback-head { margin-top: 1.5rem; }
 .admin-feedback-head h2 { margin: 0; }
 .admin-feedback-head .seg button { flex: none; padding: .3rem .7rem; white-space: nowrap; }
+.tag.ai-tag { background: var(--pc); color: var(--accent-text); }
+.panel.generate { max-width: 640px; }
+.panel.generate h2 { margin: 0; }
+.agent-guide summary { cursor: pointer; color: var(--accent); font-size: .9rem; }
+.agent-guide[open] { background: var(--surface-2); border-radius: 8px; padding: .5rem .7rem .7rem; }
+.agent-guide p { margin: .4rem 0; }
+.guide-text { white-space: pre-wrap; font-size: .8rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: .5rem .6rem; max-height: 16rem; overflow: auto; margin: 0 0 .5rem; }
+textarea.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85rem; }

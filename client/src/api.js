@@ -4,7 +4,10 @@ async function call(method, url, body) {
     headers: body ? { 'Content-Type': 'application/json' } : undefined,
     body: body ? JSON.stringify(body) : undefined,
   });
-  if (!res.ok) throw Object.assign(new Error((await res.json().catch(() => ({}))).error || res.statusText), { status: res.status });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw Object.assign(new Error(data.error || res.statusText), { status: res.status, data });
+  }
   return res.json();
 }
 
@@ -21,5 +24,8 @@ export const api = {
   feedback: () => call('GET', '/api/feedback'),
   sendFeedback: (item) => call('POST', '/api/feedback', item),
   adminDms: () => call('GET', '/api/admin/dms'),
+  generateMonsters: (prompt) => call('POST', '/api/bestiary/generate', { prompt }),
+  importMonsters: (json) => call('POST', '/api/bestiary/import', { json }),
+  agentInstructions: () => call('GET', '/api/bestiary/agent-instructions'),
   markFeedback: (id, patch) => call('PUT', `/api/admin/feedback/${id}`, patch),
 };
