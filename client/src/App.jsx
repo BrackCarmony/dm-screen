@@ -8,6 +8,7 @@ import Party from './pages/Party.jsx';
 import Reference from './pages/Reference.jsx';
 import Account from './pages/Account.jsx';
 import Feedback from './pages/Feedback.jsx';
+import Help from './pages/Help.jsx';
 
 const TABS = [
   ['battle', 'Battle'],
@@ -77,6 +78,7 @@ export default function App() {
           ))}
         </nav>
         <div className="topbar-right">
+          <a href="#help" className={`help-btn ${tab === 'help' ? 'active' : ''}`} title="Getting started" aria-label="Getting started">?</a>
           <a href={`/p/${me.user.slug}`} target="_blank" rel="noreferrer">Player view ↗</a>
           <span className="muted">{me.user.name}</span>
           <button className="link" onClick={() => api.logout().then(load)}>Log out</button>
@@ -91,6 +93,7 @@ export default function App() {
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
         {tab === 'feedback' && <Feedback pages={TABS.filter(([id]) => id !== 'feedback').map(([, label]) => label)} />}
+        {tab === 'help' && <Help user={me.user} />}
         {tab === 'account' && <Account user={me.user} onChange={(user) => setMe({ ...me, user })} />}
       </main>
     </div>
@@ -108,7 +111,11 @@ function Auth({ firstAccount, onDone }) {
     setErr('');
     if (mode === 'forgot') return api.forgot(f.email).then(() => setSent(true)).catch((x) => setErr(x.message));
     const go = mode === 'signup' ? api.signup(f) : api.login(f.email, f.password);
-    go.then(onDone).catch((x) => setErr(x.message));
+    go.then(() => {
+      // New accounts start on the getting-started guide.
+      if (mode === 'signup') window.location.hash = 'help';
+      onDone();
+    }).catch((x) => setErr(x.message));
   };
   if (mode === 'forgot') {
     return (

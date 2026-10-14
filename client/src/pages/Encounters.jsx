@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { beastMap, uid } from '../rules.js';
 import { newMonster, partyCombatants, partyCount } from './Battle.jsx';
 
+const NEW_GROUP = '\u0000new';
+
 export default function Encounters({ state, update }) {
   const beasts = useMemo(() => beastMap(state.bestiary), [state.bestiary]);
   const [draft, setDraft] = useState(null);
@@ -28,7 +30,7 @@ export default function Encounters({ state, update }) {
       <div className="toolbar">
         <p className="muted">Saved groups of monsters. Starting one creates a new battle with your party added.</p>
         <span className="spacer" />
-        <button className="primary" onClick={() => setDraft({ id: uid('enc'), group: 'Custom', name: '', note: '', monsters: [] })}>New encounter</button>
+        <button className="primary" onClick={() => setDraft({ id: uid('enc'), group: groups[0] ?? 'Custom', newGroup: !groups.length, name: '', note: '', monsters: [] })}>New encounter</button>
       </div>
 
       {draft && (
@@ -37,16 +39,34 @@ export default function Encounters({ state, update }) {
           onSubmit={(e) => {
             e.preventDefault();
             if (!draft.name.trim() || !draft.monsters.length) return;
-            update('encounters', (all) => [...all, { ...draft, name: draft.name.trim() }]);
+            const { newGroup, ...enc } = draft;
+            update('encounters', (all) => [...all, { ...enc, name: draft.name.trim(), group: draft.group.trim() || 'Custom' }]);
             setDraft(null);
           }}
         >
           <h2>New encounter</h2>
           <label className="wide">Name<input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} required /></label>
-          <label className="wide">Group<input value={draft.group} onChange={(e) => setDraft({ ...draft, group: e.target.value })} /></label>
+          {groups.length > 0 && (
+            <label className="wide">
+              Group
+              <select
+                value={draft.newGroup ? NEW_GROUP : draft.group}
+                onChange={(e) => setDraft(e.target.value === NEW_GROUP ? { ...draft, group: '', newGroup: true } : { ...draft, group: e.target.value, newGroup: false })}
+              >
+                {groups.map((g) => <option key={g} value={g}>{g}</option>)}
+                <option value={NEW_GROUP}>New group…</option>
+              </select>
+            </label>
+          )}
+          {draft.newGroup && (
+            <label className="wide">
+              {groups.length ? 'New group name' : 'Group'}
+              <input value={draft.group} onChange={(e) => setDraft({ ...draft, group: e.target.value })} placeholder="Custom" autoFocus={groups.length > 0} />
+            </label>
+          )}
           <label className="wide">Note<input value={draft.note} onChange={(e) => setDraft({ ...draft, note: e.target.value })} /></label>
           <MonsterPicker bestiary={state.bestiary} monsters={draft.monsters} onChange={(monsters) => setDraft({ ...draft, monsters })} />
-          <div className="btn-row"><button className="primary" disabled={!draft.monsters.length}>Save</button><button type="button" onClick={() => setDraft(null)}>Cancel</button></div>
+          <div className="btn-row form-actions"><button className="primary" disabled={!draft.monsters.length}>Save encounter</button><button type="button" onClick={() => setDraft(null)}>Cancel</button></div>
         </form>
       )}
 
@@ -100,7 +120,9 @@ function MonsterPicker({ bestiary, monsters, onChange }) {
         <div className="pills">
           {[...counts].map(([n, c]) => (
             <span key={n} className="pill">
-              {c > 1 && <strong>{c}×</strong>} {n}
+              {/* The count keeps a fixed width, so − and + stay put while you click them. */}
+              <strong className="count">{c}×</strong>
+              <span className="pill-name">{n}</span>
               <button type="button" className="icon" title={`One less ${n}`} onClick={() => removeOne(n)}>−</button>
               <button type="button" className="icon" title={`One more ${n}`} onClick={() => onChange([...monsters, n])}>+</button>
             </span>

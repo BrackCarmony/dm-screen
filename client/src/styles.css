@@ -44,6 +44,8 @@ button:hover { filter: brightness(.96); }
 button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 button.danger { color: var(--bad); }
 button.live { background: var(--good); border-color: var(--good); color: var(--accent-text); }
+a.button { display: inline-block; text-decoration: none; border: 1px solid var(--border); border-radius: 6px; padding: .35rem .7rem; background: var(--surface-2); color: var(--text); }
+a.button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 button.link { background: none; border: 0; color: var(--accent); padding: 0; text-decoration: underline; }
 button.icon { background: none; border: 0; padding: .1rem .35rem; color: var(--muted); }
 button.icon:hover { color: var(--text); }
@@ -63,6 +65,7 @@ button.icon:hover { color: var(--text); }
 .topbar-right { margin-left: auto; display: flex; gap: 1rem; align-items: center; }
 .banner { background: var(--surface-2); padding: .5rem 1rem; border-bottom: 1px solid var(--border); }
 .banner.error { color: var(--bad); }
+.party-changed { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; background: var(--surface-2); border: 1px solid var(--warn); border-radius: 8px; padding: .5rem .75rem; margin-bottom: 1rem; }
 main { padding: 1rem; max-width: 1500px; margin: 0 auto; }
 
 .toolbar { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
@@ -77,6 +80,9 @@ main { padding: 1rem; max-width: 1500px; margin: 0 auto; }
 .kv { display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; margin: .6rem 0; }
 .kv dt { color: var(--muted); }
 .kv dd { margin: 0; text-align: right; }
+.kv dd.hint-row { grid-column: 1 / -1; text-align: left; }
+.hint { display: block; font-size: .85rem; color: var(--muted); background: var(--surface-2); border-radius: 6px; padding: .4rem .6rem; margin: .2rem 0; }
+button.info { background: none; border: 0; padding: 0 .15rem; color: var(--accent); cursor: help; font-size: .9rem; line-height: 1; }
 
 .battle-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1rem; align-items: start; }
 .battle-grid aside { position: sticky; top: 4rem; }
@@ -103,8 +109,11 @@ main { padding: 1rem; max-width: 1500px; margin: 0 auto; }
 .dmg input { flex: 1; }
 .log { display: flex; flex-wrap: wrap; gap: .25rem; }
 .pills { display: flex; flex-wrap: wrap; gap: .3rem; margin: .3rem 0; }
-.pill { display: inline-flex; align-items: center; gap: .2rem; background: var(--surface-2); color: var(--text); border-radius: 999px; padding: .1rem .2rem .1rem .6rem; font-size: .85rem; }
+.pill { display: inline-flex; align-items: center; gap: .1rem; background: var(--surface-2); color: var(--text); border-radius: 999px; padding: .1rem .2rem; font-size: .85rem; }
 .pill button.icon { padding: 0 .3rem; }
+.pill .count { min-width: 3ch; text-align: center; font-variant-numeric: tabular-nums; }
+.pill .count { padding-left: .3rem; }
+.pill .pill-name { padding: 0 .2rem 0 .15rem; }
 .chip { font-size: .8rem; padding: .05rem .45rem; border-radius: 999px; color: var(--bad); }
 .chip.heal { color: var(--good); }
 .attacks { margin: 0; padding-left: 1.1rem; font-size: .9rem; }
@@ -134,8 +143,14 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 
 .editor { display: flex; flex-direction: column; gap: .4rem; }
 .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .4rem; }
+.form-grid .span-2 { grid-column: span 2; }
+.xp-value { padding: .35rem 0; color: var(--text); font-weight: 600; }
+.saves-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; border: 1px solid var(--border); border-radius: 8px; padding: .4rem .6rem .6rem; margin: .2rem 0; }
+.saves-grid legend { font-size: .85rem; color: var(--muted); padding: 0 .3rem; }
 .editor label, .form-row label { display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); gap: .15rem; }
 .editor label input, .editor label textarea { color: var(--text); }
+.panel.editor { max-width: 640px; }
+.form-actions { border-top: 1px solid var(--border); padding-top: .75rem; margin-top: .5rem; }
 .form-row { display: flex; gap: .5rem; flex-wrap: wrap; }
 
 .enc-grid, .shop-grid { margin-top: .8rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .8rem; margin-bottom: 1.5rem; }
@@ -196,3 +211,12 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .status-pill { font-size: .75rem; padding: .05rem .5rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
 .status-pill.addressed { color: var(--good); border-color: var(--good); }
 .status-pill.rejected { color: var(--bad); border-color: var(--bad); }
+
+.help-btn { display: inline-flex; align-items: center; justify-content: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 1px solid var(--border); text-decoration: none; color: var(--text); font-weight: 600; }
+.help-btn:hover, .help-btn.active { background: var(--surface-2); }
+.help h2 { display: flex; align-items: center; gap: .5rem; margin-top: 0; }
+.help .step { display: inline-flex; align-items: center; justify-content: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--accent); color: var(--accent-text); font-size: .9rem; flex: none; }
+.help ul { padding-left: 1.2rem; margin: .4rem 0; }
+.help li { margin: .3rem 0; }
+.help p { margin: .4rem 0; }
+.help a { overflow-wrap: anywhere; }

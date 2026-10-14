@@ -14,6 +14,7 @@ const COLUMNS = [
   { key: 'init', label: 'Init', get: (m) => m.init },
   { key: 'xp', label: 'XP', get: (m) => m.xp },
 ];
+const missingCr = (v) => v === null || v === undefined || v === '';
 const missing = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);
 
 export default function Bestiary({ state, update }) {
@@ -79,7 +80,7 @@ export default function Bestiary({ state, update }) {
         <button className="primary" onClick={() => setEditing({ original: null, m: { ...BLANK } })}>New monster</button>
       </div>
 
-      {editing && <Editor initial={editing.m} names={state.bestiary.map((m) => m.name)} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />}
+      {editing && <Editor initial={editing.m} names={state.bestiary.map((m) => m.name)} xpTable={state.xp.cr} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />}
 
       <div className="table-wrap">
         <table className="data">
@@ -129,11 +130,17 @@ export default function Bestiary({ state, update }) {
   );
 }
 
-function Editor({ initial, names, original, onSave, onCancel }) {
+function Editor({ initial, names, xpTable, original, onSave, onCancel }) {
   const [m, setM] = useState({ ...initial, attacks: [...initial.attacks] });
   const set = (k) => (e) => setM({ ...m, [k]: e.target.value });
   const n = (v) => (v === '' || v === null || v === undefined ? null : Number(v));
   const clash = m.name.trim() && m.name.trim() !== original && names.includes(m.name.trim());
+  // XP comes from the CR via the XP table. A CR that isn't in the table keeps the monster's own XP.
+  const crs = xpTable.map((r) => r.cr);
+  if (!missingCr(initial.cr) && !crs.includes(Number(initial.cr))) crs.push(Number(initial.cr));
+  crs.sort((a, b) => a - b);
+  const xpFor = (cr) => (missingCr(cr) ? null : xpTable.find((r) => r.cr === Number(cr))?.xp ?? (Number(cr) === Number(initial.cr) ? initial.xp ?? null : null));
+  const xp = xpFor(m.cr);
 
   return (
     <form
@@ -144,7 +151,7 @@ function Editor({ initial, names, original, onSave, onCancel }) {
         onSave({
           ...m,
           name: m.name.trim(),
-          hp: n(m.hp), ac: n(m.ac), init: n(m.init), cr: n(m.cr), xp: n(m.xp),
+          hp: n(m.hp), ac: n(m.ac), init: n(m.init), cr: n(m.cr), xp,
           saves: Object.fromEntries(SAVES.map((s) => [s, n(m.saves?.[s])])),
           attacks: m.attacks.map((a) => a.trim()).filter(Boolean),
         });
@@ -152,17 +159,26 @@ function Editor({ initial, names, original, onSave, onCancel }) {
     >
       <h2>{original ? `Edit ${original}` : 'New monster'}</h2>
       <div className="form-grid">
-        <label>Name<input value={m.name} onChange={set('name')} required /></label>
+        <label className="span-2">Name<input value={m.name} onChange={set('name')} required /></label>
+        <label>
+          CR
+          <select value={missingCr(m.cr) ? '' : String(Number(m.cr))} onChange={set('cr')}>
+            <option value="">–</option>
+            {crs.map((c) => <option key={c} value={String(c)}>{fmtCr(c)}</option>)}
+          </select>
+        </label>
+        <label>XP<output className="xp-value">{xp === null ? '–' : xp.toLocaleString()}</output></label>
         <label>HP<input type="number" value={m.hp ?? ''} onChange={set('hp')} /></label>
         <label>AC<input type="number" value={m.ac ?? ''} onChange={set('ac')} /></label>
         <label>Speed<input value={m.speed ?? ''} onChange={set('speed')} /></label>
-        <label>Init<input type="number" value={m.init ?? ''} onChange={set('init')} /></label>
-        <label>CR<input type="number" step="any" value={m.cr ?? ''} onChange={set('cr')} /></label>
-        <label>XP<input type="number" value={m.xp ?? ''} onChange={set('xp')} /></label>
-        {SAVES.map((s) => (
-          <label key={s}>{s.toUpperCase()} save<input type="number" value={m.saves?.[s] ?? ''} onChange={(e) => setM({ ...m, saves: { ...m.saves, [s]: e.target.value } })} /></label>
-        ))}
+        <label>Initiative<input type="number" value={m.init ?? ''} onChange={set('init')} /></label>
       </div>
+      <fieldset className="saves-grid">
+        <legend>Saves</legend>
+        {SAVES.map((s) => (
+          <label key={s}>{s.toUpperCase()}<input type="number" value={m.saves?.[s] ?? ''} onChange={(e) => setM({ ...m, saves: { ...m.saves, [s]: e.target.value } })} /></label>
+        ))}
+      </fieldset>
       {/* Always one blank attack at the end; typing in it adds another. */}
       {[...m.attacks, ''].map((a, i) => (
         <label key={i} className="wide">
@@ -176,8 +192,8 @@ function Editor({ initial, names, original, onSave, onCancel }) {
       <label className="wide">Special<textarea rows={3} value={m.special ?? ''} onChange={set('special')} /></label>
       <label className="wide">Link<input value={m.url ?? ''} onChange={set('url')} /></label>
       {clash && <p className="error-text">A monster with that name already exists.</p>}
-      <div className="btn-row">
-        <button className="primary">Save</button>
+      <div className="btn-row form-actions">
+        <button className="primary">Save monster</button>
         <button type="button" onClick={onCancel}>Cancel</button>
       </div>
     </form>
