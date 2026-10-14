@@ -12,7 +12,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'dm';
 
-export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer() }) {
+export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS }) {
+  const extraAdmins = new Set(String(adminEmails ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean));
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
   const feedback = createFeedbackStore(dataDir);
@@ -21,12 +22,31 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   app.set('trust proxy', 'loopback');
   app.use(express.json({ limit: '5mb' }));
 
-  const currentUser = (req) => session.read(req.headers.cookie, users.byId);
+  const ACTIVE_WRITE_MS = 10 * 60 * 1000;
+  // Records when a DM was last seen, at most every few minutes so it doesn't rewrite users.json on every click.
+  const touch = (user) => {
+    const now = Date.now();
+    if (user.lastSeen && now - Date.parse(user.lastSeen) < ACTIVE_WRITE_MS) return user;
+    return users.update(user.id, { lastSeen: new Date(now).toISOString() });
+  };
+  const currentUser = (req) => {
+    const user = session.read(req.headers.cookie, users.byId);
+    return user ? touch(user) : null;
+  };
+  // Admins: the first account (flagged at sign-up, or the oldest account on data made before admins existed) and ADMIN_EMAILS.
+  const isAdmin = (u) => {
+    if (!u) return false;
+    if (u.admin === true || extraAdmins.has(u.email)) return true;
+    const all = users.all();
+    return !all.some((x) => x.admin === true) && all[0]?.id === u.id;
+  };
   const requireDm = (req, res, next) => {
     req.user = currentUser(req);
     if (req.user) return next();
     res.status(401).json({ error: 'login required' });
   };
+  const requireAdmin = (req, res, next) =>
+    requireDm(req, res, () => (isAdmin(req.user) ? next() : res.status(403).json({ error: 'admins only' })));
   const setSession = (req, res, user) => {
     const secure = req.secure ? '; Secure' : '';
     const value = user ? encodeURIComponent(session.issue(user)) : '';
@@ -35,7 +55,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   // New password: bump sessionVersion so other devices are signed out, and drop any reset token.
   const changePassword = (user, password) =>
     users.update(user.id, { password: hashPassword(password), sessionVersion: (user.sessionVersion ?? 0) + 1, resetHash: null, resetExpires: null });
-  const publicUser = (u) => u && { id: u.id, email: u.email, name: u.name, slug: u.slug };
+  const publicUser = (u) => u && { id: u.id, email: u.email, name: u.name, slug: u.slug, admin: isAdmin(u) };
 
   function uniqueSlug(base) {
     let slug = slugify(base);
@@ -64,7 +84,9 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
       slug: uniqueSlug(name),
       password: hashPassword(password),
       sessionVersion: 0,
+      admin: first,
       createdAt: new Date().toISOString(),
+      lastSeen: new Date().toISOString(),
     });
     dms.create(user.id, { full: first });
     setSession(req, res, user);
@@ -77,8 +99,9 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     if (!user || !verifyPassword(String(req.body?.password ?? ''), user.password)) {
       return res.status(401).json({ error: 'Wrong email, name or password.' });
     }
-    setSession(req, res, user);
-    res.json({ user: publicUser(user) });
+    const updated = users.update(user.id, { lastLogin: new Date().toISOString(), lastSeen: new Date().toISOString() });
+    setSession(req, res, updated);
+    res.json({ user: publicUser(updated) });
   });
 
   // Always answers the same way, so it doesn't reveal which emails have accounts.
@@ -146,6 +169,48 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     if (patch.slug) broadcast(oldSlug, { battle: null, order: [], moved: true });
     broadcast(user.slug); // the player view shows the DM's name
     res.json({ user: publicUser(user) });
+  });
+
+  // Admin: who has signed up and whether they use it. Read-only; no campaign contents.
+  app.get('/api/admin/dms', requireAdmin, (req, res) => {
+    const now = Date.now();
+    const within = (iso, days) => !!iso && now - Date.parse(iso) < days * 86400000;
+    const allFeedback = feedback.all();
+    const dmsList = users.all().map((u) => {
+      const st = dms.get(u.id) ?? {};
+      return {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        slug: u.slug,
+        admin: isAdmin(u),
+        createdAt: u.createdAt ?? null,
+        lastSeen: u.lastSeen ?? null,
+        lastLogin: u.lastLogin ?? null,
+        counts: {
+          battles: st.battles?.length ?? 0,
+          party: st.party?.length ?? 0,
+          monsters: st.bestiary?.length ?? 0,
+          encounters: st.encounters?.length ?? 0,
+          shops: st.shop?.saved?.length ?? 0,
+        },
+        live: !!st.settings?.activeBattleId,
+        feedback: allFeedback.filter((f) => f.userId === u.id).length,
+      };
+    });
+    dmsList.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+    res.json({
+      totals: {
+        dms: dmsList.length,
+        signups7: dmsList.filter((d) => within(d.createdAt, 7)).length,
+        signups30: dmsList.filter((d) => within(d.createdAt, 30)).length,
+        active7: dmsList.filter((d) => within(d.lastSeen, 7)).length,
+        withBattles: dmsList.filter((d) => d.counts.battles > 0).length,
+        openFeedback: allFeedback.filter((f) => f.status === 'open').length,
+      },
+      dms: dmsList,
+      feedback: allFeedback.slice(-20).reverse().map((f) => ({ id: f.id, name: f.name, page: f.page, message: f.message, status: f.status, createdAt: f.createdAt })),
+    });
   });
 
   // Feedback: DMs send it and see what happened to theirs; scripts/feedback.js reviews it.

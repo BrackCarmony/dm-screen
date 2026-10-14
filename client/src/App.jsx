@@ -7,6 +7,7 @@ import Shop from './pages/Shop.jsx';
 import Party from './pages/Party.jsx';
 import Reference from './pages/Reference.jsx';
 import Account from './pages/Account.jsx';
+import Admin from './pages/Admin.jsx';
 import Feedback from './pages/Feedback.jsx';
 import Help from './pages/Help.jsx';
 
@@ -73,7 +74,7 @@ export default function App() {
       <header className="topbar">
         <div className="brand">DM Screen</div>
         <nav>
-          {TABS.map(([id, label]) => (
+          {[...TABS, ...(me.user.admin ? [['admin', 'Admin']] : [])].map(([id, label]) => (
             <a key={id} href={`#${id}`} className={tab === id ? 'active' : ''}>{label}</a>
           ))}
         </nav>
@@ -92,6 +93,7 @@ export default function App() {
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
+        {tab === 'admin' && me.user.admin && <Admin />}
         {tab === 'feedback' && <Feedback pages={TABS.filter(([id]) => id !== 'feedback').map(([, label]) => label)} />}
         {tab === 'help' && <Help user={me.user} />}
         {tab === 'account' && <Account user={me.user} onChange={(user) => setMe({ ...me, user })} />}

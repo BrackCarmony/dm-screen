@@ -96,6 +96,37 @@ test('forged session cookies are rejected', async (t) => {
   assert.equal(res.status, 401);
 });
 
+test('only admins can see the DM list', async (t) => {
+  const { base, close } = await startServer();
+  t.after(close);
+  const brack = client(base);
+  const sam = client(base);
+  await brack('POST', '/api/signup', { email: 'brack@example.com', name: 'Brack', password: 'longenough' });
+  const s = await sam('POST', '/api/signup', { email: 'sam@example.com', name: 'Sam', password: 'longenough' });
+  assert.equal(s.body.user.admin, false);
+  assert.equal((await brack('GET', '/api/me')).body.user.admin, true);
+
+  assert.equal((await client(base)('GET', '/api/admin/dms')).status, 401);
+  assert.equal((await sam('GET', '/api/admin/dms')).status, 403);
+
+  const r = await brack('GET', '/api/admin/dms');
+  assert.equal(r.status, 200);
+  assert.equal(r.body.totals.dms, 2);
+  assert.equal(r.body.totals.signups7, 2);
+  assert.equal(r.body.totals.active7, 2);
+  assert.deepEqual(r.body.dms.map((d) => d.email).sort(), ['brack@example.com', 'sam@example.com']);
+  const samRow = r.body.dms.find((d) => d.email === 'sam@example.com');
+  assert.equal(samRow.counts.battles, 0);
+  assert.ok(samRow.counts.monsters > 0);
+  assert.ok(samRow.lastSeen);
+  await sam('POST', '/api/feedback', { message: 'Love it', page: 'Battle' });
+  const r2 = await brack('GET', '/api/admin/dms');
+  assert.equal(r2.body.totals.openFeedback, 1);
+  assert.equal(r2.body.feedback[0].message, 'Love it');
+  assert.equal(r2.body.dms.find((d) => d.email === 'sam@example.com').feedback, 1);
+  assert.equal(JSON.stringify(r.body).includes('scrypt'), false, 'no password hashes');
+});
+
 test('accounts from before email sign-up still log in by username', async (t) => {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dm-screen-'));
   const salt = 'abcd1234';
@@ -109,7 +140,7 @@ test('accounts from before email sign-up still log in by username', async (t) =>
   assert.equal((await dm('POST', '/api/login', { email: 'kedirech', password: 'wrong-one' })).status, 401);
   const res = await dm('POST', '/api/login', { email: 'Kedirech', password: 'longenough' });
   assert.equal(res.status, 200);
-  assert.deepEqual(res.body.user, { id: 'u1', email: null, name: 'Brack', slug: 'kedirech' });
+  assert.deepEqual(res.body.user, { id: 'u1', email: null, name: 'Brack', slug: 'kedirech', admin: true });
   assert.equal((await dm('PUT', '/api/account', { email: 'brack@example.com' })).body.user.email, 'brack@example.com');
   await dm('POST', '/api/logout');
   assert.equal((await dm('POST', '/api/login', { email: 'brack@example.com', password: 'longenough' })).status, 200);

@@ -10,6 +10,10 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 - Later accounts start with the SRD starter bestiary, the XP tables and magic item tables, a few example encounters (`data/seed/starter-encounters.json`), and an empty party, battles and shops.
 - Each DM's players follow `/p/<link>`, for example `/p/brack`. The link is set on the Account page.
 
+### Admin
+
+The first account is the admin and gets an **Admin** tab: totals (DMs, new sign-ups, active this week, DMs with a battle) and a list of every DM with their sign-up date, last activity, how much they've built, and their player link. It doesn't show anyone's campaign contents. To make more admins, list their emails in `ADMIN_EMAILS` (comma separated).
+
 ### Passwords
 
 - **Change:** on the Account page. This signs the DM out on their other devices.
