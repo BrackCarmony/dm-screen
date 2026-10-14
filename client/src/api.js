@@ -20,4 +20,6 @@ export const api = {
   put: (key, value) => call('PUT', `/api/state/${key}`, value),
   feedback: () => call('GET', '/api/feedback'),
   sendFeedback: (item) => call('POST', '/api/feedback', item),
+  adminDms: () => call('GET', '/api/admin/dms'),
+  markFeedback: (id, patch) => call('PUT', `/api/admin/feedback/${id}`, patch),
 };

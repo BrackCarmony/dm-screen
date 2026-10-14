@@ -12,7 +12,7 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 
 ### Admin
 
-The first account is the admin and gets an **Admin** tab: totals (DMs, new sign-ups, active this week, DMs with a battle) and a list of every DM with their sign-up date, last activity, how much they've built, and their player link. It doesn't show anyone's campaign contents. To make more admins, list their emails in `ADMIN_EMAILS` (comma separated).
+The first account is the admin and gets an **Admin** tab: totals (DMs, new sign-ups, active this week, DMs with a battle) a list of every DM with their sign-up date, last activity, how much they've built, and their player link, and all feedback, which can be marked addressed or won't do, with a reply the DM sees. It doesn't show anyone's campaign contents. To make more admins, list their emails in `ADMIN_EMAILS` (comma separated).
 
 ### Passwords
 
@@ -33,7 +33,7 @@ The first account is the admin and gets an **Admin** tab: totals (DMs, new sign-
 
 ## Reviewing feedback
 
-Feedback is kept in `$DATA_DIR/feedback.json`. Review it from the command line; DMs see the status and note on their Feedback page.
+Feedback is kept in `$DATA_DIR/feedback.json`. Review it on the Admin page or from the command line; DMs see the status and note on their Feedback page.
 
 ```sh
 scripts/prod-feedback.sh list                  # open feedback on the live site (over ssh)
