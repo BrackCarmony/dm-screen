@@ -6,13 +6,14 @@ import { FEEDBACK_STATUSES, createDmStore, createFeedbackStore, createUserStore 
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
+import { AGENT_INSTRUCTIONS, MAX_PROMPT, createMonsterGenerator, parseImport } from './ai.js';
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,30}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'dm';
 
-export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS }) {
+export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS, generator = createMonsterGenerator(), aiUses = Number(process.env.AI_BETA_USES) || 5 }) {
   const extraAdmins = new Set(String(adminEmails ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean));
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
@@ -66,7 +67,13 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   const limiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 20 });
 
-  app.get('/api/me', (req, res) => res.json({ user: publicUser(currentUser(req)), firstAccount: users.count() === 0 }));
+  // AI monsters (beta): each account gets aiUses generations. A use only counts once the monsters are saved.
+  const aiStatus = (u) => ({ enabled: generator.enabled, used: u.aiUses ?? 0, limit: aiUses });
+
+  app.get('/api/me', (req, res) => {
+    const user = currentUser(req);
+    res.json({ user: publicUser(user), firstAccount: users.count() === 0, ai: user ? aiStatus(user) : null });
+  });
 
   app.post('/api/signup', limiter, (req, res) => {
     const email = String(req.body?.email ?? '').trim().toLowerCase();
@@ -254,6 +261,64 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
       updatedAt: now,
     });
     res.json(ownFeedback(item));
+  });
+
+  // Add monsters to a DM's bestiary as it is now (they may have edited it meanwhile), keeping names unique.
+  function addToBestiary(userId, made) {
+    const bestiary = dms.get(userId).bestiary;
+    const taken = new Set(bestiary.map((m) => m.name.toLowerCase()));
+    const monsters = made.map((m) => {
+      let name = m.name;
+      for (let n = 2; taken.has(name.toLowerCase()); n++) name = `${m.name} ${n}`;
+      taken.add(name.toLowerCase());
+      return { ...m, name };
+    });
+    dms.set(userId, 'bestiary', [...bestiary, ...monsters]);
+    return monsters;
+  }
+
+  // Monsters made elsewhere (another AI, a friend's export): pasted JSON in the bestiary's shape. Free and needs no key.
+  app.get('/api/bestiary/agent-instructions', requireDm, (req, res) => res.json({ text: AGENT_INSTRUCTIONS }));
+
+  const importLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 30 });
+  app.post('/api/bestiary/import', requireDm, importLimiter, (req, res) => {
+    const json = req.body?.json;
+    if (typeof json !== 'string' || !json.trim()) return res.status(400).json({ error: 'Paste the monsters JSON first.' });
+    let parsed;
+    try {
+      parsed = parseImport(json, { xpTable: dms.get(req.user.id).xp?.cr ?? [] });
+    } catch (e) {
+      if (!e.code) throw e;
+      return res.status(400).json({ error: e.message });
+    }
+    res.json({ monsters: addToBestiary(req.user.id, parsed.monsters), skipped: parsed.skipped });
+  });
+
+  const generating = new Set(); // user ids with a generation in progress
+  const aiLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 10 });
+
+  app.post('/api/bestiary/generate', requireDm, aiLimiter, async (req, res) => {
+    const prompt = String(req.body?.prompt ?? '').trim();
+    const status = aiStatus(req.user);
+    if (!status.enabled) return res.status(503).json({ error: "AI monsters aren't set up on this server.", ai: status });
+    if (status.used >= status.limit) return res.status(403).json({ error: `You've used all ${status.limit} AI generations in the beta.`, ai: status });
+    if (!prompt) return res.status(400).json({ error: 'Describe the monsters you want.', ai: status });
+    if (prompt.length > MAX_PROMPT) return res.status(400).json({ error: `Keep the prompt under ${MAX_PROMPT} characters.`, ai: status });
+    if (generating.has(req.user.id)) return res.status(409).json({ error: 'Already making monsters. Wait for that to finish.', ai: status });
+
+    generating.add(req.user.id);
+    try {
+      const made = await generator.generate(prompt, { xpTable: dms.get(req.user.id).xp?.cr ?? [] });
+      const monsters = addToBestiary(req.user.id, made);
+      const user = users.update(req.user.id, { aiUses: status.used + 1 });
+      res.json({ monsters, ai: aiStatus(user) });
+    } catch (e) {
+      if (!e.code) console.error('[ai] generation failed:', e);
+      const code = { busy: 503, unavailable: 503, refused: 422, invalid: 502 }[e.code] ?? 500;
+      res.status(code).json({ error: `${e.code ? e.message : 'Something went wrong making monsters.'} This didn't use one of your generations.`, ai: status });
+    } finally {
+      generating.delete(req.user.id);
+    }
   });
 
   app.get('/api/state', requireDm, (req, res) => res.json(dms.get(req.user.id)));

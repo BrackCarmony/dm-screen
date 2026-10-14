@@ -88,7 +88,7 @@ export default function App() {
       {saveError && <div className="banner error">{saveError}</div>}
       <main>
         {tab === 'battle' && <Battle {...props} />}
-        {tab === 'bestiary' && <Bestiary {...props} />}
+        {tab === 'bestiary' && <Bestiary {...props} ai={me.ai} onAi={(ai) => setMe((m) => ({ ...m, ai }))} />}
         {tab === 'encounters' && <Encounters {...props} />}
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
