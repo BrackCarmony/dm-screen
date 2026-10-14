@@ -177,3 +177,10 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .save-menu button { all: unset; box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; gap: 1rem; padding: .3rem .5rem; border-radius: 5px; cursor: pointer; }
 .save-menu button:hover, .save-menu button:focus-visible { background: var(--surface-2); }
 .save-menu button.on { font-weight: 700; color: var(--accent); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .6rem; margin-bottom: 1.2rem; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .7rem .9rem; display: flex; flex-direction: column; }
+.tile-value { font-family: Georgia, serif; font-size: 1.8rem; font-weight: bold; }
+.tile-label { color: var(--muted); font-size: .85rem; }
+.tag { font-size: .7rem; margin-left: .4rem; padding: .05rem .4rem; border-radius: 999px; background: var(--surface-2); color: var(--muted); vertical-align: middle; }
+.live-tag { color: var(--good); }
+.toolbar h2 { margin: 0; }

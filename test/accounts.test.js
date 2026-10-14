@@ -89,3 +89,29 @@ test('forged session cookies are rejected', async (t) => {
   const res = await fetch(`${base}/api/state`, { headers: { cookie: 'sid=someone.deadbeef' } });
   assert.equal(res.status, 401);
 });
+
+test('only admins can see the DM list', async (t) => {
+  const { base, close } = await startServer();
+  t.after(close);
+  const brack = client(base);
+  const sam = client(base);
+  await brack('POST', '/api/signup', { email: 'brack@example.com', name: 'Brack', password: 'longenough' });
+  const s = await sam('POST', '/api/signup', { email: 'sam@example.com', name: 'Sam', password: 'longenough' });
+  assert.equal(s.body.user.admin, false);
+  assert.equal((await brack('GET', '/api/me')).body.user.admin, true);
+
+  assert.equal((await client(base)('GET', '/api/admin/dms')).status, 401);
+  assert.equal((await sam('GET', '/api/admin/dms')).status, 403);
+
+  const r = await brack('GET', '/api/admin/dms');
+  assert.equal(r.status, 200);
+  assert.equal(r.body.totals.dms, 2);
+  assert.equal(r.body.totals.signups7, 2);
+  assert.equal(r.body.totals.active7, 2);
+  assert.deepEqual(r.body.dms.map((d) => d.email).sort(), ['brack@example.com', 'sam@example.com']);
+  const samRow = r.body.dms.find((d) => d.email === 'sam@example.com');
+  assert.equal(samRow.counts.battles, 0);
+  assert.ok(samRow.counts.monsters > 0);
+  assert.ok(samRow.lastSeen);
+  assert.equal(JSON.stringify(r.body).includes('scrypt'), false, 'no password hashes');
+});
