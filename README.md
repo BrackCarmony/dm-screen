@@ -23,6 +23,7 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 - **Encounters**: the Dungeon Rooms and Combat Tables groups. "Start battle" creates a battle with those monsters and your party.
 - **Magic Shop**: roll items under a gold target from the major and minor item tables, and keep named shops.
 - **Party** and **XP Tables**.
+- **Getting started** (the **?** in the top bar, and the first page after sign-up): a short guide to setting up a party, running a battle and sharing the player view.
 - **Feedback**: DMs send suggestions or problems, and see whether each one was addressed or rejected, with any reply.
 - **/p/&lt;link&gt;**: read-only initiative order for the battle marked "Show to players". It updates live, shows monster names as their player-facing name, and shows monster health as a bar.
 
