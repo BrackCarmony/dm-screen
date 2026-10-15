@@ -8,6 +8,7 @@ import Party from './pages/Party.jsx';
 import Reference from './pages/Reference.jsx';
 import Account from './pages/Account.jsx';
 import Admin from './pages/Admin.jsx';
+import Privacy from './pages/Privacy.jsx';
 import Feedback from './pages/Feedback.jsx';
 import Help from './pages/Help.jsx';
 
@@ -62,10 +63,12 @@ export default function App() {
     });
   }, []);
 
+  // The privacy policy is public, so it shows whether or not anyone is logged in.
+  if (window.location.pathname === '/privacy') return <Privacy />;
   if (!me) return <div className="center muted">Loading…</div>;
   const resetToken = window.location.pathname === '/reset' ? new URLSearchParams(window.location.search).get('token') : null;
   if (resetToken) return <Reset token={resetToken} />;
-  if (!me.user) return <Auth firstAccount={me.firstAccount} onDone={load} />;
+  if (!me.user) return <Auth firstAccount={me.firstAccount} google={me.google} onDone={load} />;
   if (!state) return <div className="center muted">Loading…</div>;
 
   const props = { state, update };
@@ -102,10 +105,32 @@ export default function App() {
   );
 }
 
-function Auth({ firstAccount, onDone }) {
+// Google sign-in comes back to /?login_error=... when it fails; show it once and tidy the address.
+function takeLoginError() {
+  const params = new URLSearchParams(window.location.search);
+  const message = params.get('login_error');
+  if (message) window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+  return message ?? '';
+}
+
+function GoogleButton() {
+  return (
+    <a className="button google-btn" href="/api/auth/google">
+      <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+      </svg>
+      Continue with Google
+    </a>
+  );
+}
+
+function Auth({ firstAccount, google, onDone }) {
   const [mode, setMode] = useState(firstAccount ? 'signup' : 'login');
   const [f, setF] = useState({ name: '', email: '', password: '' });
-  const [err, setErr] = useState('');
+  const [err, setErr] = useState(takeLoginError);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const [sent, setSent] = useState(false);
   const submit = (e) => {
@@ -138,12 +163,18 @@ function Auth({ firstAccount, onDone }) {
   }
   return (
     <form className="login" onSubmit={submit}>
-      <h1>DM Screen</h1>
+      <h1 className="login-logo"><img src="/logo.svg" alt="DM Screen" width="128" height="128" /></h1>
       <div className="seg">
         <button type="button" className={mode === 'login' ? 'on' : ''} onClick={() => setMode('login')}>Log in</button>
         <button type="button" className={mode === 'signup' ? 'on' : ''} onClick={() => setMode('signup')}>Sign up</button>
       </div>
       {mode === 'signup' && firstAccount && <p className="muted small">This is the first account, so it gets the campaign data already on this server.</p>}
+      {google && (
+        <>
+          <GoogleButton />
+          <div className="or"><span>or</span></div>
+        </>
+      )}
       {mode === 'signup' && <input placeholder="Your name" value={f.name} onChange={set('name')} autoComplete="name" required />}
       {mode === 'signup'
         ? <input type="email" placeholder="Email" value={f.email} onChange={set('email')} autoComplete="email" required />
@@ -153,6 +184,7 @@ function Auth({ firstAccount, onDone }) {
       {err && <p className="error-text">{err}</p>}
       {mode === 'login' && <button type="button" className="link" onClick={() => setMode('forgot')}>Forgot password?</button>}
       <p className="muted small">Players: ask your DM for their player link.</p>
+      <a className="muted small" href="/privacy">Privacy</a>
     </form>
   );
 }
