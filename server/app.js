@@ -7,13 +7,14 @@ import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
 import { AGENT_INSTRUCTIONS, MAX_PROMPT, createMonsterGenerator, parseImport } from './ai.js';
+import { createGoogleAuth, pkcePair } from './google.js';
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,30}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'dm';
 
-export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS, generator = createMonsterGenerator(), aiUses = Number(process.env.AI_BETA_USES) || 5 }) {
+export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS, generator = createMonsterGenerator(), aiUses = Number(process.env.AI_BETA_USES) || 5, google = createGoogleAuth() }) {
   const extraAdmins = new Set(String(adminEmails ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean));
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
@@ -51,12 +52,32 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   const setSession = (req, res, user) => {
     const secure = req.secure ? '; Secure' : '';
     const value = user ? encodeURIComponent(session.issue(user)) : '';
-    res.setHeader('Set-Cookie', `sid=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${user ? 31536000 : 0}${secure}`);
+    res.append('Set-Cookie', `sid=${value}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${user ? 31536000 : 0}${secure}`);
   };
   // New password: bump sessionVersion so other devices are signed out, and drop any reset token.
   const changePassword = (user, password) =>
     users.update(user.id, { password: hashPassword(password), sessionVersion: (user.sessionVersion ?? 0) + 1, resetHash: null, resetExpires: null });
   const publicUser = (u) => u && { id: u.id, email: u.email, name: u.name, slug: u.slug, admin: isAdmin(u) };
+
+  // A new DM: the first account on a server is the admin and gets the full campaign seed.
+  function createAccount({ email, name, password, googleId }) {
+    const first = users.count() === 0;
+    const now = new Date().toISOString();
+    const user = users.add({
+      id: crypto.randomUUID(),
+      email,
+      name,
+      slug: uniqueSlug(name),
+      password,
+      ...(googleId && { googleId }),
+      sessionVersion: 0,
+      admin: first,
+      createdAt: now,
+      lastSeen: now,
+    });
+    dms.create(user.id, { full: first });
+    return user;
+  }
 
   function uniqueSlug(base) {
     let slug = slugify(base);
@@ -72,7 +93,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   app.get('/api/me', (req, res) => {
     const user = currentUser(req);
-    res.json({ user: publicUser(user), firstAccount: users.count() === 0, ai: user ? aiStatus(user) : null });
+    res.json({ user: publicUser(user), firstAccount: users.count() === 0, google: google.enabled, ai: user ? aiStatus(user) : null });
   });
 
   app.post('/api/signup', limiter, (req, res) => {
@@ -83,21 +104,57 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     if (!name) return res.status(400).json({ error: 'Enter your name.' });
     if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
     if (users.byEmail(email)) return res.status(409).json({ error: 'That email already has an account.' });
-    const first = users.count() === 0;
-    const user = users.add({
-      id: crypto.randomUUID(),
-      email,
-      name,
-      slug: uniqueSlug(name),
-      password: hashPassword(password),
-      sessionVersion: 0,
-      admin: first,
-      createdAt: new Date().toISOString(),
-      lastSeen: new Date().toISOString(),
-    });
-    dms.create(user.id, { full: first });
+    const user = createAccount({ email, name, password: hashPassword(password) });
     setSession(req, res, user);
     res.json({ user: publicUser(user) });
+  });
+
+  // Sign in with Google. An account is found by its Google id, then by a verified email (so a DM who
+  // signed up with a password can use Google for the same account); otherwise a new account is made.
+  const googleRedirect = (req) => `${(appUrl || `${req.protocol}://${req.get('host')}`).trim().replace(/\/+$/, '')}/api/auth/google/callback`;
+  const googleCookie = (req, value, maxAge) =>
+    `g_oauth=${value}; HttpOnly; SameSite=Lax; Path=/api/auth/google; Max-Age=${maxAge}${req.secure ? '; Secure' : ''}`;
+  const loginError = (res, message) => res.redirect(`/?login_error=${encodeURIComponent(message)}`);
+
+  app.get('/api/auth/google', limiter, (req, res) => {
+    if (!google.enabled) return loginError(res, "Google sign-in isn't set up on this server.");
+    const state = crypto.randomBytes(16).toString('base64url');
+    const { verifier, challenge } = pkcePair();
+    res.setHeader('Set-Cookie', googleCookie(req, `${state}.${verifier}`, 600));
+    res.redirect(google.authUrl({ redirectUri: googleRedirect(req), state, challenge }));
+  });
+
+  app.get('/api/auth/google/callback', limiter, async (req, res) => {
+    const [state, verifier] = (req.headers.cookie?.match(/(?:^|;\s*)g_oauth=([^;]+)/)?.[1] ?? '').split('.');
+    res.setHeader('Set-Cookie', googleCookie(req, '', 0));
+    if (req.query.error) return loginError(res, 'Google sign-in was cancelled.');
+    const given = Buffer.from(String(req.query.state ?? ''));
+    if (!state || !verifier || !req.query.code || given.length !== state.length || !crypto.timingSafeEqual(given, Buffer.from(state))) {
+      return loginError(res, 'Google sign-in expired. Try again.');
+    }
+    let profile;
+    try {
+      profile = await google.profile({ code: String(req.query.code), redirectUri: googleRedirect(req), verifier });
+    } catch (e) {
+      console.error('[google]', e.message);
+      return loginError(res, "Couldn't sign in with Google. Try again.");
+    }
+    let user = users.all().find((u) => u.googleId === profile.sub);
+    let created = false;
+    if (!user) {
+      if (!profile.email || !profile.emailVerified) return loginError(res, "Google hasn't verified that account's email, so it can't be used to sign in.");
+      user = users.byEmail(profile.email);
+      if (user) {
+        user = users.update(user.id, { googleId: profile.sub });
+      } else {
+        user = createAccount({ email: profile.email, name: profile.name || profile.email.split('@')[0], password: null, googleId: profile.sub });
+        created = true;
+      }
+    }
+    user = users.update(user.id, { lastLogin: new Date().toISOString(), lastSeen: new Date().toISOString() });
+    setSession(req, res, user);
+    // New accounts start on the getting-started guide, as with sign-up.
+    res.redirect(created ? '/#help' : '/');
   });
 
   app.post('/api/login', limiter, (req, res) => {

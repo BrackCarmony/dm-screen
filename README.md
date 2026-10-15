@@ -14,6 +14,10 @@ Any DM can sign up with an email and password and gets their own party, bestiary
 
 The first account is the admin and gets an **Admin** tab: totals (DMs, new sign-ups, active this week, DMs with a battle) a list of every DM with their sign-up date, last activity, how much they've built, and their player link, and all feedback, which can be marked addressed or won't do, with a reply the DM sees. It doesn't show anyone's campaign contents. To make more admins, list their emails in `ADMIN_EMAILS` (comma separated).
 
+### Sign in with Google
+
+Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` (an OAuth client of type "Web application") and the login screen gets **Continue with Google**. The redirect URI is `$APP_URL/api/auth/google/callback`, so register `https://dm-screen.brackcarmony.com/api/auth/google/callback` and, for local development, `http://localhost:5173/api/auth/google/callback`. A Google sign-in uses the account it signed into before; otherwise the account with the same email, if Google has verified that email (so a DM who signed up with a password can use either); otherwise it makes a new account. Google-only accounts have no password; "Forgot password?" sets one.
+
 ### Passwords
 
 - **Change:** on the Account page. This signs the DM out on their other devices.
