@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "dm-screen": {
+      "command": "node",
+      "args": ["server/mcp-stdio.js"]
+    }
+  }
+}

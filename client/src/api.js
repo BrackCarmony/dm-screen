@@ -28,4 +28,8 @@ export const api = {
   importMonsters: (json) => call('POST', '/api/bestiary/import', { json }),
   agentInstructions: () => call('GET', '/api/bestiary/agent-instructions'),
   markFeedback: (id, patch) => call('PUT', `/api/admin/feedback/${id}`, patch),
+  oauthRequest: (id) => call('GET', `/api/oauth/request/${encodeURIComponent(id ?? '')}`),
+  answerOauth: (id, allow) => call('POST', `/api/oauth/request/${encodeURIComponent(id ?? '')}`, { allow }),
+  aiApps: () => call('GET', '/api/oauth/grants'),
+  disconnectAiApp: (id) => call('DELETE', `/api/oauth/grants/${id}`),
 };

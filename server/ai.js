@@ -51,7 +51,7 @@ const MONSTER_SCHEMA = {
 };
 
 // How fields are written in the bestiary. Shared by Claude's prompt and the instructions DMs copy for their own AI.
-const FIELD_RULES = `- name: a short name a DM can read aloud.
+export const FIELD_RULES = `- name: a short name a DM can read aloud.
 - cr: challenge rating: 0, 0.125, 0.25, 0.5, or a whole number from 1 to 30.
 - hp, ac, init: whole numbers; init is the initiative modifier (the Dex modifier).
 - speed: in feet, e.g. "30" or "30, fly 60".
@@ -59,7 +59,7 @@ const FIELD_RULES = `- name: a short name a DM can read aloud.
 - attacks: one short line per action, e.g. "Multiattack: 2× Claw", "Claw +5 5ft 2d6+3 slashing", "Longbow +4 150/600ft 1d8+2 piercing", "Fire Breath (Recharge 5-6) DC13 Dex 6d6 fire".
 - special: traits, resistances and senses in one compact paragraph, e.g. "Pack Tactics. Resist cold. Darkvision 60 ft., PP 13. Legendary: Detect, Tail Swipe".`;
 
-const BALANCE = `Balance hit points, armor class, attack bonuses, damage and save DCs for the challenge rating using the 5e monster creation guidelines. Don't copy monsters from published books other than the 5e System Reference Document.`;
+export const BALANCE = `Balance hit points, armor class, attack bonuses, damage and save DCs for the challenge rating using the 5e monster creation guidelines. Don't copy monsters from published books other than the 5e System Reference Document.`;
 
 const SYSTEM = `You design monsters for a Dungeons & Dragons 5th edition DM's bestiary, used at the table to run combat.
 
@@ -104,6 +104,17 @@ export function normalizeMonster(m, { xpTable = [] } = {}) {
     special: text(m.special, 1500),
     url: /^https?:\/\//i.test(url) ? url : '',
   };
+}
+
+// Rename monsters whose name is already in the bestiary (or earlier in the list): "Wolf" becomes "Wolf 2".
+export function withUniqueNames(bestiary, monsters) {
+  const taken = new Set(bestiary.map((m) => m.name.toLowerCase()));
+  return monsters.map((m) => {
+    let name = m.name;
+    for (let n = 2; taken.has(name.toLowerCase()); n++) name = `${m.name} ${n}`;
+    taken.add(name.toLowerCase());
+    return { ...m, name };
+  });
 }
 
 // Turn Claude's monsters into bestiary entries. Returns only the ones that are usable.
