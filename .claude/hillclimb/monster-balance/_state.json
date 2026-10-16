@@ -1,0 +1,54 @@
+{
+  "metrics": [
+    {
+      "id": "balanced",
+      "label": "Balanced",
+      "kind": "float",
+      "scale": 1
+    },
+    {
+      "id": "count_ok",
+      "label": "Right count",
+      "kind": "float",
+      "scale": 1
+    },
+    {
+      "id": "cr_ok",
+      "label": "Asked-for CR",
+      "kind": "float",
+      "scale": 1
+    },
+    {
+      "id": "unsure",
+      "label": "Unsure",
+      "kind": "float",
+      "scale": 1,
+      "better": "lower"
+    }
+  ],
+  "perf_fields": [
+    {
+      "id": "cost_usd",
+      "label": "Cost",
+      "unit": "$"
+    },
+    {
+      "id": "out_tokens",
+      "label": "Out tokens"
+    },
+    {
+      "id": "latency_s",
+      "label": "Latency",
+      "unit": "s"
+    },
+    {
+      "id": "monsters",
+      "label": "Monsters"
+    }
+  ],
+  "harness_paths": [
+    "server/ai.js",
+    "evals/balance.js",
+    "evals/monster-cases.json"
+  ]
+}

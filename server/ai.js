@@ -149,22 +149,26 @@ export function parseImport(input, { xpTable = [] } = {}) {
 }
 
 // Without a key (ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN) the feature is off.
-export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN ? new Anthropic() : null } = {}) {
+// model and effort are what the site uses unless set otherwise (evals/run-monsters.js tries others).
+// onResponse(response, request), if given, sees each reply from Claude, refusals included.
+export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN ? new Anthropic() : null, model = AI_MODEL, effort = 'medium', onResponse } = {}) {
   return {
     enabled: Boolean(client),
     async generate(prompt, { xpTable } = {}) {
+      const request = {
+        model,
+        max_tokens: 16000,
+        output_config: { effort, format: { type: 'json_schema', schema: MONSTER_SCHEMA } },
+        // If a safety classifier declines, the API retries on Anthropic's recommended fallback model.
+        // Haiku has no fallback, and a request that asks for one is refused.
+        ...(!model.startsWith('claude-haiku') && { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }),
+        system: SYSTEM,
+        messages: [{ role: 'user', content: prompt }],
+      };
       let response;
       try {
-        response = await client.beta.messages.create({
-          model: AI_MODEL,
-          max_tokens: 16000,
-          output_config: { effort: 'medium', format: { type: 'json_schema', schema: MONSTER_SCHEMA } },
-          // If a safety classifier declines, the API retries on Anthropic's recommended fallback model.
-          betas: ['server-side-fallback-2026-07-01'],
-          fallbacks: 'default',
-          system: SYSTEM,
-          messages: [{ role: 'user', content: prompt }],
-        });
+        response = await client.beta.messages.create(request);
+        onResponse?.(response, request);
       } catch (e) {
         if (e instanceof Anthropic.RateLimitError || e instanceof Anthropic.InternalServerError || e instanceof Anthropic.APIConnectionError) {
           throw new GenerateError('busy', 'Claude is out of capacity right now. Try again later.');

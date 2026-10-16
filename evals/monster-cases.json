@@ -1,0 +1,38 @@
+{
+  "about": "Prompts for the monster generator's eval (server/ai.js). Tags: [CR band, how the CR is given, then features]. expect.count is how many monsters the request asks for (the generator makes one when it doesn't say); expect.cr is the CR it names, when it names one CR for all of them. Cases tagged caster will mostly grade 'unsure' (evals/balance.js can't judge spells) and are there to see what the generator does with them.",
+  "cases": [
+    { "id": "low-swamp-ambusher", "prompt": "A CR 1/4 swamp creature that ambushes travelers from the reeds.", "tags": ["CR 1/8-2", "explicit CR"], "expect": { "count": 1, "cr": 0.25 } },
+    { "id": "low-goblin-raiders", "prompt": "goblin-ish raiders for a level 1 party, give me 3 different ones", "tags": ["CR 1/8-2", "party level", "several"], "expect": { "count": 3 } },
+    { "id": "low-beetle-swarm", "prompt": "A swarm of clockwork beetles, CR 2", "tags": ["CR 1/8-2", "explicit CR", "swarm"], "expect": { "count": 1, "cr": 2 } },
+    { "id": "low-cave-critters", "prompt": "Two cave critters for brand new level 1 players, nothing too deadly", "tags": ["CR 1/8-2", "party level", "several"], "expect": { "count": 2 } },
+    { "id": "low-scarecrow", "prompt": "A CR 1/2 haunted scarecrow", "tags": ["CR 1/8-2", "explicit CR", "terse"], "expect": { "count": 1, "cr": 0.5 } },
+    { "id": "low-brawler-and-buddies", "prompt": "A CR 2 tavern brawler and his CR 1/8 drunk buddies (make 3 total)", "tags": ["CR 1/8-2", "explicit CR", "mixed CRs", "several"], "expect": { "count": 3 } },
+    { "id": "low-kobold-trapmaster", "prompt": "kobold trapmaster CR 1", "tags": ["CR 1/8-2", "explicit CR", "terse"], "expect": { "count": 1, "cr": 1 } },
+    { "id": "low-sewer-rat", "prompt": "Something for a level 2 party exploring sewers, a big rat thing", "tags": ["CR 1/8-2", "party level"], "expect": { "count": 1 } },
+
+    { "id": "mid-salamander-knight", "prompt": "A CR 5 fire-breathing salamander knight", "tags": ["CR 3-6", "explicit CR", "breath weapon"], "expect": { "count": 1, "cr": 5 } },
+    { "id": "mid-arcade-enemies", "prompt": "Make 4 CR 4 enemies based on characters from classic arcade games.", "tags": ["CR 3-6", "explicit CR", "pop culture", "several"], "expect": { "count": 4, "cr": 4 } },
+    { "id": "mid-northern-beast", "prompt": "A tough fight for 4 level 5 players: a werebear-like beast of the northern woods", "tags": ["CR 3-6", "party level"], "expect": { "count": 1 } },
+    { "id": "mid-stone-wall", "prompt": "CR 6 tank: huge HP and armor, weak hits. Its a living stone wall", "tags": ["CR 3-6", "explicit CR", "lopsided"], "expect": { "count": 1, "cr": 6 } },
+    { "id": "mid-glass-cannon", "prompt": "CR 3 glass cannon assassin: hits really hard but goes down fast", "tags": ["CR 3-6", "explicit CR", "lopsided"], "expect": { "count": 1, "cr": 3 } },
+    { "id": "mid-tomb-boss", "prompt": "A CR 6 boss with two CR 2 minions for a desert tomb", "tags": ["CR 3-6", "explicit CR", "mixed CRs", "several"], "expect": { "count": 3 } },
+    { "id": "mid-frost-wolves", "prompt": "A pack of 3 frost wolves, CR 3 each, that coordinate attacks", "tags": ["CR 3-6", "explicit CR", "several"], "expect": { "count": 3, "cr": 3 } },
+    { "id": "mid-hedge-witch", "prompt": "A CR 4 hedge witch who curses people", "tags": ["CR 3-6", "explicit CR", "caster"], "expect": { "count": 1, "cr": 4 } },
+    { "id": "mid-flooded-mine", "prompt": "Something to challenge a level 4 party in a flooded mine", "tags": ["CR 3-6", "party level", "vague"], "expect": { "count": 1 } },
+    { "id": "mid-dive-predator", "prompt": "CR 5 flying predator that dives on its prey", "tags": ["CR 3-6", "explicit CR"], "expect": { "count": 1, "cr": 5 } },
+    { "id": "mid-forge-guardian", "prompt": "My players are level 6 and about to enter an abandoned dwarven forge. I want a single centerpiece monster: a molten-metal elemental that was once the forge's guardian. It should be able to fight all four of them alone, punish them for clumping up, and have something to do on rounds when it can't reach anyone. Please keep it to attacks and abilities, not spells, so it's quick to run at the table.", "tags": ["CR 3-6", "party level", "detailed"], "expect": { "count": 1 } },
+
+    { "id": "high-troll-warlord", "prompt": "A CR 8 bog troll warlord", "tags": ["CR 7-10", "explicit CR"], "expect": { "count": 1, "cr": 8 } },
+    { "id": "high-smash-fighters", "prompt": "Make 4 CR 10 enemies based off different fighters from the Super Smash Bros franchise.", "tags": ["CR 7-10", "explicit CR", "pop culture", "several", "real"], "expect": { "count": 4, "cr": 10 } },
+    { "id": "high-brute", "prompt": "An encounter for 5 level 9 characters: a single brute that can take a beating", "tags": ["CR 7-10", "party level", "lopsided"], "expect": { "count": 1 } },
+    { "id": "high-lightning-golem", "prompt": "CR 7 mechanical golem with a lightning breath weapon", "tags": ["CR 7-10", "explicit CR", "breath weapon"], "expect": { "count": 1, "cr": 7 } },
+    { "id": "high-sea-serpent", "prompt": "CR 9 sea serpent that grapples ships", "tags": ["CR 7-10", "explicit CR"], "expect": { "count": 1, "cr": 9 } },
+    { "id": "high-vampire-knight", "prompt": "a CR 10 vampire knight. no spells, pure melee", "tags": ["CR 7-10", "explicit CR"], "expect": { "count": 1, "cr": 10 } },
+    { "id": "high-demon-twins", "prompt": "Two CR 7 twin demon sisters, one fire one ice", "tags": ["CR 7-10", "explicit CR", "several"], "expect": { "count": 2, "cr": 7 } },
+    { "id": "high-cult-leader", "prompt": "A CR 10 archmage-style cult leader", "tags": ["CR 7-10", "explicit CR", "caster"], "expect": { "count": 1, "cr": 10 } },
+
+    { "id": "open-creepy-doll", "prompt": "A creepy doll that walks at night", "tags": ["CR not given", "none"], "expect": { "count": 1 } },
+    { "id": "open-haunted-forest", "prompt": "Make me 3 monsters for a haunted forest", "tags": ["CR not given", "none", "several"], "expect": { "count": 3 } },
+    { "id": "open-dragon", "prompt": "dragon", "tags": ["CR not given", "none", "terse"], "expect": { "count": 1 } }
+  ]
+}

@@ -193,3 +193,18 @@ test('a single monster or a bare list imports too', () => {
   assert.equal(parseImport('{"name": "Lone Wolf", "cr": 0.25}').monsters[0].name, 'Lone Wolf');
   assert.equal(parseImport('[{"name": "A"}, {"name": "B"}]').monsters.length, 2);
 });
+
+test('the generator can try another model and effort; Haiku is asked without a fallback; onResponse sees each reply', async () => {
+  const monster = { name: 'Bog Hag', cr: 2, hp: 45, ac: 13, speed: '30', init: 1, saves: { str: 3, dex: 0, con: 0, int: 0, wis: 0, cha: 0 }, attacks: ['Claw +5 5ft 2d6+3 slashing'], special: '' };
+  const seen = [];
+  const client = fakeClient(() => reply({ monsters: [monster] }));
+  await createMonsterGenerator({ client, model: 'claude-haiku-5-5', effort: 'low', onResponse: (res, req) => seen.push([res.stop_reason, req.model]) }).generate('hag');
+  await createMonsterGenerator({ client, model: 'claude-sonnet-5-5' }).generate('hag');
+  const [haiku, sonnet] = client.requests;
+  assert.equal(haiku.output_config.effort, 'low');
+  assert.equal(haiku.fallbacks, undefined);
+  assert.equal(haiku.betas, undefined);
+  assert.equal(sonnet.fallbacks, 'default');
+  assert.equal(sonnet.output_config.effort, 'medium');
+  assert.deepEqual(seen, [['end_turn', 'claude-haiku-5-5']]);
+});
