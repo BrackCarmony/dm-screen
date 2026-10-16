@@ -68,6 +68,18 @@ Each connected app is listed on the Account page, where it can be disconnected. 
 
 `.mcp.json` registers `node server/mcp-stdio.js` with Claude Code for this folder. It reads the first account's data, or `DM_EMAIL`'s, from `DATA_DIR`, so locally that's your development data. To try either by hand: `npx @modelcontextprotocol/inspector node server/mcp-stdio.js`.
 
+## Evals: are monsters balanced for their CR?
+
+`evals/balance.js` grades a monster's challenge rating against its numbers, with no model calls, so it costs nothing to run. As in 5e, it rates defense from hit points (nudged by armor class) and offense from damage per round (nudged by attack bonus or save DC), and a monster passes when each is within 3 steps of its CR on the CR ladder (0, 1/8, 1/4, 1/2, 1, 2, ...). What each CR should look like is learned from the SRD bestiary in `data/seed`, not copied from a rulebook.
+
+```sh
+node evals/grade.js monsters.json                 # {"monsters": [...]}, a list, or saved eval results
+node evals/grade.js --dm someone@example.com      # a DM's bestiary
+node evals/grade.js --srd                         # the SRD itself, as a check on the grader
+```
+
+How far to trust it: each ordinary SRD monster up to CR 10, graded against a table learned without it, passes about 95% of the time and lands within one step of its CR about 85% of the time (`test/balance.test.js` fails if that drops). Spellcasters and legendary monsters (whose attack lines understate them), monsters above CR 10 (the SRD has 10 ordinary ones to learn from) and monsters with no readable damage are reported as "unsure" rather than pass or fail.
+
 ## Run locally
 
 ```sh
