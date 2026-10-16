@@ -112,6 +112,13 @@ One-time setup on a server, using the files in `deploy/`:
 python3 scripts/srd_bestiary.py
 ```
 
+Accounts that started from something else (the first account gets the sheet's campaign) can add the SRD monsters they're missing. Names match ignoring case and punctuation, so the sheet's `dire-wolf` is the SRD's `Dire Wolf` and is left as it is. Without `--apply` it only prints what it would add, and which SRD names are close to one you have (often a typo of the same monster, sometimes a different one) so you can `--skip` them. With `--apply` it backs up the DM's file next to it first.
+
+```sh
+DATA_DIR=/var/lib/dm-screen npm run add-srd -- someone@example.com
+DATA_DIR=/var/lib/dm-screen npm run add-srd -- someone@example.com --skip "Blue Dragon Wyrmling" --apply
+```
+
 This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the Coast LLC and available at https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is licensed under the Creative Commons Attribution 4.0 International License available at https://creativecommons.org/licenses/by/4.0/legalcode.
 
 ## Re-importing the sheet
