@@ -48,6 +48,26 @@ scripts/prod-feedback.sh reopen <id>
 npm run feedback -- list                       # the same against local data
 ```
 
+## MCP server
+
+`server/mcp.js` is a [Model Context Protocol](https://modelcontextprotocol.io) server, so an AI app such as Claude can work with a DM's campaign.
+
+- **Tools:** `search_monsters`, `get_monster`, `get_battle` (initiative, HP and XP for the active battle), `encounter_xp`, `roll_dice`, `list_encounters`, and two that write: `add_monsters` (tagged AI, with the request, like the in-app generator) and `add_encounters` (all or nothing: every monster must be in the bestiary). Nothing edits or deletes.
+- **Resources:** `dm://party` and `dm://monster/{name}`.
+- **Prompts:** `plan_encounter` and `random_encounter_table` (for example "the woods", level 5), which picks monsters, adds any that are missing and saves the table as an encounter group.
+
+The app reloads a DM's file when it changes on disk and reloads the campaign when you come back to its tab, so the server can add things while the app is open.
+
+### Remote: `$APP_URL/mcp`
+
+With `APP_URL` set, the app serves the MCP server at `$APP_URL/mcp` (for the live site, `https://dm-screen.brackcarmony.com/mcp`), and DM Screen is the OAuth server that signs AI apps in (`server/oauth.js`, using the MCP SDK's OAuth router for `/authorize`, `/token`, `/register`, `/revoke` and `/.well-known/...`). A DM adds that address to their AI app (in Claude: Settings → Connectors → Add custom connector; in Claude Code: `claude mcp add --transport http dm-screen <address>`), signs in to DM Screen when asked and allows it on the `/connect` page. Apps get their own DM Screen tokens; Google sign-in is only how the DM logs in, and no Google token goes to the app.
+
+Each connected app is listed on the Account page, where it can be disconnected. Changing the password disconnects them all. Connections are kept in `$DATA_DIR/oauth.json` (refresh tokens hashed; access tokens are signed, last an hour and aren't stored).
+
+### Local: stdio
+
+`.mcp.json` registers `node server/mcp-stdio.js` with Claude Code for this folder. It reads the first account's data, or `DM_EMAIL`'s, from `DATA_DIR`, so locally that's your development data. To try either by hand: `npx @modelcontextprotocol/inspector node server/mcp-stdio.js`.
+
 ## Run locally
 
 ```sh

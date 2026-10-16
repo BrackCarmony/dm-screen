@@ -39,6 +39,7 @@ export default function App() {
   const [state, setState] = useState(null);
   const [saveError, setSaveError] = useState('');
   const timers = useRef({});
+  const pending = useRef(new Set()); // keys with a save waiting or in flight
   const tab = useHashTab();
 
   const load = useCallback(async () => {
@@ -56,12 +57,32 @@ export default function App() {
     setState((s) => {
       const value = typeof fn === 'function' ? fn(s[key]) : fn;
       clearTimeout(timers.current[key]);
+      pending.current.add(key);
       timers.current[key] = setTimeout(() => {
-        api.put(key, value).then(() => setSaveError('')).catch((e) => setSaveError(`Not saved: ${e.message}`));
+        api.put(key, value)
+          .then(() => setSaveError(''))
+          .catch((e) => setSaveError(`Not saved: ${e.message}`))
+          .finally(() => pending.current.delete(key));
       }, 250);
       return { ...s, [key]: value };
     });
   }, []);
+
+  // Coming back to the tab reloads the campaign, so changes made elsewhere (another device, an AI over MCP)
+  // show up before the next save would overwrite them. Not while a save is waiting, which would lose that edit.
+  useEffect(() => {
+    if (!me?.user) return;
+    const refresh = () => {
+      if (document.visibilityState !== 'visible' || pending.current.size) return;
+      api.state().then((s) => { if (!pending.current.size) setState(s); }).catch(() => {});
+    };
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [me]);
 
   // The privacy policy is public, so it shows whether or not anyone is logged in.
   if (window.location.pathname === '/privacy') return <Privacy />;
@@ -69,6 +90,8 @@ export default function App() {
   const resetToken = window.location.pathname === '/reset' ? new URLSearchParams(window.location.search).get('token') : null;
   if (resetToken) return <Reset token={resetToken} />;
   if (!me.user) return <Auth firstAccount={me.firstAccount} google={me.google} onDone={load} />;
+  // An AI app asking to connect over MCP; signing in above comes back here.
+  if (window.location.pathname === '/connect') return <Connect user={me.user} requestId={new URLSearchParams(window.location.search).get('request')} />;
   if (!state) return <div className="center muted">Loading…</div>;
 
   const props = { state, update };
@@ -99,7 +122,7 @@ export default function App() {
         {tab === 'admin' && me.user.admin && <Admin />}
         {tab === 'feedback' && <Feedback pages={TABS.filter(([id]) => id !== 'feedback').map(([, label]) => label)} />}
         {tab === 'help' && <Help user={me.user} />}
-        {tab === 'account' && <Account user={me.user} onChange={(user) => setMe({ ...me, user })} />}
+        {tab === 'account' && <Account user={me.user} mcp={me.mcp} onChange={(user) => setMe({ ...me, user })} />}
       </main>
     </div>
   );
@@ -115,7 +138,7 @@ function takeLoginError() {
 
 function GoogleButton() {
   return (
-    <a className="button google-btn" href="/api/auth/google">
+    <a className="button google-btn" href={`/api/auth/google?next=${encodeURIComponent(window.location.pathname === '/' ? '' : window.location.pathname + window.location.search)}`}>
       <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
@@ -207,5 +230,35 @@ function Reset({ token }) {
       {err && <p className="error-text">{err}</p>}
       <a href="/">Back to log in</a>
     </form>
+  );
+}
+
+// The OAuth consent screen: an AI app wants to use this DM's campaign through the MCP server.
+function Connect({ user, requestId }) {
+  const [request, setRequest] = useState(null);
+  const [err, setErr] = useState('');
+  useEffect(() => {
+    api.oauthRequest(requestId).then(setRequest).catch((x) => setErr(x.message));
+  }, [requestId]);
+  const answer = (allow) => api.answerOauth(requestId, allow).then((r) => window.location.replace(r.redirect)).catch((x) => setErr(x.message));
+
+  return (
+    <div className="login">
+      <h1 className="login-logo"><img src="/logo.svg" alt="DM Screen" width="96" height="96" /></h1>
+      <h2>Connect an AI app</h2>
+      {err && <p className="error-text">{err}</p>}
+      {!request && !err && <p className="muted">Loading…</p>}
+      {request && (
+        <>
+          <p><strong>{request.clientName}</strong> wants to use {user.name}'s DM Screen.</p>
+          <p className="muted small">It will be able to read your bestiary, encounters, party and battles, and add monsters and encounters. It can't change or delete anything you've made, or see your account.</p>
+          <p className="muted small">After you allow it, you go back to <strong>{request.redirectHost}</strong>. Only allow apps you started connecting yourself. You can disconnect it on the Account page.</p>
+          <div className="btn-row">
+            <button className="primary" onClick={() => answer(true)}>Allow</button>
+            <button onClick={() => answer(false)}>Deny</button>
+          </div>
+        </>
+      )}
+    </div>
   );
 }

@@ -32,16 +32,25 @@ function blankState() {
 export function createDmStore(dataDir, seedDir) {
   const dir = path.join(dataDir, 'dms');
   fs.mkdirSync(dir, { recursive: true });
-  const cache = new Map();
+  const cache = new Map(); // userId -> { state, mtime }
   const fileFor = (userId) => path.join(dir, `${userId.replace(/[^a-zA-Z0-9_-]/g, '')}.json`);
-
-  function load(userId) {
-    if (cache.has(userId)) return cache.get(userId);
+  const mtimeOf = (file) => fs.statSync(file, { throwIfNoEntry: false })?.mtimeMs;
+  const save = (userId, state) => {
     const file = fileFor(userId);
-    if (!fs.existsSync(file)) return null;
+    writeJson(file, state);
+    cache.set(userId, { state, mtime: mtimeOf(file) });
+  };
+
+  // Another process (the MCP server) may write a DM's file, so the cached copy is only used while the file is unchanged.
+  function load(userId) {
+    const file = fileFor(userId);
+    const mtime = mtimeOf(file);
+    if (mtime === undefined) return null;
+    const hit = cache.get(userId);
+    if (hit?.mtime === mtime) return hit.state;
     const state = JSON.parse(fs.readFileSync(file, 'utf8'));
     state.settings = { activeBattleId: null, ...state.settings };
-    cache.set(userId, state);
+    cache.set(userId, { state, mtime });
     return state;
   }
 
@@ -66,15 +75,14 @@ export function createDmStore(dataDir, seedDir) {
         }
       }
       state.settings = { activeBattleId: null, ...state.settings };
-      writeJson(fileFor(userId), state);
-      cache.set(userId, state);
+      save(userId, state);
       return state;
     },
     set(userId, key, value) {
       if (!KEYS.includes(key)) throw new Error(`unknown key ${key}`);
       const state = load(userId);
       state[key] = value;
-      writeJson(fileFor(userId), state);
+      save(userId, state);
     },
   };
 }

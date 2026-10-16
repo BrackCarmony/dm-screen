@@ -6,8 +6,13 @@ import { FEEDBACK_STATUSES, createDmStore, createFeedbackStore, createUserStore 
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
-import { AGENT_INSTRUCTIONS, MAX_PROMPT, createMonsterGenerator, parseImport } from './ai.js';
+import { AGENT_INSTRUCTIONS, MAX_PROMPT, createMonsterGenerator, parseImport, withUniqueNames } from './ai.js';
 import { createGoogleAuth, pkcePair } from './google.js';
+import { getOAuthProtectedResourceMetadataUrl, mcpAuthRouter } from '@modelcontextprotocol/sdk/server/auth/router.js';
+import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { createOAuthProvider } from './oauth.js';
+import { createMcpServer } from './mcp.js';
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,30}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,7 +24,10 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
   const feedback = createFeedbackStore(dataDir);
-  const session = sessionCookie(loadSecret(dataDir));
+  const secret = loadSecret(dataDir);
+  const session = sessionCookie(secret);
+  const mcpUrl = appUrl ? new URL('/mcp', appUrl) : null;
+  const oauth = mcpUrl && createOAuthProvider({ dataDir, secret, users, mcpUrl: mcpUrl.href });
   const app = express();
   app.set('trust proxy', 'loopback');
   app.use(express.json({ limit: '5mb' }));
@@ -93,7 +101,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   app.get('/api/me', (req, res) => {
     const user = currentUser(req);
-    res.json({ user: publicUser(user), firstAccount: users.count() === 0, google: google.enabled, ai: user ? aiStatus(user) : null });
+    res.json({ user: publicUser(user), firstAccount: users.count() === 0, google: google.enabled, ai: user ? aiStatus(user) : null, mcp: mcpUrl?.href ?? null });
   });
 
   app.post('/api/signup', limiter, (req, res) => {
@@ -115,17 +123,20 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   const googleCookie = (req, value, maxAge) =>
     `g_oauth=${value}; HttpOnly; SameSite=Lax; Path=/api/auth/google; Max-Age=${maxAge}${req.secure ? '; Secure' : ''}`;
   const loginError = (res, message) => res.redirect(`/?login_error=${encodeURIComponent(message)}`);
+  // Where to land after signing in (such as the page allowing an AI app): a path on this site only.
+  const safeNext = (next) => (typeof next === 'string' && /^\/(?![/\\])/.test(next) ? next : '');
 
   app.get('/api/auth/google', limiter, (req, res) => {
     if (!google.enabled) return loginError(res, "Google sign-in isn't set up on this server.");
     const state = crypto.randomBytes(16).toString('base64url');
     const { verifier, challenge } = pkcePair();
-    res.setHeader('Set-Cookie', googleCookie(req, `${state}.${verifier}`, 600));
+    const next = Buffer.from(safeNext(req.query.next)).toString('base64url');
+    res.setHeader('Set-Cookie', googleCookie(req, `${state}.${verifier}.${next}`, 600));
     res.redirect(google.authUrl({ redirectUri: googleRedirect(req), state, challenge }));
   });
 
   app.get('/api/auth/google/callback', limiter, async (req, res) => {
-    const [state, verifier] = (req.headers.cookie?.match(/(?:^|;\s*)g_oauth=([^;]+)/)?.[1] ?? '').split('.');
+    const [state, verifier, nextB64 = ''] = (req.headers.cookie?.match(/(?:^|;\s*)g_oauth=([^;]+)/)?.[1] ?? '').split('.');
     res.setHeader('Set-Cookie', googleCookie(req, '', 0));
     if (req.query.error) return loginError(res, 'Google sign-in was cancelled.');
     const given = Buffer.from(String(req.query.state ?? ''));
@@ -153,8 +164,8 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     }
     user = users.update(user.id, { lastLogin: new Date().toISOString(), lastSeen: new Date().toISOString() });
     setSession(req, res, user);
-    // New accounts start on the getting-started guide, as with sign-up.
-    res.redirect(created ? '/#help' : '/');
+    // New accounts start on the getting-started guide, as with sign-up, unless they were on their way somewhere.
+    res.redirect(safeNext(Buffer.from(nextB64, 'base64url').toString()) || (created ? '/#help' : '/'));
   });
 
   app.post('/api/login', limiter, (req, res) => {
@@ -323,13 +334,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   // Add monsters to a DM's bestiary as it is now (they may have edited it meanwhile), keeping names unique.
   function addToBestiary(userId, made) {
     const bestiary = dms.get(userId).bestiary;
-    const taken = new Set(bestiary.map((m) => m.name.toLowerCase()));
-    const monsters = made.map((m) => {
-      let name = m.name;
-      for (let n = 2; taken.has(name.toLowerCase()); n++) name = `${m.name} ${n}`;
-      taken.add(name.toLowerCase());
-      return { ...m, name };
-    });
+    const monsters = withUniqueNames(bestiary, made);
     dms.set(userId, 'bestiary', [...bestiary, ...monsters]);
     return monsters;
   }
@@ -386,6 +391,49 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     broadcast(req.user.slug);
     res.json({ ok: true });
   });
+
+  // Remote MCP for AI apps (server/mcp.js) at $APP_URL/mcp, with DM Screen as the OAuth server that
+  // signs them in (server/oauth.js). Needs APP_URL: tokens are issued for that exact address.
+  if (oauth) {
+    app.use(mcpAuthRouter({ provider: oauth.provider, issuerUrl: new URL(appUrl), resourceServerUrl: mcpUrl, resourceName: 'DM Screen' }));
+    // No token, or a bad one: 401 with a WWW-Authenticate header pointing at our metadata, which is how
+    // an app finds out where to sign in.
+    const bearer = requireBearerAuth({ verifier: oauth.provider, resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(mcpUrl), expectedResource: mcpUrl });
+
+    // Stateless: a new server and transport for every request, so there are no sessions to lose on a restart.
+    // Replies are plain JSON rather than an event stream, which nginx passes through as is.
+    app.post('/mcp', bearer, async (req, res) => {
+      const server = createMcpServer({ dms, dm: touch(users.byId(req.auth.extra.userId)) });
+      const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
+      res.on('close', () => { transport.close(); server.close(); });
+      try {
+        await server.connect(transport);
+        await transport.handleRequest(req, res, req.body);
+      } catch (e) {
+        console.error('[mcp]', e);
+        if (!res.headersSent) res.status(500).json({ jsonrpc: '2.0', error: { code: -32603, message: 'Internal error' }, id: null });
+      }
+    });
+    // Without sessions there's no stream to open (GET) or session to end (DELETE).
+    app.all('/mcp', (req, res) => res.status(405).set('Allow', 'POST').json({ jsonrpc: '2.0', error: { code: -32000, message: 'Method not allowed.' }, id: null }));
+
+    // The /connect page: what's asking, and the DM's answer.
+    app.get('/api/oauth/request/:id', requireDm, (req, res) => {
+      const request = oauth.request(req.params.id);
+      if (!request) return res.status(404).json({ error: 'This request has expired. Start connecting again from your AI app.' });
+      res.json(request);
+    });
+    app.post('/api/oauth/request/:id', requireDm, (req, res) => {
+      const redirect = oauth.answer(req.params.id, req.user, req.body?.allow === true);
+      if (!redirect) return res.status(404).json({ error: 'This request has expired. Start connecting again from your AI app.' });
+      res.json({ redirect });
+    });
+    app.get('/api/oauth/grants', requireDm, (req, res) => res.json(oauth.grants(req.user.id)));
+    app.delete('/api/oauth/grants/:id', requireDm, (req, res) => {
+      if (!oauth.removeGrant(req.user.id, req.params.id)) return res.status(404).json({ error: 'Not found.' });
+      res.json({ ok: true });
+    });
+  }
 
   // Players' view: each DM's active battle, by the DM's player link, pushed live over SSE.
   const streams = new Map(); // slug -> Set<res>
