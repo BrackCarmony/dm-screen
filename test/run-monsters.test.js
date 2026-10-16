@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { grade, srdTable } from '../evals/balance.js';
+import { crIndex, grade, srdTable } from '../evals/balance.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const srd = JSON.parse(fs.readFileSync(path.join(root, 'data', 'seed', 'bestiary.json'), 'utf8'));
@@ -41,6 +41,8 @@ const cases = await loadCases();
 const wolves = cases.find((c) => c.id === 'mid-frost-wolves'); // 3 monsters, CR 3 each
 const baseline = { variant: 'baseline', model: 'claude-opus-5-5' };
 const monstersJson = (list) => JSON.stringify({ monsters: list });
+// The grade without varied_stats, which depends on the stand-in's numbers (tested on its own below).
+const core = ({ varied_stats, ...rest }) => rest;
 const run = async (ctx = baseline) => {
   const r = await runCase(wolves, ctx);
   return { r, g: (await gradeCase(wolves, r, null, ctx)).grade };
@@ -49,7 +51,7 @@ const run = async (ctx = baseline) => {
 test('a perfect answer scores 1 on everything, with the model and usage the report needs', async () => {
   respond = () => ({ text: monstersJson(['Rimefang', 'Hoarfrost Stalker', 'Whiteout Howler'].map((name) => ({ ...wolfStandIn, name }))) });
   const { r, g } = await run();
-  assert.deepEqual(g, { balanced: 1, count_ok: 1, cr_ok: 1, unsure: 0, original_names: 1 });
+  assert.deepEqual(core(g), { balanced: 1, count_ok: 1, cr_ok: 1, unsure: 0, unique_names: 1 });
   assert.equal(r.model, 'claude-opus-5-5');
   assert.deepEqual(r.usage, { input_tokens: 900, output_tokens: 700 });
   assert.equal(r.transcript[1].content, wolves.prompt);
@@ -57,21 +59,29 @@ test('a perfect answer scores 1 on everything, with the model and usage the repo
 
 test('an empty answer, a refusal, and the wrong count and CR all score 0', async () => {
   respond = () => ({ text: '{"monsters": []}' });
-  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 0, original_names: 0 });
+  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 0, unique_names: 0 });
   respond = () => ({ text: '', stop_reason: 'refusal' });
   const refused = await run();
   assert.equal(refused.r.failure, 'refused');
-  assert.deepEqual(refused.g, { balanced: 0, count_ok: 0, cr_ok: 0, original_names: 0 });
+  assert.deepEqual(refused.g, { balanced: 0, count_ok: 0, cr_ok: 0, unique_names: 0 });
   // One overpowered CR 3 "wolf" (an ogre's HP doubled, its damage tripled) where three were asked for.
   const ogre = srd.find((m) => m.name === 'Ogre');
   respond = () => ({ text: monstersJson([{ ...ogre, name: 'Dire Frost Wolf', cr: 3, hp: 240, attacks: ['Multiattack: 3× Greatclub', ...ogre.attacks] }]) });
-  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 1, unsure: 0, original_names: 1 });
+  assert.deepEqual(core((await run()).g), { balanced: 0, count_ok: 0, cr_ok: 1, unsure: 0, unique_names: 1 });
 });
 
-test('numbered, repeated and borrowed names count against "own names"', async () => {
+test('numbered and repeated names count against "unique names"; franchise names are fine', async () => {
   respond = () => ({ text: monstersJson(['Frost Wolf (1)', 'Koopa Howler', 'Whiteout Howler'].map((name) => ({ ...wolfStandIn, name }))) });
-  const { g } = await run();
-  assert.equal(g.original_names, 1 / 3);
+  assert.equal((await run()).g.unique_names, 2 / 3);
+  respond = () => ({ text: monstersJson(['Howler', 'Howler', 'Rimefang'].map((name) => ({ ...wolfStandIn, name }))) });
+  assert.equal((await run()).g.unique_names, 1 / 3);
+});
+
+test('"varied stats" counts monsters that sit on the typical row for their CR', async () => {
+  const t = srdTable();
+  const onRow = { ...wolfStandIn, hp: Math.round(t.hp[crIndex(3)]), ac: Math.round(t.ac[crIndex(3)]) };
+  respond = () => ({ text: monstersJson([{ ...onRow, name: 'A' }, { ...onRow, name: 'B', hp: onRow.hp + 2 }, { ...onRow, name: 'C', hp: onRow.hp + 15 }]) });
+  assert.equal((await run()).g.varied_stats, 1 / 3);
 });
 
 test('a requested tank passes on its averaged CR, where an ordinary request would fail it', async () => {

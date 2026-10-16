@@ -1,24 +1,25 @@
 // Re-score saved eval results after the grader changes, from each case's saved reply (traces/), so earlier
 // runs stay comparable with new ones without paying for them again. Grading makes no model calls.
 //
-//   node evals/regrade.mjs .claude/hillclimb/monster-balance [--write]
+//   node evals/regrade.mjs .claude/hillclimb/monster-balance --unchanged count_ok,cr_ok,unsure [--write]
 //
-// Without --write it only reports what would change. It first checks that the replies reproduce the stored
-// metrics the grader change didn't touch; if they don't, the traces can't stand in for the original run.
+// Without --write it only reports what would change. --unchanged names the metrics the grader change didn't
+// touch: it first checks the saved replies reproduce those; if they don't, the traces can't stand in for the run.
 import fs from 'node:fs';
 import path from 'node:path';
 import { toBestiaryEntries } from '../server/ai.js';
 import { gradeCase, loadCases } from './run-monsters.mjs';
 
-const [flow] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
-const write = process.argv.includes('--write');
+const args = process.argv.slice(2);
+const write = args.includes('--write');
+const UNCHANGED = args.includes('--unchanged') ? args[args.indexOf('--unchanged') + 1].split(',') : [];
+const flow = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--unchanged');
 if (!flow) {
-  console.error('Usage: node evals/regrade.mjs <flow dir> [--write]');
+  console.error('Usage: node evals/regrade.mjs <flow dir> --unchanged metric,metric [--write]');
   process.exit(1);
 }
 const xpTable = JSON.parse(fs.readFileSync(new URL('../data/seed/xp.json', import.meta.url), 'utf8')).cr;
 const cases = new Map((await loadCases()).map((c) => [c.id, c]));
-const UNCHANGED = ['count_ok', 'cr_ok', 'unsure']; // metrics this regrade's grader change leaves alone
 
 let mismatches = 0;
 for (const variant of fs.readdirSync(flow).filter((d) => /^(baseline|v\d+)$/.test(d)).sort()) {

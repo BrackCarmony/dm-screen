@@ -51,7 +51,7 @@ const MONSTER_SCHEMA = {
 };
 
 // How fields are written in the bestiary. Shared by Claude's prompt and the instructions DMs copy for their own AI.
-export const FIELD_RULES = `- name: a short name a DM can read aloud, its own and different from the others. Not numbered ("Frost Wolf (2)"): give each monster of a pack a name of its own. Not a name from a game, film or book, or a D&D monster outside the SRD, even when the request is themed on one: say what the idea is in your own words.
+export const FIELD_RULES = `- name: a short name a DM can read aloud, different from the others' names. Don't number them ("Frost Wolf (2)"): give each monster of a pack a name of its own.
 - cr: challenge rating: 0, 0.125, 0.25, 0.5, or a whole number from 1 to 30.
 - hp, ac, init: whole numbers; init is the initiative modifier (the Dex modifier).
 - speed: in feet, e.g. "30" or "30, fly 60".
@@ -76,7 +76,7 @@ const SYSTEM = `You design monsters for a Dungeons & Dragons 5th edition DM's be
 
 Make original monsters that fit the DM's request. Make ${MAX_MONSTERS} at most; if the request doesn't say how many, make one. ${BALANCE}
 
-Typical numbers for each CR, from the SRD's monsters. Start from the row for the CR you give a monster: its hit points and its damage per round should both be near that row. It can be a little sturdier and hit a little softer, or the reverse, but not much of either unless the DM asks for something lopsided. Damage per round is its usual turn (every hit of its multiattack), with a recharge ability counted about once in three rounds. Above CR 10, keep growing from the CR 10 row.
+Typical numbers for each CR, from the SRD's monsters. Each row is an average, not a stat block to copy: real monsters at the same CR differ, and yours should too, from the row and from each other. Let the monster's idea set its numbers, then check them against its CR's row: hit points up to about a third above or below it, AC two or three either side, and damage per round the other way, so a tougher monster hits softer and a fragile one harder, and the two still average out to its CR. Unless the DM asks for something lopsided, don't push both far the same way. Damage per round is its usual turn (every hit of its multiattack), with a recharge ability counted about once in three rounds. Above CR 10, keep growing from the CR 10 row.
 CR | HP | AC | attack bonus | save DC | damage per round
 ${TYPICAL_BY_CR.map(([cr, hp, ac, bonus, dc, dpr]) => `${crName(cr)} | ${hp} | ${ac} | +${bonus} | ${dc} | ${dpr}`).join('\n')}
 

@@ -8,6 +8,7 @@ Each case is one prompt from `evals/monster-cases.json`, run through `server/ai.
 - **Unsure**: the share of monsters the grader can't judge. Lower is better.
 
 A refusal or an unreadable reply scores 0 on the first three.
-- **Own names**: the share of monsters named in their own words: not numbered ("Frost Wolf (1)"), not repeated within the reply, and not using a franchise name or a non-SRD D&D monster from the list in `evals/names.js`.
+- **Unique names**: the share of monsters a DM can tell apart by name: not numbered ("Frost Wolf (1)") and not repeated within the reply. Names from the franchise a request is based on are fine.
+- **Varied stats**: of monsters at CR 10 or below, the share that don't sit on the typical row for their CR (HP within 5% and exactly its AC). Real SRD monsters at CR 1-10 sit on it 6% of the time; a model given the table can copy it.
 
 Prompts tagged `lopsided` (a tank, a glass cannon, a brute that "can take a beating") pass on their averaged CR, within 2 steps, rather than defense and offense each within 3.

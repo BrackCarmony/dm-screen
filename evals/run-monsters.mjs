@@ -146,7 +146,7 @@ const REF_EXTS = ['', '.html', '.txt', '.json'];
 // --- fill these in ----------------------------------------------------------
 
 import { createMonsterGenerator } from '../server/ai.js';
-import { grade as gradeMonster, srdTable, fmtCr } from './balance.js';
+import { crIndex, grade as gradeMonster, srdTable, fmtCr } from './balance.js';
 import { nameProblems } from './names.js';
 
 const EVAL_DIR = dirname(fileURLToPath(import.meta.url));
@@ -165,6 +165,9 @@ const VARIANTS = {
   // From here on, server/ai.js's prompt has the typical numbers per CR and the naming rule; v1-v3 ran without.
   v4: { model: 'claude-haiku-5-5', effort: 'medium' },
   v5: { model: 'claude-sonnet-5-5', effort: 'medium' },
+  // From here on, the table is a midpoint to vary around, and franchise names are fine; only numbering isn't.
+  v6: { model: 'claude-haiku-5-5', effort: 'medium' },
+  v7: { model: 'claude-sonnet-5-5', effort: 'medium' },
 };
 
 /** Return the list of input cases. Each must have a stable `id`. */
@@ -219,12 +222,20 @@ async function gradeCase(input, run, ref, ctx) {
   if (run.failure) {
     const why = `The generator failed (${run.failure}) and made no monsters.`;
     return {
-      grade: { balanced: 0, count_ok: 0, ...(input.expect.cr !== undefined && { cr_ok: 0 }), original_names: 0 },
+      grade: { balanced: 0, count_ok: 0, ...(input.expect.cr !== undefined && { cr_ok: 0 }), unique_names: 0 },
       explanation: { balanced: why, count_ok: why },
     };
   }
   const graded = run.monsters.map((m) => gradeMonster(m, TABLE, { lopsided: input.tags.includes('lopsided') }));
   const names = nameProblems(run.monsters.map((m) => m.name));
+  // Copying the typical row for the CR: HP within 5% of it and exactly its AC. Real SRD monsters at CR 1-10
+  // do that 6% of the time, so a reply that does it a lot is filling in a table, not designing monsters.
+  const typical = run.monsters.filter((m) => m.cr <= 10).map((m) => {
+    const i = crIndex(m.cr);
+    const hp = Math.round(TABLE.hp[i]);
+    const ac = Math.round(TABLE.ac[i]);
+    return { m, hp, ac, onTable: Math.abs(m.hp / hp - 1) <= 0.05 && m.ac === ac };
+  });
   const judged = graded.filter((g) => g.verdict !== 'unsure');
   const share = (n, of) => (of ? n / of : undefined);
   const lines = graded.map((g) => `${g.verdict} ${g.name} (CR ${fmtCr(g.claimed)}): defense CR ${fmtCr(g.defensive)}, offense ${g.offensive === null ? 'unknown' : `CR ${fmtCr(g.offensive)}`}`
@@ -235,14 +246,16 @@ async function gradeCase(input, run, ref, ctx) {
     count_ok: run.monsters.length === input.expect.count ? 1 : 0,
     cr_ok: input.expect.cr === undefined ? undefined : share(run.monsters.filter((m) => m.cr === input.expect.cr).length, run.monsters.length),
     unsure: share(graded.length - judged.length, graded.length),
-    original_names: share(names.filter(([, problem]) => !problem).length, names.length),
+    unique_names: share(names.filter(([, problem]) => !problem).length, names.length),
+    varied_stats: share(typical.filter((t) => !t.onTable).length, typical.length),
   };
   return {
     grade,
     explanation: {
       balanced: lines.join('\n'),
       count_ok: `Asked for ${input.expect.count}, made ${run.monsters.length}.`,
-      original_names: names.map(([n, problem]) => `${n}: ${problem ?? 'ok'}`).join('\n'),
+      unique_names: names.map(([n, problem]) => `${n}: ${problem ?? 'ok'}`).join('\n'),
+      ...(typical.length && { varied_stats: typical.map(({ m, hp, ac, onTable }) => `${m.name}: ${m.hp} HP, AC ${m.ac} (typical for CR ${fmtCr(m.cr)}: ${hp} HP, AC ${ac})${onTable ? ', the typical row' : ''}`).join('\n') }),
       ...(input.expect.cr !== undefined && { cr_ok: `Asked for CR ${fmtCr(input.expect.cr)}; made CR ${crs}.` }),
     },
   };

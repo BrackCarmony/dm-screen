@@ -19,8 +19,14 @@
       "scale": 1
     },
     {
-      "id": "original_names",
-      "label": "Own names",
+      "id": "unique_names",
+      "label": "Unique names",
+      "kind": "float",
+      "scale": 1
+    },
+    {
+      "id": "varied_stats",
+      "label": "Varied stats",
       "kind": "float",
       "scale": 1
     },
@@ -58,5 +64,5 @@
     "evals/names.js",
     "server/ai.js"
   ],
-  "harness_sha": "bdaabcc659d1b0c4cdf50d310a29c7250267c0ea983788c2e6368b66d4d50176"
+  "harness_sha": "1f61060f6174af61e42654371015af690ea9e259965aa79e6b2be2484ec75442"
 }
