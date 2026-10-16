@@ -91,6 +91,9 @@ export const WELL_SAMPLED_CR = 10;
 // A monster passes when its defense and its offense each look within this many steps of its CR. Steps are
 // along the CR ladder (0, 1/8, 1/4, 1/2, 1, 2, ...). Ordinary SRD monsters up to CR 10 pass 95-97% of the time.
 export const PASS_STEPS = 3;
+// When the DM asks for a lopsided monster (a tank, a glass cannon), defense and offense are meant to be far
+// apart, so it passes when their average, 5e's own CR, is within this many steps instead.
+export const LOPSIDED_STEPS = 2;
 
 export function unreliable(monster) {
   const text = `${monster.special ?? ''} ${(monster.attacks ?? []).join(' ')}`;
@@ -127,7 +130,8 @@ const nearest = (curve, value) => curve.reduce((best, v, i) => (Math.abs(Math.lo
 const clamp = (i) => Math.max(0, Math.min(CRS.length - 1, i));
 
 // Grade one monster: the CR its numbers suggest, how far that is from the CR it claims, and why.
-export function grade(monster, table) {
+// lopsided: the request asked for defense and offense to be uneven (see LOPSIDED_STEPS).
+export function grade(monster, table, { lopsided = false } = {}) {
   const claimed = crIndex(Number(monster.cr) || 0);
   const off = offense(monster);
   const problems = [];
@@ -147,10 +151,12 @@ export function grade(monster, table) {
   const estimated = offensive === null ? defensive : Math.round((defensive + offensive) / 2);
   const delta = estimated - claimed;
   const say = (what, i) => `${what} looks like CR ${fmtCr(CRS[i])}`;
-  const defenseOff = Math.abs(defensive - claimed) > PASS_STEPS;
-  const offenseOff = offensive !== null && Math.abs(offensive - claimed) > PASS_STEPS;
+  const defenseOff = !lopsided && Math.abs(defensive - claimed) > PASS_STEPS;
+  const offenseOff = !lopsided && offensive !== null && Math.abs(offensive - claimed) > PASS_STEPS;
+  const averageOff = lopsided && Math.abs(delta) > LOPSIDED_STEPS;
   if (defenseOff) problems.push(say(`HP ${monster.hp} with AC ${monster.ac}`, defensive));
   if (offenseOff) problems.push(say(`about ${Math.round(off.dpr)} damage a round${off.bonus !== null ? ` at +${off.bonus}` : ''}`, offensive));
+  if (averageOff) problems.push(say(`Defense and offense together (asked to be lopsided)`, estimated));
 
   const caveats = unreliable(monster);
   if (CRS[claimed] > WELL_SAMPLED_CR) caveats.push(`too few SRD monsters above CR ${WELL_SAMPLED_CR} to judge`);
@@ -158,7 +164,7 @@ export function grade(monster, table) {
   return {
     name: monster.name,
     // pass: defense and offense each fit the CR. unsure: a caveat applies, so it isn't counted either way.
-    verdict: caveats.length ? 'unsure' : defenseOff || offenseOff ? 'fail' : 'pass',
+    verdict: caveats.length ? 'unsure' : defenseOff || offenseOff || averageOff ? 'fail' : 'pass',
     reliable: caveats.length === 0,
     caveats, // why it can't be judged: spells, legendary actions, a CR above WELL_SAMPLED_CR, no damage to read
     claimed: CRS[claimed],

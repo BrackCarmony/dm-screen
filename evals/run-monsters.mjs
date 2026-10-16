@@ -147,6 +147,7 @@ const REF_EXTS = ['', '.html', '.txt', '.json'];
 
 import { createMonsterGenerator } from '../server/ai.js';
 import { grade as gradeMonster, srdTable, fmtCr } from './balance.js';
+import { nameProblems } from './names.js';
 
 const EVAL_DIR = dirname(fileURLToPath(import.meta.url));
 // The API key, as for the server: from .env, with real environment variables winning.
@@ -154,12 +155,16 @@ if (existsSync(join(EVAL_DIR, '..', '.env'))) process.loadEnvFile(join(EVAL_DIR,
 const XP_TABLE = JSON.parse(readFileSync(join(EVAL_DIR, '..', 'data', 'seed', 'xp.json'), 'utf8')).cr;
 const TABLE = srdTable();
 
-// What each variant runs. baseline is what the site uses (server/ai.js's defaults).
+// What each variant runs. baseline is what the site uses (server/ai.js's defaults). A variant's results are
+// only comparable with others run on the same prompt; change.md in its folder says which.
 const VARIANTS = {
   baseline: { model: 'claude-opus-5-5', effort: 'medium' },
   v1: { model: 'claude-opus-5-5', effort: 'low' },
   v2: { model: 'claude-sonnet-5-5', effort: 'medium' },
   v3: { model: 'claude-haiku-5-5', effort: 'medium' },
+  // From here on, server/ai.js's prompt has the typical numbers per CR and the naming rule; v1-v3 ran without.
+  v4: { model: 'claude-haiku-5-5', effort: 'medium' },
+  v5: { model: 'claude-sonnet-5-5', effort: 'medium' },
 };
 
 /** Return the list of input cases. Each must have a stable `id`. */
@@ -214,11 +219,12 @@ async function gradeCase(input, run, ref, ctx) {
   if (run.failure) {
     const why = `The generator failed (${run.failure}) and made no monsters.`;
     return {
-      grade: { balanced: 0, count_ok: 0, ...(input.expect.cr !== undefined && { cr_ok: 0 }) },
+      grade: { balanced: 0, count_ok: 0, ...(input.expect.cr !== undefined && { cr_ok: 0 }), original_names: 0 },
       explanation: { balanced: why, count_ok: why },
     };
   }
-  const graded = run.monsters.map((m) => gradeMonster(m, TABLE));
+  const graded = run.monsters.map((m) => gradeMonster(m, TABLE, { lopsided: input.tags.includes('lopsided') }));
+  const names = nameProblems(run.monsters.map((m) => m.name));
   const judged = graded.filter((g) => g.verdict !== 'unsure');
   const share = (n, of) => (of ? n / of : undefined);
   const lines = graded.map((g) => `${g.verdict} ${g.name} (CR ${fmtCr(g.claimed)}): defense CR ${fmtCr(g.defensive)}, offense ${g.offensive === null ? 'unknown' : `CR ${fmtCr(g.offensive)}`}`
@@ -229,12 +235,14 @@ async function gradeCase(input, run, ref, ctx) {
     count_ok: run.monsters.length === input.expect.count ? 1 : 0,
     cr_ok: input.expect.cr === undefined ? undefined : share(run.monsters.filter((m) => m.cr === input.expect.cr).length, run.monsters.length),
     unsure: share(graded.length - judged.length, graded.length),
+    original_names: share(names.filter(([, problem]) => !problem).length, names.length),
   };
   return {
     grade,
     explanation: {
       balanced: lines.join('\n'),
       count_ok: `Asked for ${input.expect.count}, made ${run.monsters.length}.`,
+      original_names: names.map(([n, problem]) => `${n}: ${problem ?? 'ok'}`).join('\n'),
       ...(input.expect.cr !== undefined && { cr_ok: `Asked for CR ${fmtCr(input.expect.cr)}; made CR ${crs}.` }),
     },
   };

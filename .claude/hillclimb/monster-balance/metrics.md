@@ -8,3 +8,6 @@ Each case is one prompt from `evals/monster-cases.json`, run through `server/ai.
 - **Unsure**: the share of monsters the grader can't judge. Lower is better.
 
 A refusal or an unreadable reply scores 0 on the first three.
+- **Own names**: the share of monsters named in their own words: not numbered ("Frost Wolf (1)"), not repeated within the reply, and not using a franchise name or a non-SRD D&D monster from the list in `evals/names.js`.
+
+Prompts tagged `lopsided` (a tank, a glass cannon, a brute that "can take a beating") pass on their averaged CR, within 2 steps, rather than defense and offense each within 3.

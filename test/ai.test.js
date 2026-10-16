@@ -208,3 +208,13 @@ test('the generator can try another model and effort; Haiku is asked without a f
   assert.equal(sonnet.output_config.effort, 'medium');
   assert.deepEqual(seen, [['end_turn', 'claude-haiku-5-5']]);
 });
+
+test('the typical numbers in the generator prompt match the CR calibration the evals grade with', async () => {
+  const { TYPICAL_BY_CR } = await import('../server/ai.js');
+  const { srdTable, crIndex } = await import('../evals/balance.js');
+  const t = srdTable();
+  for (const [cr, hp, ac, bonus, dc, dpr] of TYPICAL_BY_CR) {
+    const i = crIndex(cr);
+    assert.deepEqual([hp, ac, bonus, dc, dpr], [t.hp[i], t.ac[i], t.bonus[i], t.dc[i], t.dpr[i]].map(Math.round), `CR ${cr}`);
+  }
+});

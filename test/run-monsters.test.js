@@ -47,9 +47,9 @@ const run = async (ctx = baseline) => {
 };
 
 test('a perfect answer scores 1 on everything, with the model and usage the report needs', async () => {
-  respond = () => ({ text: monstersJson([1, 2, 3].map((n) => ({ ...wolfStandIn, name: `Frost Wolf ${n}` }))) });
+  respond = () => ({ text: monstersJson(['Rimefang', 'Hoarfrost Stalker', 'Whiteout Howler'].map((name) => ({ ...wolfStandIn, name }))) });
   const { r, g } = await run();
-  assert.deepEqual(g, { balanced: 1, count_ok: 1, cr_ok: 1, unsure: 0 });
+  assert.deepEqual(g, { balanced: 1, count_ok: 1, cr_ok: 1, unsure: 0, original_names: 1 });
   assert.equal(r.model, 'claude-opus-5-5');
   assert.deepEqual(r.usage, { input_tokens: 900, output_tokens: 700 });
   assert.equal(r.transcript[1].content, wolves.prompt);
@@ -57,15 +57,33 @@ test('a perfect answer scores 1 on everything, with the model and usage the repo
 
 test('an empty answer, a refusal, and the wrong count and CR all score 0', async () => {
   respond = () => ({ text: '{"monsters": []}' });
-  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 0 });
+  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 0, original_names: 0 });
   respond = () => ({ text: '', stop_reason: 'refusal' });
   const refused = await run();
   assert.equal(refused.r.failure, 'refused');
-  assert.deepEqual(refused.g, { balanced: 0, count_ok: 0, cr_ok: 0 });
+  assert.deepEqual(refused.g, { balanced: 0, count_ok: 0, cr_ok: 0, original_names: 0 });
   // One overpowered CR 3 "wolf" (an ogre's HP doubled, its damage tripled) where three were asked for.
   const ogre = srd.find((m) => m.name === 'Ogre');
   respond = () => ({ text: monstersJson([{ ...ogre, name: 'Dire Frost Wolf', cr: 3, hp: 240, attacks: ['Multiattack: 3× Greatclub', ...ogre.attacks] }]) });
-  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 1, unsure: 0 });
+  assert.deepEqual((await run()).g, { balanced: 0, count_ok: 0, cr_ok: 1, unsure: 0, original_names: 1 });
+});
+
+test('numbered, repeated and borrowed names count against "own names"', async () => {
+  respond = () => ({ text: monstersJson(['Frost Wolf (1)', 'Koopa Howler', 'Whiteout Howler'].map((name) => ({ ...wolfStandIn, name }))) });
+  const { g } = await run();
+  assert.equal(g.original_names, 1 / 3);
+});
+
+test('a requested tank passes on its averaged CR, where an ordinary request would fail it', async () => {
+  const wall = cases.find((c) => c.id === 'mid-stone-wall'); // "CR 6 tank: huge HP and armor, weak hits"
+  const ogre = srd.find((m) => m.name === 'Ogre');
+  // Tanky (HP of a much stronger monster) and soft (an ogre's club): uneven, but about CR 6 on average.
+  const tank = { ...ogre, name: 'Basalt Bulwark', cr: 6, hp: 180, ac: 17 };
+  respond = () => ({ text: monstersJson([tank]) });
+  const r = await runCase(wall, baseline);
+  assert.equal((await gradeCase(wall, r, null, baseline)).grade.balanced, 1);
+  const ordinary = { ...wall, tags: wall.tags.filter((t) => t !== 'lopsided') };
+  assert.equal((await gradeCase(ordinary, r, null, baseline)).grade.balanced, 0);
 });
 
 test('each variant asks for its own model and effort, and the model must match --model', async () => {

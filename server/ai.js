@@ -51,7 +51,7 @@ const MONSTER_SCHEMA = {
 };
 
 // How fields are written in the bestiary. Shared by Claude's prompt and the instructions DMs copy for their own AI.
-export const FIELD_RULES = `- name: a short name a DM can read aloud.
+export const FIELD_RULES = `- name: a short name a DM can read aloud, its own and different from the others. Not numbered ("Frost Wolf (2)"): give each monster of a pack a name of its own. Not a name from a game, film or book, or a D&D monster outside the SRD, even when the request is themed on one: say what the idea is in your own words.
 - cr: challenge rating: 0, 0.125, 0.25, 0.5, or a whole number from 1 to 30.
 - hp, ac, init: whole numbers; init is the initiative modifier (the Dex modifier).
 - speed: in feet, e.g. "30" or "30, fly 60".
@@ -61,9 +61,24 @@ export const FIELD_RULES = `- name: a short name a DM can read aloud.
 
 export const BALANCE = `Balance hit points, armor class, attack bonuses, damage and save DCs for the challenge rating using the 5e monster creation guidelines. Don't copy monsters from published books other than the 5e System Reference Document.`;
 
+// Typical numbers at each CR: the medians of the SRD bestiary's ordinary monsters (evals/balance.js, srdTable),
+// rounded. Above CR 10 the SRD has too few to say. test/ai.test.js fails if this drifts from the calibration.
+export const TYPICAL_BY_CR = [
+  // [cr, hp, ac, attack bonus, save DC, damage per round]
+  [0, 3, 11, 3, 11, 3], [0.125, 9, 12, 4, 11, 5], [0.25, 13, 12, 4, 11, 6], [0.5, 22, 12, 4, 11, 8],
+  [1, 27, 12, 4, 11, 10], [2, 45, 13, 5, 12, 13], [3, 58, 13, 5, 12, 17], [4, 78, 13, 5, 13, 17],
+  [5, 102, 15, 7, 15, 26], [6, 112, 15, 7, 15, 29], [7, 127, 17, 7, 15, 39], [8, 136, 17, 8, 15, 44],
+  [9, 147, 18, 10, 17, 47], [10, 178, 18, 10, 17, 47],
+];
+const crName = (cr) => ({ 0.125: '1/8', 0.25: '1/4', 0.5: '1/2' })[cr] ?? String(cr);
+
 const SYSTEM = `You design monsters for a Dungeons & Dragons 5th edition DM's bestiary, used at the table to run combat.
 
 Make original monsters that fit the DM's request. Make ${MAX_MONSTERS} at most; if the request doesn't say how many, make one. ${BALANCE}
+
+Typical numbers for each CR, from the SRD's monsters. Start from the row for the CR you give a monster: its hit points and its damage per round should both be near that row. It can be a little sturdier and hit a little softer, or the reverse, but not much of either unless the DM asks for something lopsided. Damage per round is its usual turn (every hit of its multiattack), with a recharge ability counted about once in three rounds. Above CR 10, keep growing from the CR 10 row.
+CR | HP | AC | attack bonus | save DC | damage per round
+${TYPICAL_BY_CR.map(([cr, hp, ac, bonus, dc, dpr]) => `${crName(cr)} | ${hp} | ${ac} | +${bonus} | ${dc} | ${dpr}`).join('\n')}
 
 Write fields the way the rest of the bestiary does:
 ${FIELD_RULES}`;
