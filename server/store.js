@@ -40,6 +40,8 @@ export function createDmStore(dataDir, seedDir) {
     writeJson(file, state);
     cache.set(userId, { state, mtime: mtimeOf(file) });
   };
+  const listeners = new Set();
+  const emit = (userId, keys, meta) => { for (const fn of listeners) fn(userId, keys, meta); };
 
   // Another process (the MCP server) may write a DM's file, so the cached copy is only used while the file is unchanged.
   function load(userId) {
@@ -78,11 +80,38 @@ export function createDmStore(dataDir, seedDir) {
       save(userId, state);
       return state;
     },
-    set(userId, key, value) {
+    // meta says who made the change ({ by: 'Claude' } for an AI app, { tab } for a browser tab) and goes to onChange.
+    set(userId, key, value, meta = {}) {
       if (!KEYS.includes(key)) throw new Error(`unknown key ${key}`);
       const state = load(userId);
       state[key] = value;
       save(userId, state);
+      emit(userId, [key], meta);
+    },
+    // fn(userId, keys, meta) after each change: from set, or from another process when watching.
+    onChange(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    },
+    // Report changes another process (the stdio MCP server) writes to a DM's file, with meta {}. Only for DMs
+    // this process has loaded; its own writes are recognized by their modification time and skipped.
+    watch() {
+      const timers = new Map();
+      const check = (userId) => {
+        const before = cache.get(userId);
+        if (!before || before.mtime === mtimeOf(fileFor(userId))) return;
+        const after = load(userId);
+        const keys = KEYS.filter((k) => JSON.stringify(before.state[k]) !== JSON.stringify(after?.[k]));
+        if (keys.length) emit(userId, keys, {});
+      };
+      const watcher = fs.watch(dir, { persistent: false }, (_, name) => {
+        const userId = /^([a-zA-Z0-9_-]+)\.json$/.exec(String(name ?? ''))?.[1];
+        if (!userId) return;
+        // One write is several events (the temp file, the rename); look once they've settled.
+        clearTimeout(timers.get(userId));
+        timers.set(userId, setTimeout(() => { timers.delete(userId); check(userId); }, 50).unref());
+      });
+      return () => watcher.close();
     },
   };
 }

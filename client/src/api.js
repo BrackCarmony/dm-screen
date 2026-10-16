@@ -1,7 +1,10 @@
+// Sent with every request so this tab can tell its own saves apart in the live change events (/api/events).
+export const TAB_ID = crypto.randomUUID();
+
 async function call(method, url, body) {
   const res = await fetch(url, {
     method,
-    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    headers: { 'X-Tab-Id': TAB_ID, ...(body && { 'Content-Type': 'application/json' }) },
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {

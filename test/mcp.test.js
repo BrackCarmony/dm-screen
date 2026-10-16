@@ -93,3 +93,23 @@ test('the random encounter table prompt names the tools and the place', async (t
   const text = messages[0].content.text;
   for (const s of ['d8', 'the woods', 'level 5', 'search_monsters', 'encounter_xp', 'add_encounters']) assert.ok(text.includes(s), s);
 });
+
+test('the store reports which collections another process changed, and not its own writes', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dm-screen-'));
+  const dms = createDmStore(dataDir, seedDir);
+  const seen = [];
+  dms.onChange((userId, keys, meta) => seen.push([userId, keys, meta]));
+  const stop = dms.watch();
+  dms.create('dm1');
+  dms.set('dm1', 'party', [{ id: 'P1', name: 'Ulf', inParty: true }], { tab: 't' });
+  await new Promise((r) => setTimeout(r, 150));
+  assert.deepEqual(seen, [['dm1', ['party'], { tab: 't' }]]);
+
+  // Another process (the stdio MCP server) adds an encounter.
+  const other = createDmStore(dataDir, seedDir);
+  other.set('dm1', 'encounters', [...other.get('dm1').encounters, { id: 'e', group: 'G', name: 'N', note: '', monsters: ['Wolf'] }]);
+  await new Promise((r) => setTimeout(r, 150));
+  stop();
+  assert.deepEqual(seen.at(-1), ['dm1', ['encounters'], {}]);
+  assert.equal(seen.length, 2);
+});

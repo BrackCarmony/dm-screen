@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { api } from './api.js';
+import { TAB_ID, api } from './api.js';
 import Battle from './pages/Battle.jsx';
 import Bestiary from './pages/Bestiary.jsx';
 import Encounters from './pages/Encounters.jsx';
@@ -23,6 +23,9 @@ const TABS = [
   ['account', 'Account'],
 ];
 
+// What a change event's collections are called in the app, for the "Claude updated your ..." notice.
+const PAGE_NAMES = { bestiary: 'Bestiary', encounters: 'Encounters', party: 'Party', battles: 'Battles', shop: 'Magic Shop', xp: 'XP Tables' };
+
 function useHashTab() {
   const read = () => window.location.hash.slice(1) || 'battle';
   const [tab, setTab] = useState(read);
@@ -38,6 +41,7 @@ export default function App() {
   const [me, setMe] = useState(null);
   const [state, setState] = useState(null);
   const [saveError, setSaveError] = useState('');
+  const [notice, setNotice] = useState('');
   const timers = useRef({});
   const pending = useRef(new Set()); // keys with a save waiting or in flight
   const tab = useHashTab();
@@ -68,21 +72,39 @@ export default function App() {
     });
   }, []);
 
-  // Coming back to the tab reloads the campaign, so changes made elsewhere (another device, an AI over MCP)
-  // show up before the next save would overwrite them. Not while a save is waiting, which would lose that edit.
+  // Live updates: the server says which collections changed and who changed them (an AI app over MCP, another
+  // tab or device). Reload just those, except one with an edit waiting to save, which would lose that edit.
+  const reload = useCallback(async (keys) => {
+    const fresh = await api.state();
+    setState((s) => {
+      const next = { ...s };
+      for (const k of keys ?? Object.keys(fresh)) if (!pending.current.has(k)) next[k] = fresh[k];
+      return next;
+    });
+  }, []);
   useEffect(() => {
     if (!me?.user) return;
-    const refresh = () => {
-      if (document.visibilityState !== 'visible' || pending.current.size) return;
-      api.state().then((s) => { if (!pending.current.size) setState(s); }).catch(() => {});
+    const events = new EventSource('/api/events');
+    let connected = false;
+    // EventSource reconnects by itself (after a deploy, a dropped network); changes made meanwhile were missed.
+    events.onopen = () => {
+      if (connected) reload().catch(() => {});
+      connected = true;
     };
-    window.addEventListener('focus', refresh);
-    document.addEventListener('visibilitychange', refresh);
-    return () => {
-      window.removeEventListener('focus', refresh);
-      document.removeEventListener('visibilitychange', refresh);
+    events.onmessage = (e) => {
+      const { keys, by, tab } = JSON.parse(e.data);
+      if (tab === TAB_ID) return;
+      reload(keys).catch(() => {});
+      // Say so when an app made the change; edits from the DM's other tabs and devices just appear.
+      const pages = keys.map((k) => PAGE_NAMES[k]).filter(Boolean);
+      if (!tab && pages.length) {
+        setNotice(`${by ?? 'Another app'} updated your ${pages.join(' and ')}.`);
+        clearTimeout(timers.current.notice);
+        timers.current.notice = setTimeout(() => setNotice(''), 6000);
+      }
     };
-  }, [me]);
+    return () => events.close();
+  }, [me, reload]);
 
   // The privacy policy is public, so it shows whether or not anyone is logged in.
   if (window.location.pathname === '/privacy') return <Privacy />;
@@ -112,6 +134,7 @@ export default function App() {
         </div>
       </header>
       {saveError && <div className="banner error">{saveError}</div>}
+      {notice && <div className="banner notice" role="status">{notice}</div>}
       <main>
         {tab === 'battle' && <Battle {...props} />}
         {tab === 'bestiary' && <Bestiary {...props} ai={me.ai} onAi={(ai) => setMe((m) => ({ ...m, ai }))} />}

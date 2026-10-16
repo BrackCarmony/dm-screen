@@ -65,6 +65,7 @@ button.icon:hover { color: var(--text); }
 .topbar-right { margin-left: auto; display: flex; gap: 1rem; align-items: center; }
 .banner { background: var(--surface-2); padding: .5rem 1rem; border-bottom: 1px solid var(--border); }
 .banner.error { color: var(--bad); }
+.banner.notice { color: var(--good); }
 .party-changed { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; background: var(--surface-2); border: 1px solid var(--warn); border-radius: 8px; padding: .5rem .75rem; margin-bottom: 1rem; }
 main { padding: 1rem; max-width: 1500px; margin: 0 auto; }
 
