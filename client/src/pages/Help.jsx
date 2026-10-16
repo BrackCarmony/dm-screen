@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Getting-started guide. Opens after sign-up and from the ? in the top bar.
-export default function Help({ user }) {
+export default function Help({ user, mcp }) {
   const link = `${window.location.origin}/p/${user.slug}`;
   return (
     <div className="page narrow-page help">
@@ -68,6 +68,12 @@ export default function Help({ user }) {
             <strong><a href="#shop">Magic Shop</a>:</strong> roll a shop's stock from the major and minor item tables under a gold budget, and save the shops your party visits.
             Use <em>Edit items</em> to change what each table can roll.
           </li>
+          {mcp && (
+            <li>
+              <strong><a href="#account/ai-apps">AI apps</a>:</strong> connect Claude or another AI app that supports MCP, and it can look up
+              your monsters, battles and encounters, and add new monsters and encounter tables when you ask.
+            </li>
+          )}
           <li>
             <strong><a href="#feedback">Feedback</a>:</strong> something confusing, missing or broken? Tell us there. You'll see when it's been looked at.
           </li>
