@@ -155,7 +155,8 @@ if (existsSync(join(EVAL_DIR, '..', '.env'))) process.loadEnvFile(join(EVAL_DIR,
 const XP_TABLE = JSON.parse(readFileSync(join(EVAL_DIR, '..', 'data', 'seed', 'xp.json'), 'utf8')).cr;
 const TABLE = srdTable();
 
-// What each variant runs. baseline is what the site uses (server/ai.js's defaults). A variant's results are
+// What each variant runs. baseline is what the site used when the eval began (Opus 5.5, medium effort); the site
+// now runs v6's setting (Haiku 5.5, medium effort, the current prompt). A variant's results are
 // only comparable with others run on the same prompt; change.md in its folder says which.
 const VARIANTS = {
   baseline: { model: 'claude-opus-5-5', effort: 'medium' },

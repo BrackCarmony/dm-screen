@@ -19,7 +19,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const slugify = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 30) || 'dm';
 
-export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS, generator = createMonsterGenerator(), aiUses = Number(process.env.AI_BETA_USES) || 5, google = createGoogleAuth() }) {
+export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_URL, mailer = createMailer(), adminEmails = process.env.ADMIN_EMAILS, generator = createMonsterGenerator(), aiUses = Number(process.env.AI_BETA_USES) || 100, google = createGoogleAuth() }) {
   const extraAdmins = new Set(String(adminEmails ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean));
   const users = createUserStore(dataDir);
   const dms = createDmStore(dataDir, seedDir);
@@ -275,6 +275,14 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
         },
         live: !!st.settings?.activeBattleId,
         feedback: allFeedback.filter((f) => f.userId === u.id).length,
+        // AI: in-app generations against the limit, the monsters they made, and AI apps connected over MCP.
+        ai: {
+          used: u.aiUses ?? 0,
+          limit: aiUses,
+          lastUsed: u.aiLastUsed ?? null,
+          monsters: st.bestiary?.filter((m) => m.ai).length ?? 0,
+          apps: oauth ? oauth.grants(u.id).length : 0,
+        },
       };
     });
     dmsList.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
@@ -286,6 +294,9 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
         active7: dmsList.filter((d) => within(d.lastSeen, 7)).length,
         withBattles: dmsList.filter((d) => d.counts.battles > 0).length,
         openFeedback: allFeedback.filter((f) => f.status === 'open').length,
+        aiUsers: dmsList.filter((d) => d.ai.used > 0).length,
+        aiGenerations: dmsList.reduce((s, d) => s + d.ai.used, 0),
+        aiNearLimit: dmsList.filter((d) => d.ai.used >= 0.8 * d.ai.limit).length,
       },
       dms: dmsList,
       feedback: [...allFeedback].reverse().map(adminFeedback),
@@ -374,7 +385,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     try {
       const made = await generator.generate(prompt, { xpTable: dms.get(req.user.id).xp?.cr ?? [] });
       const monsters = addToBestiary(req.user.id, made, fromTab(req));
-      const user = users.update(req.user.id, { aiUses: status.used + 1 });
+      const user = users.update(req.user.id, { aiUses: status.used + 1, aiLastUsed: new Date().toISOString() });
       res.json({ monsters, ai: aiStatus(user) });
     } catch (e) {
       if (!e.code) console.error('[ai] generation failed:', e);
