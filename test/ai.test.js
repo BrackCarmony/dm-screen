@@ -36,14 +36,14 @@ async function start(t, generator, opts = {}) {
 test('a generation adds AI monsters to the bestiary and uses one of the 5', async (t) => {
   const calls = [];
   const dm = await start(t, { enabled: true, generate: async (prompt) => { calls.push(prompt); return [monster('Aboleth'), monster('Ash Wraith')]; } });
-  assert.deepEqual((await dm('GET', '/api/me')).body.ai, { enabled: true, used: 0, limit: 5 });
+  assert.deepEqual((await dm('GET', '/api/me')).body.ai, { enabled: true, used: 0, limit: 100 });
 
   const r = await dm('POST', '/api/bestiary/generate', { prompt: '  two swamp horrors  ' });
   assert.equal(r.status, 200);
   assert.deepEqual(calls, ['two swamp horrors']);
   // Aboleth is already in the starter bestiary, so the new one is renamed.
   assert.deepEqual(r.body.monsters.map((m) => m.name), ['Aboleth 2', 'Ash Wraith']);
-  assert.deepEqual(r.body.ai, { enabled: true, used: 1, limit: 5 });
+  assert.deepEqual(r.body.ai, { enabled: true, used: 1, limit: 100 });
 
   const { bestiary } = (await dm('GET', '/api/state')).body;
   const ai = bestiary.filter((m) => m.ai);
@@ -122,7 +122,8 @@ test('the generator asks Claude for JSON monsters and sorts out failures', async
   const [req] = ok.requests;
   assert.equal(req.model, AI_MODEL);
   assert.equal(req.output_config.format.type, 'json_schema');
-  assert.equal(req.fallbacks, 'default');
+  assert.equal(req.model, 'claude-haiku-5-5');
+  assert.equal(req.fallbacks, undefined); // Haiku has no refusal fallback
   assert.deepEqual(req.messages, [{ role: 'user', content: 'a fire imp' }]);
 
   const fails = async (respond) => {
@@ -217,4 +218,15 @@ test('the typical numbers in the generator prompt match the CR calibration the e
     const i = crIndex(cr);
     assert.deepEqual([hp, ac, bonus, dc, dpr], [t.hp[i], t.ac[i], t.bonus[i], t.dc[i], t.dpr[i]].map(Math.round), `CR ${cr}`);
   }
+});
+
+test('the Admin page shows each DM\'s AI use against the limit, their AI monsters, and who is near it', async (t) => {
+  let calls = 0;
+  const dm = await start(t, { enabled: true, generate: async () => { calls++; return [monster(`Imp ${calls}`)]; } }, { aiUses: 5 });
+  for (let i = 0; i < 4; i++) assert.equal((await dm('POST', '/api/bestiary/generate', { prompt: 'an imp' })).status, 200);
+  // The first account is the admin, so this DM sees the Admin page's data.
+  const { totals, dms: [me] } = (await dm('GET', '/api/admin/dms')).body;
+  assert.deepEqual({ ...me.ai, lastUsed: typeof me.ai.lastUsed }, { used: 4, limit: 5, lastUsed: 'string', monsters: 4, apps: 0 });
+  assert.ok(Date.now() - Date.parse(me.ai.lastUsed) < 60_000);
+  assert.deepEqual([totals.aiUsers, totals.aiGenerations, totals.aiNearLimit], [1, 4, 1]);
 });

@@ -38,6 +38,9 @@ export default function Admin() {
         <Tile label="Active this week" value={t.active7} />
         <Tile label="Have made a battle" value={t.withBattles} />
         <Tile label="Open feedback" value={count('open')} />
+        <Tile label="Have used AI" value={t.aiUsers} />
+        <Tile label="AI generations" value={t.aiGenerations} />
+        {t.aiNearLimit > 0 && <Tile label="Near the AI limit" value={t.aiNearLimit} />}
       </div>
       <div className="toolbar">
         <h2>DMs</h2>
@@ -49,7 +52,7 @@ export default function Admin() {
           <thead>
             <tr>
               <th>Name</th><th>Email</th><th>Signed up</th><th>Last active</th>
-              <th>Battles</th><th>Party</th><th>Monsters</th><th>Encounters</th><th>Shops</th><th>Feedback</th><th>Player link</th>
+              <th>Battles</th><th>Party</th><th>Monsters</th><th>Encounters</th><th>Shops</th><th>AI used</th><th>AI apps</th><th>Feedback</th><th>Player link</th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +67,11 @@ export default function Admin() {
                 <td>{d.counts.monsters}</td>
                 <td>{d.counts.encounters}</td>
                 <td>{d.counts.shops}</td>
+                <td title={`${d.ai.monsters} AI monsters in their bestiary. Last generated: ${ago(d.ai.lastUsed)}`}>
+                  {d.ai.used} / {d.ai.limit}
+                  {d.ai.used >= d.ai.limit ? <span className="tag">limit</span> : d.ai.used >= 0.8 * d.ai.limit && <span className="tag">near limit</span>}
+                </td>
+                <td>{d.ai.apps}</td>
                 <td>{d.feedback}</td>
                 <td><a href={`/p/${d.slug}`} target="_blank" rel="noreferrer">/p/{d.slug}</a></td>
               </tr>
@@ -71,7 +79,7 @@ export default function Admin() {
           </tbody>
         </table>
       </div>
-      <p className="muted small">Last active updates at most every 10 minutes while a DM uses the site.</p>
+      <p className="muted small">Last active updates at most every 10 minutes while a DM uses the site. AI used is generations with the Bestiary's Generate with AI against each account's limit (hover for their AI monsters and when they last generated); AI apps are apps such as Claude connected to their campaign over MCP, which don't count toward the limit.</p>
 
       <div className="toolbar admin-feedback-head">
         <h2>Feedback</h2>

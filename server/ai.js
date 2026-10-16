@@ -1,6 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-export const AI_MODEL = 'claude-opus-5-5';
+// Haiku matched or beat Opus on the monster eval (balance, names, varied stats) at about 1/40th the cost:
+// see the README's Evals section and .claude/hillclimb/monster-balance.
+export const AI_MODEL = 'claude-haiku-5-5';
 export const MAX_PROMPT = 500;
 const MAX_MONSTERS = 4;
 const SAVES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
