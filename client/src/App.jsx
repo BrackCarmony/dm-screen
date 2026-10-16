@@ -26,8 +26,9 @@ const TABS = [
 // What a change event's collections are called in the app, for the "Claude updated your ..." notice.
 const PAGE_NAMES = { bestiary: 'Bestiary', encounters: 'Encounters', party: 'Party', battles: 'Battles', shop: 'Magic Shop', xp: 'XP Tables' };
 
+// #account/ai-apps opens the Account tab; the part after the slash is a section on it to scroll to.
 function useHashTab() {
-  const read = () => window.location.hash.slice(1) || 'battle';
+  const read = () => window.location.hash.slice(1).split('/')[0] || 'battle';
   const [tab, setTab] = useState(read);
   useEffect(() => {
     const on = () => setTab(read());
@@ -137,14 +138,14 @@ export default function App() {
       {notice && <div className="banner notice" role="status">{notice}</div>}
       <main>
         {tab === 'battle' && <Battle {...props} />}
-        {tab === 'bestiary' && <Bestiary {...props} ai={me.ai} onAi={(ai) => setMe((m) => ({ ...m, ai }))} />}
+        {tab === 'bestiary' && <Bestiary {...props} ai={me.ai} mcp={me.mcp} onAi={(ai) => setMe((m) => ({ ...m, ai }))} />}
         {tab === 'encounters' && <Encounters {...props} />}
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
         {tab === 'admin' && me.user.admin && <Admin />}
         {tab === 'feedback' && <Feedback pages={TABS.filter(([id]) => id !== 'feedback').map(([, label]) => label)} />}
-        {tab === 'help' && <Help user={me.user} />}
+        {tab === 'help' && <Help user={me.user} mcp={me.mcp} />}
         {tab === 'account' && <Account user={me.user} mcp={me.mcp} onChange={(user) => setMe({ ...me, user })} />}
       </main>
     </div>
