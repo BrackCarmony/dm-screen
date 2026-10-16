@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Gloomhound",
+    "hp": 27,
+    "ac": 13,
+    "speed": "40",
+    "saves": {
+      "str": 2,
+      "dex": 2,
+      "con": 1,
+      "int": -3,
+      "wis": 1,
+      "cha": -2
+    },
+    "init": 2,
+    "attacks": [
+      "Bite +4 5ft 2d6+2 piercing; target DC12 Str save or knocked prone",
+      "Howl of the Lost (1/day) DC11 Wis or frightened until end of its next turn, 30ft radius, creatures that can hear"
+    ],
+    "cr": 1,
+    "xp": 200,
+    "special": "Pack Tactics. Shadow Lope: advantage on Dex (Stealth) checks in dim light or darkness. Keen Smell: advantage on smell-based Wis (Perception) checks. Darkvision 60 ft., PP 13.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make me 3 monsters for a haunted forest"
+  },
+  {
+    "name": "Weeping Birch",
+    "hp": 75,
+    "ac": 13,
+    "speed": "20",
+    "saves": {
+      "str": 3,
+      "dex": -1,
+      "con": 2,
+      "int": -2,
+      "wis": 3,
+      "cha": 0
+    },
+    "init": -1,
+    "attacks": [
+      "Multiattack: 2× Branch",
+      "Branch +5 10ft 2d6+3 bludgeoning",
+      "Mournful Wail (Recharge 5-6) DC13 Wis 30ft radius, frightened for 1 min (repeat save end of each turn)",
+      "Sap Tears (bonus action) DC13 Dex, 10ft radius, area becomes difficult terrain until start of its next turn"
+    ],
+    "cr": 3,
+    "xp": 700,
+    "special": "False Appearance: indistinguishable from a normal birch while motionless. Siege Monster. Resist bludgeoning, piercing. Vulnerable fire. Blindsight 30 ft., darkvision 60 ft., PP 13.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make me 3 monsters for a haunted forest"
+  },
+  {
+    "name": "Lantern Widow",
+    "hp": 97,
+    "ac": 15,
+    "speed": "0, fly 40 (hover)",
+    "saves": {
+      "str": -1,
+      "dex": 6,
+      "con": 2,
+      "int": 1,
+      "wis": 5,
+      "cha": 7
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Grave Touch, or 1× Grave Touch and 1× Lantern Glare",
+      "Grave Touch +7 5ft 3d8+4 necrotic; DC15 Con or HP max reduced by damage taken until long rest",
+      "Lantern Glare +7 60ft 2d10+4 fire",
+      "Beckoning Light (Recharge 5-6) DC15 Wis, one creature within 60ft that can see her, charmed 1 min and must use its movement to approach her (repeat save end of each turn and when damaged)"
+    ],
+    "cr": 6,
+    "xp": 2300,
+    "special": "Incorporeal Movement: moves through creatures and objects as difficult terrain, 1d10 force if ends turn inside an object. Sunlight Sensitivity. Rejuvenation: if destroyed, reforms in 1d10 days unless her lantern is shattered. Resist acid, fire, lightning, thunder; bludgeoning, piercing, slashing from nonmagical attacks. Immune cold, necrotic, poison; charmed, exhaustion, frightened, grappled, paralyzed, petrified, poisoned, prone, restrained. Darkvision 60 ft., PP 15.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make me 3 monsters for a haunted forest"
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Skyrend Shrike",
+    "hp": 136,
+    "ac": 15,
+    "speed": "20, fly 80",
+    "saves": {
+      "str": 4,
+      "dex": 7,
+      "con": 6,
+      "int": -3,
+      "wis": 5,
+      "cha": -1
+    },
+    "init": 4,
+    "attacks": [
+      "Multiattack: Beak + Talons",
+      "Beak +7 5ft 2d8+4 piercing",
+      "Talons +7 5ft 2d6+4 slashing; target grappled (escape DC15) if Medium or smaller; the shrike can grapple one creature at a time",
+      "Bonus Action, Carry Off: the shrike flies up to half its fly speed with a creature it is grappling, without provoking opportunity attacks"
+    ],
+    "cr": 5,
+    "xp": 1800,
+    "special": "Plummeting Dive. If the shrike flies at least 30 ft. straight down or toward a target and then hits it with Talons on the same turn, the target takes an extra 3d8 slashing damage and must succeed on a DC15 Str save or be knocked prone. Flyby: it doesn't provoke opportunity attacks when it flies out of an enemy's reach. Keen Sight: advantage on Wis (Perception) checks that rely on sight. Skills: Perception +5. Darkvision 60 ft., PP 15.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "CR 5 flying predator that dives on its prey"
+  }
+]

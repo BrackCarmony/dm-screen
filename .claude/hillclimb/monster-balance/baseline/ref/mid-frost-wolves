@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Rimefang Alpha",
+    "hp": 102,
+    "ac": 13,
+    "speed": "50",
+    "saves": {
+      "str": 3,
+      "dex": 2,
+      "con": 5,
+      "int": -2,
+      "wis": 3,
+      "cha": -1
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Bite",
+      "Bite +5 5ft 1d10+3 piercing + 1d6 cold",
+      "Command the Hunt (Reaction, when the Alpha hits a creature): one allied wolf within 30 ft that can hear it moves up to half its speed without provoking opportunity attacks and makes one Bite against that creature"
+    ],
+    "cr": 3,
+    "xp": 700,
+    "special": "Large beast. Pack Tactics. Keen Hearing and Smell (advantage on Perception checks that rely on hearing or smell). Snow Stride (ignores difficult terrain from snow and ice). Immune cold. Darkvision 60 ft., PP 13.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A pack of 3 frost wolves, CR 3 each, that coordinate attacks"
+  },
+  {
+    "name": "Hoarfrost Stalker",
+    "hp": 84,
+    "ac": 14,
+    "speed": "50",
+    "saves": {
+      "str": 2,
+      "dex": 5,
+      "con": 2,
+      "int": -2,
+      "wis": 1,
+      "cha": -2
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Bite",
+      "Bite +5 5ft 1d8+3 piercing; once per turn +2d6 cold if an ally of the Stalker is within 5 ft of the target",
+      "Hamstring: if both Bites hit the same creature in one turn, it makes a DC13 Str save or is knocked prone"
+    ],
+    "cr": 3,
+    "xp": 700,
+    "special": "Medium beast. Pack Tactics. Keen Hearing and Smell. Snow Camouflage (advantage on Stealth checks in snowy terrain; Stealth +5). Flanking Lope (when a creature within 5 ft of the Stalker misses it with an attack, the Stalker can use its reaction to move 10 ft without provoking opportunity attacks). Immune cold. Darkvision 60 ft., PP 13.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A pack of 3 frost wolves, CR 3 each, that coordinate attacks"
+  },
+  {
+    "name": "Whiteout Howler",
+    "hp": 90,
+    "ac": 13,
+    "speed": "50",
+    "saves": {
+      "str": 2,
+      "dex": 2,
+      "con": 4,
+      "int": -2,
+      "wis": 4,
+      "cha": 0
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Bite",
+      "Bite +5 5ft 1d10+3 piercing",
+      "Frost Breath (Recharge 5-6) DC13 Con 15ft cone 6d6 cold, half on success; on a failure the target's speed is halved until the end of its next turn",
+      "Hunting Howl (Bonus Action): each allied wolf within 60 ft that can hear it gains advantage on its next attack roll before the start of the Howler's next turn"
+    ],
+    "cr": 3,
+    "xp": 700,
+    "special": "Large beast. Pack Tactics. Keen Hearing and Smell. Snow Stride (ignores difficult terrain from snow and ice). Immune cold. Darkvision 60 ft., PP 14.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A pack of 3 frost wolves, CR 3 each, that coordinate attacks"
+  }
+]

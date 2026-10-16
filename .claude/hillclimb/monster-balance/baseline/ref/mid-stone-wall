@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Bulwark Golem",
+    "hp": 200,
+    "ac": 19,
+    "speed": "15",
+    "saves": {
+      "str": 5,
+      "dex": -2,
+      "con": 9,
+      "int": -4,
+      "wis": 0,
+      "cha": -3
+    },
+    "init": -2,
+    "attacks": [
+      "Multiattack: 2× Slam",
+      "Slam +5 10ft 2d6+2 bludgeoning",
+      "Rampart Shove (Recharge 5-6) DC13 Str, each creature in a 15ft line adjacent to it pushed 10ft and knocked prone; 2d6 bludgeoning on fail, none on success",
+      "Interpose (Reaction) when an ally within 10ft is hit by an attack, the ally gains +3 AC against it, possibly causing a miss"
+    ],
+    "cr": 6,
+    "xp": 2300,
+    "special": "Huge construct of mortared stone, 30 ft long when spread out. Living Wall: creatures and objects behind it have total cover; it can occupy a line of squares 30 ft long and 5 ft wide. Immovable: can't be moved against its will or knocked prone. False Appearance (indistinguishable from a stone wall while motionless). Siege Monster (double damage to objects and structures). Immune poison, psychic; immune charmed, exhaustion, frightened, paralyzed, petrified, poisoned. Tremorsense 60 ft., darkvision 60 ft., PP 10. Understands the languages of its creator but can't speak.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "CR 6 tank: huge HP and armor, weak hits. Its a living stone wall"
+  }
+]

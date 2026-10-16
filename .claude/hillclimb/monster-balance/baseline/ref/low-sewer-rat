@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Sewer Gnawmother",
+    "hp": 68,
+    "ac": 13,
+    "speed": "40, climb 30, swim 30",
+    "saves": {
+      "str": 3,
+      "dex": 2,
+      "con": 5,
+      "int": -4,
+      "wis": 1,
+      "cha": -3
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: Bite + Claw",
+      "Bite +5 5ft 2d6+3 piercing; DC13 Con save or poisoned (filth fever) for 1 hour",
+      "Claw +5 5ft 1d8+3 slashing",
+      "Skitter (Bonus Action): Disengage and move up to 10 ft. through a space at least 1 ft. wide"
+    ],
+    "cr": 2,
+    "xp": 450,
+    "special": "Large beast. Keen Smell (advantage on Wisdom (Perception) checks that rely on smell). Sewer Dweller (no disadvantage on attacks while swimming; can hold breath 10 minutes). Squeezing (moves through spaces as narrow as 1 ft. without squeezing penalties). Darkvision 60 ft., PP 13.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Something for a level 2 party exploring sewers, a big rat thing"
+  }
+]

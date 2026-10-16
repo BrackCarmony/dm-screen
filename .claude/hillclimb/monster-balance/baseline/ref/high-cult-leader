@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Hierarch of the Hollow Star",
+    "hp": 162,
+    "ac": 15,
+    "speed": "30",
+    "saves": {
+      "str": -1,
+      "dex": 2,
+      "con": 6,
+      "int": 9,
+      "wis": 6,
+      "cha": 3
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 3× Void Bolt, or 2× Sacrificial Dagger and 1× Void Bolt",
+      "Void Bolt +9 120ft 3d8+5 force",
+      "Sacrificial Dagger +6 5ft 1d4+2 piercing plus 3d6 necrotic; Hierarch regains HP equal to the necrotic damage",
+      "Starfall (Recharge 5-6) DC17 Dex 20ft radius within 120ft 10d8 force, half on save; creatures that fail are knocked prone",
+      "Spellcasting (Int, DC17): at will detect magic, mage hand, misty step; 1/day each counterspell, dimension door, hold monster, wall of force",
+      "Reaction - Shield (3/day): +5 AC until start of its next turn, including vs. the triggering attack",
+      "Reaction - Martyr's Bond: when hit by an attack, a willing cultist within 30 ft takes the damage instead"
+    ],
+    "cr": 10,
+    "xp": 5900,
+    "special": "Magic Resistance (advantage on saves vs. spells and magical effects). Hollow Star Devotion: while at least one allied cultist is within 30 ft, the Hierarch can't be frightened or charmed and has advantage on Con saves to maintain concentration. Mage Armor active (AC 15). Resist force, necrotic. Darkvision 60 ft., PP 12. Languages: Common, Abyssal, Deep Speech, plus two others.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 10 archmage-style cult leader"
+  }
+]

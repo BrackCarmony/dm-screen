@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Young Cinderglass Dragon",
+    "hp": 161,
+    "ac": 18,
+    "speed": "40, burrow 20, fly 80",
+    "saves": {
+      "str": 5,
+      "dex": 3,
+      "con": 7,
+      "int": 1,
+      "wis": 3,
+      "cha": 5
+    },
+    "init": 0,
+    "attacks": [
+      "Multiattack: Bite + 2× Claw",
+      "Bite +8 10ft 2d10+5 piercing + 1d6 fire",
+      "Claw +8 5ft 2d6+5 slashing",
+      "Glassfire Breath (Recharge 5-6) 30ft cone DC15 Dex 10d8 fire, half on success; ground in the cone becomes difficult terrain (razor glass) until end of the dragon's next turn"
+    ],
+    "cr": 8,
+    "xp": 3900,
+    "special": "Shard Hide. A creature that hits the dragon with a melee attack while within 5 ft takes 1d4 piercing damage. Molten Burrow. Can burrow through sand and loose stone, leaving a glassy tunnel behind. Immune fire. Blindsight 30 ft., darkvision 120 ft., Perception +6, PP 16. Speaks Common, Draconic.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "dragon"
+  }
+]

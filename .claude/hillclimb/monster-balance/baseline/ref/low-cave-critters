@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Glowcap Skitterer",
+    "hp": 9,
+    "ac": 12,
+    "speed": "30, climb 30",
+    "saves": {
+      "str": -1,
+      "dex": 2,
+      "con": 0,
+      "int": -4,
+      "wis": 0,
+      "cha": -3
+    },
+    "init": 2,
+    "attacks": [
+      "Bite +4 5ft 1d6+2 piercing",
+      "Spore Puff (Recharge 6) DC10 Con, 5ft radius; on fail the target can't take reactions and has disadvantage on its next attack roll before the end of its next turn"
+    ],
+    "cr": 0.125,
+    "xp": 25,
+    "special": "Spider Climb. Faint Glow: sheds dim light in a 10 ft. radius, so it can't benefit from being unseen in darkness. Darkvision 60 ft., PP 10.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Two cave critters for brand new level 1 players, nothing too deadly"
+  },
+  {
+    "name": "Drip Leech",
+    "hp": 13,
+    "ac": 11,
+    "speed": "20, climb 20, swim 30",
+    "saves": {
+      "str": 1,
+      "dex": 1,
+      "con": 1,
+      "int": -5,
+      "wis": -1,
+      "cha": -4
+    },
+    "init": 1,
+    "attacks": [
+      "Latching Bite +3 5ft 1d6+1 piercing; target is grappled (escape DC11). While grappled, the target takes 1d4 necrotic at the start of each of its turns and the leech regains HP equal to that damage"
+    ],
+    "cr": 0.25,
+    "xp": 50,
+    "special": "Ceiling Drop: if it drops from a ceiling onto a creature that hasn't noticed it, it has advantage on its first Latching Bite. Amphibious. Vulnerable fire. Blindsight 30 ft. (blind beyond), PP 9.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Two cave critters for brand new level 1 players, nothing too deadly"
+  }
+]

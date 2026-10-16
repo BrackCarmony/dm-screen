@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Rimepelt Skinchanger",
+    "hp": 180,
+    "ac": 16,
+    "speed": "40, climb 30, swim 30",
+    "saves": {
+      "str": 8,
+      "dex": 1,
+      "con": 7,
+      "int": 0,
+      "wis": 5,
+      "cha": 0
+    },
+    "init": 1,
+    "attacks": [
+      "Multiattack: Bite + 2× Claw",
+      "Bite +8 5ft 2d10+5 piercing + 2d6 cold",
+      "Claw +8 5ft 2d8+5 slashing; if both claws hit the same Large or smaller target, it is grappled (escape DC 16)",
+      "Winter's Roar (Recharge 5-6) DC15 Con 30ft cone 6d8 cold, half on save; on a failed save speed halved until end of its next turn",
+      "Shapechange (Bonus): turns into a burly woodcutter human or back; stats unchanged except speed 30, no bite in human form"
+    ],
+    "cr": 8,
+    "xp": 3900,
+    "special": "Relentless (1/Day): when reduced to 0 HP by 20 or less damage, drops to 1 HP instead. Mauling Hug: bite has advantage against a creature it is grappling. Snowstride: ignores difficult terrain from snow and ice. Keen Smell: advantage on Wisdom (Perception) checks that rely on smell. Resist cold. Darkvision 60 ft., PP 15.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A tough fight for 4 level 5 players: a werebear-like beast of the northern woods"
+  }
+]

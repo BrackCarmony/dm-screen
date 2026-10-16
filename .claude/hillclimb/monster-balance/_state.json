@@ -50,5 +50,6 @@
     "server/ai.js",
     "evals/balance.js",
     "evals/monster-cases.json"
-  ]
+  ],
+  "harness_sha": "bdaabcc659d1b0c4cdf50d310a29c7250267c0ea983788c2e6368b66d4d50176"
 }

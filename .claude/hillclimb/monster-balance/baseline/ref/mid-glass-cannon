@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Veilknife Assassin",
+    "hp": 45,
+    "ac": 14,
+    "speed": "35",
+    "saves": {
+      "str": 0,
+      "dex": 6,
+      "con": 1,
+      "int": 3,
+      "wis": 1,
+      "cha": 0
+    },
+    "init": 4,
+    "attacks": [
+      "Multiattack: 2× Shiv Blade",
+      "Shiv Blade +6 5ft 2d6+4 piercing",
+      "Hand Crossbow +6 30/120ft 1d6+4 piercing plus 2d6 poison",
+      "Smoke Vial (1/day, bonus action) 10ft-radius cloud of heavy obscurement centered on self, lasts until end of its next turn"
+    ],
+    "cr": 3,
+    "xp": 700,
+    "special": "Killing Strike. Once per turn, deals an extra 4d6 damage when it hits with a weapon attack and has advantage or an ally is within 5 ft of the target. Silent Opener. On its first turn of combat, if it is hidden from the target, its first Shiv Blade hit deals an extra 2d6 damage. Cunning Footwork. Bonus action: Dash, Disengage or Hide. Brittle Focus. Lightly armored and frail; it has no damage resistances and flees when reduced to 15 hp or fewer. Skills Stealth +8, Acrobatics +6. Darkvision 60 ft., PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "CR 3 glass cannon assassin: hits really hard but goes down fast"
+  }
+]

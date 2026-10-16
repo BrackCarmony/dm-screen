@@ -80,6 +80,25 @@ node evals/grade.js --srd                         # the SRD itself, as a check o
 
 How far to trust it: each ordinary SRD monster up to CR 10, graded against a table learned without it, passes about 95% of the time and lands within one step of its CR about 85% of the time (`test/balance.test.js` fails if that drops). Spellcasters and legendary monsters (whose attack lines understate them), monsters above CR 10 (the SRD has 10 ordinary ones to learn from) and monsters with no readable damage are reported as "unsure" rather than pass or fail.
 
+### The generator's eval
+
+`evals/run-monsters.mjs` runs the real generator (`server/ai.js`) on the 30 prompts in `evals/monster-cases.json` and grades what it makes with `evals/balance.js`: balanced for its CR, the number of monsters asked for, and the CR asked for. Each variant is a model and effort setting (`VARIANTS` in the runner). It spends API credit, and it won't run until someone has reviewed it and passed `--approve-harness` once; changing the runner, generator, grader or cases asks again. `EVAL_CASES=id,id` runs a few cases as a pilot.
+
+```sh
+node evals/run-monsters.mjs --flow .claude/hillclimb/monster-balance --variant baseline --model claude-opus-5-5 --reps 2
+```
+
+Results are in `.claude/hillclimb/monster-balance/<variant>/results.jsonl`; the claude-api skill's report builder turns the folder into `report.html`. The first run (October 2026, 30 prompts × 2, $3.77 in all):
+
+| Setting | Balanced | Right count | Asked-for CR | Cost per generation |
+|---|---|---|---|---|
+| Opus 5.5, medium effort (the site) | 92% | 100% | 100% | $0.034 |
+| Opus 5.5, low effort | 94% | 100% | 100% | $0.019 |
+| Sonnet 5.5 | 98% | 100% | 100% | $0.009 |
+| Haiku 5.5 | 89% (62% at CR 7-10) | 100% | 100% | $0.0009 |
+
+The differences in Balanced are within the noise of 30 prompts, except Haiku at CR 7-10. Haiku also numbered copies ("Frost Wolf (1)") and borrowed franchise names. The "CR 6 tank" prompt fails for every setting because the grader's rule against lopsided monsters contradicts the request.
+
 ## Run locally
 
 ```sh

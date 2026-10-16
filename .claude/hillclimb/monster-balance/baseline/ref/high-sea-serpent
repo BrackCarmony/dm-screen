@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Hullcrusher Serpent",
+    "hp": 186,
+    "ac": 16,
+    "speed": "20, swim 60",
+    "saves": {
+      "str": 11,
+      "dex": 1,
+      "con": 9,
+      "int": -3,
+      "wis": 5,
+      "cha": -2
+    },
+    "init": 1,
+    "attacks": [
+      "Multiattack: Bite + Constrict, or Bite + Tail Slam",
+      "Bite +11 10ft 3d10+7 piercing",
+      "Constrict +11 15ft 3d8+7 bludgeoning; target or ship (Gargantuan or smaller) is grappled, escape DC 19; serpent can hold one ship or creature at a time",
+      "Tail Slam +11 20ft 2d10+7 bludgeoning; Large or smaller target DC 17 Str save or knocked prone or overboard 15 ft.",
+      "Capsizing Heave (Recharge 5-6, only while grappling a ship): ship tilts violently; each creature on deck DC 17 Dex save, 6d8 bludgeoning and slides 20 ft. (possibly overboard) on fail, half and no slide on success",
+      "Drag Under (1/day, while grappling a ship): ship's speed becomes 0 and it begins taking on water; sinks in 1d4+1 rounds unless the serpent is forced to release it"
+    ],
+    "cr": 9,
+    "xp": 5000,
+    "special": "Ship Grapple. While coiled around a vessel, the ship's speed is 0 and the hull takes 4d10 bludgeoning at the start of each of the serpent's turns; crew can pry it loose with a DC 19 Str (Athletics) check as an action, or it lets go after taking 30+ damage in one turn. Siege Monster (double damage to objects and structures). Amphibious. Resist cold. Darkvision 60 ft., PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "CR 9 sea serpent that grapples ships"
+  }
+]
