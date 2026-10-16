@@ -18,7 +18,7 @@ const COLUMNS = [
 const missingCr = (v) => v === null || v === undefined || v === '';
 const missing = (v) => v === null || v === undefined || v === '' || Number.isNaN(v);
 
-export default function Bestiary({ state, update, ai, onAi }) {
+export default function Bestiary({ state, update, ai, mcp, onAi }) {
   const [q, setQ] = useState('');
   const [source, setSource] = useState('all');
   const [panel, setPanel] = useState(null); // 'generate' | 'import'
@@ -103,7 +103,7 @@ export default function Bestiary({ state, update, ai, onAi }) {
       </div>
 
       {panel === 'generate' && ai && <Generate ai={ai} onAi={onAi} onAdded={(m) => added(m, 'ai')} onClose={() => setPanel(null)} />}
-      {panel === 'import' && <Import onAdded={(m) => added(m, 'imported')} onClose={() => setPanel(null)} />}
+      {panel === 'import' && <Import mcp={mcp} onAdded={(m) => added(m, 'imported')} onClose={() => setPanel(null)} />}
 
       {editing && <Editor initial={editing.m} names={state.bestiary.map((m) => m.name)} xpTable={state.xp.cr} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />}
 
@@ -200,7 +200,7 @@ function Generate({ ai, onAi, onAdded, onClose }) {
   );
 }
 
-function Import({ onAdded, onClose }) {
+function Import({ mcp, onAdded, onClose }) {
   const [json, setJson] = useState('');
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState(null);
@@ -231,6 +231,13 @@ function Import({ onAdded, onClose }) {
     <form className="panel editor generate" onSubmit={submit}>
       <h2>Import monsters</h2>
       <p className="muted small">Paste monsters as JSON, for example from your own AI or another DM. Free, and doesn't use a generation.</p>
+      {mcp && (
+        <p className="small callout">
+          <strong>Skip the copy and paste.</strong> If your AI app can connect to MCP servers (Claude can), connect it to
+          DM Screen once and just ask: "add three swamp monsters for a level 5 party". They go straight into your bestiary,
+          and it can build encounters from them too. <a href="#account/ai-apps">Connect an AI app →</a>
+        </p>
+      )}
       <details className="agent-guide" onToggle={loadGuide}>
         <summary>Using your own AI? Copy these instructions</summary>
         <p className="muted small">Give these to ChatGPT, Claude or your own agent, replace the part in angle brackets with what you want, then paste its reply below.</p>

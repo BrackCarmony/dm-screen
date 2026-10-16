@@ -95,6 +95,8 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   }
 
   const limiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 20 });
+  // Browser tabs send their id with each save, so a tab can ignore the change events for its own saves.
+  const fromTab = (req) => ({ tab: String(req.get('x-tab-id') ?? '').slice(0, 64) || undefined });
 
   // AI monsters (beta): each account gets aiUses generations. A use only counts once the monsters are saved.
   const aiStatus = (u) => ({ enabled: generator.enabled, used: u.aiUses ?? 0, limit: aiUses });
@@ -343,10 +345,10 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   });
 
   // Add monsters to a DM's bestiary as it is now (they may have edited it meanwhile), keeping names unique.
-  function addToBestiary(userId, made) {
+  function addToBestiary(userId, made, meta) {
     const bestiary = dms.get(userId).bestiary;
     const monsters = withUniqueNames(bestiary, made);
-    dms.set(userId, 'bestiary', [...bestiary, ...monsters]);
+    dms.set(userId, 'bestiary', [...bestiary, ...monsters], meta);
     return monsters;
   }
 
@@ -364,7 +366,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
       if (!e.code) throw e;
       return res.status(400).json({ error: e.message });
     }
-    res.json({ monsters: addToBestiary(req.user.id, parsed.monsters), skipped: parsed.skipped });
+    res.json({ monsters: addToBestiary(req.user.id, parsed.monsters, fromTab(req)), skipped: parsed.skipped });
   });
 
   const generating = new Set(); // user ids with a generation in progress
@@ -382,7 +384,7 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     generating.add(req.user.id);
     try {
       const made = await generator.generate(prompt, { xpTable: dms.get(req.user.id).xp?.cr ?? [] });
-      const monsters = addToBestiary(req.user.id, made);
+      const monsters = addToBestiary(req.user.id, made, fromTab(req));
       const user = users.update(req.user.id, { aiUses: status.used + 1, aiLastUsed: new Date().toISOString() });
       res.json({ monsters, ai: aiStatus(user) });
     } catch (e) {
@@ -398,9 +400,24 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
 
   app.put('/api/state/:key', requireDm, (req, res) => {
     if (!dms.keys.includes(req.params.key)) return res.status(404).json({ error: 'unknown key' });
-    dms.set(req.user.id, req.params.key, req.body);
-    broadcast(req.user.slug);
+    dms.set(req.user.id, req.params.key, req.body, fromTab(req));
     res.json({ ok: true });
+  });
+
+  // Each DM's open tabs, told which collections changed and by whom, so they can reload them: an AI app over
+  // MCP, another tab or device, or (watching the files) the local stdio MCP server. The player view follows too.
+  const dmStreams = new Map(); // userId -> Set<res>
+  dms.onChange((userId, keys, meta) => {
+    const body = JSON.stringify({ keys, by: meta.by ?? null, tab: meta.tab ?? null });
+    for (const res of dmStreams.get(userId) ?? []) res.write(`data: ${body}\n\n`);
+    const user = users.byId(userId);
+    if (user) broadcast(user.slug);
+  });
+  dms.watch();
+
+  app.get('/api/events', requireDm, (req, res) => {
+    if (!dmStreams.has(req.user.id)) dmStreams.set(req.user.id, new Set());
+    eventStream(req, res, dmStreams.get(req.user.id));
   });
 
   // Remote MCP for AI apps (server/mcp.js) at $APP_URL/mcp, with DM Screen as the OAuth server that
@@ -414,7 +431,9 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     // Stateless: a new server and transport for every request, so there are no sessions to lose on a restart.
     // Replies are plain JSON rather than an event stream, which nginx passes through as is.
     app.post('/mcp', bearer, async (req, res) => {
-      const server = createMcpServer({ dms, dm: touch(users.byId(req.auth.extra.userId)) });
+      // Changes made through the app's tools are marked with its name, so the DM's tabs can say who made them.
+      const byApp = { ...dms, set: (userId, key, value) => dms.set(userId, key, value, { by: req.auth.extra.clientName }) };
+      const server = createMcpServer({ dms: byApp, dm: touch(users.byId(req.auth.extra.userId)) });
       const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
       res.on('close', () => { transport.close(); server.close(); });
       try {
@@ -475,21 +494,27 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     const slug = req.params.slug.toLowerCase();
     const view = viewFor(slug);
     if (!view) return res.status(404).json({ error: 'No DM with that link.' });
+    if (!streams.has(slug)) streams.set(slug, new Set());
+    eventStream(req, res, streams.get(slug), view);
+  });
+
+  // A server-sent events response, kept in `set` until the browser goes away. X-Accel-Buffering tells nginx not
+  // to hold events back, and the ping keeps proxies from closing a quiet connection.
+  function eventStream(req, res, set, first) {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       Connection: 'keep-alive',
       'X-Accel-Buffering': 'no',
     });
-    res.write(`data: ${JSON.stringify(view)}\n\n`);
-    if (!streams.has(slug)) streams.set(slug, new Set());
-    streams.get(slug).add(res);
+    if (first) res.write(`data: ${JSON.stringify(first)}\n\n`);
+    set.add(res);
     const ping = setInterval(() => res.write(': ping\n\n'), 25000);
     req.on('close', () => {
       clearInterval(ping);
-      streams.get(slug)?.delete(res);
+      set.delete(res);
     });
-  });
+  }
 
   if (distDir && fs.existsSync(distDir)) {
     app.use(express.static(distDir));

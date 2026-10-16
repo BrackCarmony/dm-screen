@@ -26,8 +26,26 @@ async function start(t) {
     cookie = res.headers.get('set-cookie')?.split(';')[0] ?? cookie;
     return { status: res.status, body: await res.json() };
   };
+  web.cookie = () => cookie;
   await web('POST', '/api/signup', { email: 'dm@example.com', name: 'Dee', password: 'longenough' });
   return { base, web };
+}
+
+// The DM's change events (/api/events), as a browser tab would get them. next() resolves with the next event.
+export async function listen(t, base, cookie) {
+  const controller = new AbortController();
+  t.after(() => controller.abort());
+  const res = await fetch(`${base}/api/events`, { headers: { cookie }, signal: controller.signal });
+  const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+  let buffer = '';
+  return {
+    async next() {
+      while (!buffer.includes('\n\n')) buffer += (await reader.read()).value;
+      const [event, ...rest] = buffer.split('\n\n');
+      buffer = rest.join('\n\n');
+      return event.startsWith(':') ? this.next() : JSON.parse(event.replace(/^data: /, ''));
+    },
+  };
 }
 
 // An MCP client the way Claude does it: on a 401 it discovers the OAuth server, registers, and sends the DM
@@ -84,6 +102,7 @@ test('an AI app signs in with OAuth, uses the tools, and its writes reach the DM
   assert.deepEqual(app.saved.consent, { clientName: 'Test AI', redirectHost: '127.0.0.1:9999' });
   assert.ok(app.saved.tokens.access_token && app.saved.tokens.refresh_token);
 
+  const events = await listen(t, base, web.cookie());
   const client = await app.connect();
   t.after(() => client.close());
   const found = await client.callTool({ name: 'search_monsters', arguments: { query: 'wolf', maxCr: 1 } });
@@ -91,6 +110,9 @@ test('an AI app signs in with OAuth, uses the tools, and its writes reach the DM
   const saved = await client.callTool({ name: 'add_encounters', arguments: { group: 'Woods (level 5)', encounters: [{ name: '1: Wolves', monsters: [{ name: 'Wolf', count: 4 }] }] } });
   assert.equal(saved.isError, undefined);
   assert.equal((await web('GET', '/api/state')).body.encounters.at(-1).group, 'Woods (level 5)');
+
+  // The DM's open tab hears about it, with the app's name.
+  assert.deepEqual(await events.next(), { keys: ['encounters'], by: 'Test AI', tab: null });
 
   const apps = (await web('GET', '/api/oauth/grants')).body;
   assert.deepEqual(apps.map((a) => a.clientName), ['Test AI']);
@@ -137,4 +159,11 @@ test('a forged access token is refused', async (t) => {
   const body = Buffer.from(JSON.stringify({ g: 'x', e: 9999999999 })).toString('base64url');
   const res = await fetch(`${base}/mcp`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${body}.bogus` }, body: '{}' });
   assert.equal(res.status, 401);
+});
+
+test('a tab\'s own saves come back marked with its tab id, so it can ignore them', async (t) => {
+  const { base, web } = await start(t);
+  const events = await listen(t, base, web.cookie());
+  await fetch(`${base}/api/state/party`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Tab-Id': 'tab-1', cookie: web.cookie() }, body: '[]' });
+  assert.deepEqual(await events.next(), { keys: ['party'], by: null, tab: 'tab-1' });
 });

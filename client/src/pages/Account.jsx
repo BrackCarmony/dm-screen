@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { api } from '../api.js';
 
 export default function Account({ user, mcp, onChange }) {
@@ -73,19 +73,30 @@ function AiApps({ mcp }) {
   useEffect(() => { load(); }, []);
   const date = (iso) => (iso ? new Date(iso).toLocaleDateString() : 'never');
 
+  // Opened from a link to #account/ai-apps (the Import panel, the getting-started guide): bring this section into view.
+  const ref = useRef(null);
+  useEffect(() => {
+    if (window.location.hash === '#account/ai-apps') ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
   return (
-    <section className="panel">
+    <section className="panel" id="ai-apps" ref={ref}>
       <h2>AI apps</h2>
       <p className="muted small">
-        Let an AI such as Claude look things up in your campaign and add monsters and encounters, for example
-        "make a random encounter table for my level 5 party in the woods". Add this address as an MCP server
-        (in Claude: Settings → Connectors → Add custom connector) and sign in when it asks.
+        Connect an AI app that supports MCP (Model Context Protocol) servers and it can look things up in your campaign
+        and add monsters and encounters for you. For example: "make a random encounter table for my level 5 party in the woods".
+        It can't change or delete what you've made. What it adds shows up in DM Screen as it happens.
       </p>
       <div className="add-row">
         <input readOnly value={mcp} onFocus={(e) => e.target.select()} aria-label="MCP server address" />
         <button onClick={() => navigator.clipboard?.writeText(mcp)}>Copy</button>
       </div>
-      <p className="muted small">In Claude Code: <code>claude mcp add --transport http dm-screen {mcp}</code></p>
+      <ul className="muted small connect-steps">
+        <li><strong>Claude</strong> (web, desktop and mobile): Settings → Connectors → Add custom connector, paste the address, then Connect.</li>
+        <li><strong>Claude Code:</strong> <code>claude mcp add --transport http dm-screen {mcp}</code>, then <code>/mcp</code> to sign in.</li>
+        <li><strong>Other apps:</strong> add the address as a remote MCP server or connector. Some apps only allow connectors that make changes on certain plans; without that, use Import on the Bestiary page.</li>
+      </ul>
+      <p className="muted small">Either way, you'll sign in to DM Screen and allow the app. You can disconnect it here at any time.</p>
       {err && <p className="error-text">{err}</p>}
       {apps?.length === 0 && <p className="muted small">No apps connected.</p>}
       {apps?.map((a) => (
