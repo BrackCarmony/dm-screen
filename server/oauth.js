@@ -139,7 +139,7 @@ export function createOAuthProvider({ dataDir, secret, users, mcpUrl }) {
       const user = liveGrant(grant);
       if (!user) throw new InvalidTokenError('Access was removed');
       if (e < Date.now() / 1000) throw new InvalidTokenError('Token expired');
-      return { token, clientId: grant.clientId, scopes: [], expiresAt: e, resource: new URL(mcpUrl), extra: { userId: user.id, grantId: grant.id } };
+      return { token, clientId: grant.clientId, scopes: [], expiresAt: e, resource: new URL(mcpUrl), extra: { userId: user.id, grantId: grant.id, clientName: grant.clientName } };
     },
 
     async revokeToken(client, { token }) {
