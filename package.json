@@ -11,7 +11,8 @@
     "test": "node --test",
     "reset-link": "node scripts/reset-link.js",
     "feedback": "node scripts/feedback.js",
-    "mcp": "node server/mcp-stdio.js"
+    "mcp": "node server/mcp-stdio.js",
+    "add-srd": "node scripts/add-srd.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
