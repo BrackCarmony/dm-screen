@@ -51,7 +51,7 @@ const MONSTER_SCHEMA = {
 };
 
 // How fields are written in the bestiary. Shared by Claude's prompt and the instructions DMs copy for their own AI.
-export const FIELD_RULES = `- name: a short name a DM can read aloud.
+export const FIELD_RULES = `- name: a short name a DM can read aloud, different from the others' names. Don't number them ("Frost Wolf (2)"): give each monster of a pack a name of its own.
 - cr: challenge rating: 0, 0.125, 0.25, 0.5, or a whole number from 1 to 30.
 - hp, ac, init: whole numbers; init is the initiative modifier (the Dex modifier).
 - speed: in feet, e.g. "30" or "30, fly 60".
@@ -61,9 +61,24 @@ export const FIELD_RULES = `- name: a short name a DM can read aloud.
 
 export const BALANCE = `Balance hit points, armor class, attack bonuses, damage and save DCs for the challenge rating using the 5e monster creation guidelines. Don't copy monsters from published books other than the 5e System Reference Document.`;
 
+// Typical numbers at each CR: the medians of the SRD bestiary's ordinary monsters (evals/balance.js, srdTable),
+// rounded. Above CR 10 the SRD has too few to say. test/ai.test.js fails if this drifts from the calibration.
+export const TYPICAL_BY_CR = [
+  // [cr, hp, ac, attack bonus, save DC, damage per round]
+  [0, 3, 11, 3, 11, 3], [0.125, 9, 12, 4, 11, 5], [0.25, 13, 12, 4, 11, 6], [0.5, 22, 12, 4, 11, 8],
+  [1, 27, 12, 4, 11, 10], [2, 45, 13, 5, 12, 13], [3, 58, 13, 5, 12, 17], [4, 78, 13, 5, 13, 17],
+  [5, 102, 15, 7, 15, 26], [6, 112, 15, 7, 15, 29], [7, 127, 17, 7, 15, 39], [8, 136, 17, 8, 15, 44],
+  [9, 147, 18, 10, 17, 47], [10, 178, 18, 10, 17, 47],
+];
+const crName = (cr) => ({ 0.125: '1/8', 0.25: '1/4', 0.5: '1/2' })[cr] ?? String(cr);
+
 const SYSTEM = `You design monsters for a Dungeons & Dragons 5th edition DM's bestiary, used at the table to run combat.
 
 Make original monsters that fit the DM's request. Make ${MAX_MONSTERS} at most; if the request doesn't say how many, make one. ${BALANCE}
+
+Typical numbers for each CR, from the SRD's monsters. Each row is an average, not a stat block to copy: real monsters at the same CR differ, and yours should too, from the row and from each other. Let the monster's idea set its numbers, then check them against its CR's row: hit points up to about a third above or below it, AC two or three either side, and damage per round the other way, so a tougher monster hits softer and a fragile one harder, and the two still average out to its CR. Unless the DM asks for something lopsided, don't push both far the same way. Damage per round is its usual turn (every hit of its multiattack), with a recharge ability counted about once in three rounds. Above CR 10, keep growing from the CR 10 row.
+CR | HP | AC | attack bonus | save DC | damage per round
+${TYPICAL_BY_CR.map(([cr, hp, ac, bonus, dc, dpr]) => `${crName(cr)} | ${hp} | ${ac} | +${bonus} | ${dc} | ${dpr}`).join('\n')}
 
 Write fields the way the rest of the bestiary does:
 ${FIELD_RULES}`;
@@ -149,22 +164,26 @@ export function parseImport(input, { xpTable = [] } = {}) {
 }
 
 // Without a key (ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN) the feature is off.
-export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN ? new Anthropic() : null } = {}) {
+// model and effort are what the site uses unless set otherwise (evals/run-monsters.js tries others).
+// onResponse(response, request), if given, sees each reply from Claude, refusals included.
+export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN ? new Anthropic() : null, model = AI_MODEL, effort = 'medium', onResponse } = {}) {
   return {
     enabled: Boolean(client),
     async generate(prompt, { xpTable } = {}) {
+      const request = {
+        model,
+        max_tokens: 16000,
+        output_config: { effort, format: { type: 'json_schema', schema: MONSTER_SCHEMA } },
+        // If a safety classifier declines, the API retries on Anthropic's recommended fallback model.
+        // Haiku has no fallback, and a request that asks for one is refused.
+        ...(!model.startsWith('claude-haiku') && { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }),
+        system: SYSTEM,
+        messages: [{ role: 'user', content: prompt }],
+      };
       let response;
       try {
-        response = await client.beta.messages.create({
-          model: AI_MODEL,
-          max_tokens: 16000,
-          output_config: { effort: 'medium', format: { type: 'json_schema', schema: MONSTER_SCHEMA } },
-          // If a safety classifier declines, the API retries on Anthropic's recommended fallback model.
-          betas: ['server-side-fallback-2026-07-01'],
-          fallbacks: 'default',
-          system: SYSTEM,
-          messages: [{ role: 'user', content: prompt }],
-        });
+        response = await client.beta.messages.create(request);
+        onResponse?.(response, request);
       } catch (e) {
         if (e instanceof Anthropic.RateLimitError || e instanceof Anthropic.InternalServerError || e instanceof Anthropic.APIConnectionError) {
           throw new GenerateError('busy', 'Claude is out of capacity right now. Try again later.');

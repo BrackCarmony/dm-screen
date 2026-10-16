@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Bog Troll Warlord",
+    "hp": 157,
+    "ac": 15,
+    "speed": "30, swim 30",
+    "saves": {
+      "str": 5,
+      "dex": 1,
+      "con": 8,
+      "int": 0,
+      "wis": 4,
+      "cha": 2
+    },
+    "init": 1,
+    "attacks": [
+      "Multiattack: Bite + 2× Peat-Hewn Glaive",
+      "Peat-Hewn Glaive +8 10ft 2d10+5 slashing",
+      "Bite +8 5ft 2d6+5 piercing, target DC16 Con save or poisoned until end of its next turn",
+      "Bog Bellow (Recharge 5-6): enemies within 30ft DC15 Wis or frightened 1 min (save ends each turn); each allied troll or swamp creature within 30ft can use its reaction to make one weapon attack",
+      "Reaction - Drag Into the Mire: when a creature within 10ft misses the warlord, DC16 Str save or pulled 5ft toward it and knocked prone"
+    ],
+    "cr": 8,
+    "xp": 3900,
+    "special": "Regeneration 10 at start of turn unless it took acid or fire damage since its last turn; dies only if it starts its turn at 0 HP and doesn't regenerate. Keen Smell (advantage on smell-based Perception). Bog Stride: ignores difficult terrain from mud, water or swamp vegetation. Hold Breath 30 min. Rallying Presence: allied trolls within 30ft add 2 to attack rolls. Resist poison. Darkvision 60 ft., PP 14. Skills: Perception +4, Intimidation +5.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 8 bog troll warlord"
+  }
+]

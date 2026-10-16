@@ -1,0 +1,81 @@
+[
+  {
+    "name": "The Sand-Bound Vizier",
+    "hp": 153,
+    "ac": 16,
+    "speed": "30",
+    "saves": {
+      "str": 2,
+      "dex": 1,
+      "con": 6,
+      "int": 2,
+      "wis": 7,
+      "cha": 3
+    },
+    "init": 1,
+    "attacks": [
+      "Multiattack: 2× Serpent Scepter",
+      "Serpent Scepter +7 5ft 2d8+4 bludgeoning + 2d6 necrotic",
+      "Sandstorm Curse (Recharge 5-6) DC15 Con 20ft radius centered on self 8d6 necrotic, half on save; failed save also blinded until end of its next turn",
+      "Command the Dead (bonus action): one undead or construct ally within 60ft moves up to its speed and makes one weapon attack as a reaction"
+    ],
+    "cr": 6,
+    "xp": 2300,
+    "special": "Tomb-Bound. While inside its tomb, the Vizier regains 10 hp at the start of each of its turns unless it took radiant damage since its last turn. Dust Body. Ranged weapon attacks against it have disadvantage while it stands in sand or dust. Legendary Resistance (1/Day). Resist fire and bludgeoning, piercing and slashing damage from nonmagical attacks. Immune necrotic, poison; can't be charmed, frightened or poisoned. Vulnerable radiant. Darkvision 60 ft., PP 14. Legendary (3/round): Scepter Strike (1 Serpent Scepter attack), Sand Step (teleport 30ft into an unoccupied space it can see), Withering Gaze (costs 2; one creature within 30ft makes DC15 Wis save or is frightened until end of its next turn).",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 6 boss with two CR 2 minions for a desert tomb"
+  },
+  {
+    "name": "Jackal-Headed Tomb Guardian",
+    "hp": 85,
+    "ac": 15,
+    "speed": "30",
+    "saves": {
+      "str": 3,
+      "dex": 0,
+      "con": 5,
+      "int": -4,
+      "wis": 0,
+      "cha": -5
+    },
+    "init": 0,
+    "attacks": [
+      "Multiattack: 2× Khopesh",
+      "Khopesh +5 5ft 1d8+3 slashing",
+      "Bay of the Underworld (Recharge 6) DC13 Wis 30ft cone; failed save frightened for 1 minute, save repeats at end of each turn"
+    ],
+    "cr": 2,
+    "xp": 450,
+    "special": "Warden's Interception. When a creature within 5 ft attacks the Vizier, the guardian can use its reaction to impose disadvantage on that attack roll. False Appearance. Indistinguishable from an ordinary statue while motionless. Immune poison, psychic; can't be charmed, exhausted, frightened, paralyzed or poisoned. Darkvision 60 ft., PP 10.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 6 boss with two CR 2 minions for a desert tomb"
+  },
+  {
+    "name": "Sandshroud Stalker",
+    "hp": 60,
+    "ac": 14,
+    "speed": "30, burrow 20",
+    "saves": {
+      "str": 0,
+      "dex": 5,
+      "con": 2,
+      "int": 0,
+      "wis": 1,
+      "cha": -2
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Bone Dagger",
+      "Bone Dagger +5 5ft or 20/60ft 1d6+3 piercing",
+      "Choking Sand (Recharge 5-6) DC13 Con 10ft radius around self 3d6 bludgeoning, half on save; failed save can't speak until end of its next turn"
+    ],
+    "cr": 2,
+    "xp": 450,
+    "special": "Sand Ambush. Once per turn, deals an extra 2d6 necrotic damage when it hits a creature it surfaced next to that turn or that hasn't acted yet in combat. Sand Glide. Can burrow through sand and loose earth without disturbing it; it leaves no tunnel. Skulker. Advantage on Stealth checks in sandy or dusty areas. Resist necrotic. Immune poison; can't be poisoned. Darkvision 60 ft., tremorsense 30 ft., PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 6 boss with two CR 2 minions for a desert tomb"
+  }
+]

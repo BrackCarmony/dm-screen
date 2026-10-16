@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Slagheart Warden",
+    "hp": 168,
+    "ac": 17,
+    "speed": "30",
+    "saves": {
+      "str": 8,
+      "dex": 0,
+      "con": 8,
+      "int": -1,
+      "wis": 1,
+      "cha": 0
+    },
+    "init": 0,
+    "attacks": [
+      "Multiattack: 2× Molten Slam, or 2× Hurl Slag",
+      "Molten Slam +8 10ft 2d10+5 bludgeoning + 2d6 fire",
+      "Hurl Slag +8 60/120ft 2d8+5 bludgeoning + 2d6 fire",
+      "Slag Eruption (Recharge 5-6) DC16 Dex, 15ft-radius sphere centered on a point within 60ft, 8d8 fire (half on save); the area becomes Slag Pool for 1 minute",
+      "Legendary (3/round): Molten Slam (1); Hurl Slag (2); Forge Surge (2): moves up to its speed without provoking opportunity attacks and can merge into and emerge from any Slag Pool it moves through"
+    ],
+    "cr": 8,
+    "xp": 3900,
+    "special": "Heated Body: a creature that touches the Warden or hits it with a melee attack within 5 ft. takes 5 (1d10) fire damage. Slag Pool: difficult terrain; a creature that enters it for the first time on a turn or starts its turn there takes 7 (2d6) fire damage. Quench: if doused with at least 5 gallons of water (e.g. a forge cistern) or hit by 10+ cold damage in one turn, its speed becomes 15, it loses Heated Body, and Slag Eruption can't recharge until the end of its next turn. Molten Form: can move through gaps 1 inch wide; metal weapons that hit it are not harmed (it is bound to the forge). Legendary Resistance (1/day). Immune fire, poison; resist bludgeoning, piercing, slashing from nonmagical attacks. Immune charmed, exhaustion, frightened, paralyzed, petrified, poisoned. Darkvision 60 ft., tremorsense 30 ft., PP 11. Understands Dwarvish but can't speak.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "My players are level 6 and about to enter an abandoned dwarven forge. I want a single centerpiece monster: a molten-metal elemental that was once the forge's guardian. It should be able to fight all four of them alone, punish them for clumping up, and have something to do on rounds when it can't reach anyone. Please keep it to attacks and abilities, not spells, so it's quick to run at the table."
+  }
+]

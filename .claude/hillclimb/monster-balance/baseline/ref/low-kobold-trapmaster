@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Kobold Trapmaster",
+    "hp": 38,
+    "ac": 14,
+    "speed": "30",
+    "saves": {
+      "str": -1,
+      "dex": 5,
+      "con": 2,
+      "int": 4,
+      "wis": 0,
+      "cha": -1
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Hand Crossbow or 2× Dagger",
+      "Dagger +5 5ft or 20/60ft 1d4+3 piercing",
+      "Hand Crossbow +5 30/120ft 1d6+3 piercing",
+      "Snare Bomb (Recharge 5-6) 10ft radius within 30ft, DC12 Dex 2d6 acid and restrained (escape DC12); half damage and not restrained on save",
+      "Bonus: Rig Trap: hidden caltrap-spring on an unoccupied 5ft square within 5ft (max 3 at a time); first creature entering it: DC12 Dex or 1d6+3 piercing and speed 0 until its next turn; spotted with DC12 Wis (Perception)"
+    ],
+    "cr": 1,
+    "xp": 200,
+    "special": "Pack Tactics. Sunlight Sensitivity. Trap Savant: advantage on checks and saves vs traps; disarms a trap as an action with no check. Cunning Retreat: may Disengage as a bonus action. Darkvision 60 ft., PP 10. Skills: Stealth +5, Sleight of Hand +5.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "kobold trapmaster CR 1"
+  }
+]

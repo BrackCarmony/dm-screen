@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Hollow Harvestman",
+    "hp": 27,
+    "ac": 12,
+    "speed": "30",
+    "saves": {
+      "str": 1,
+      "dex": 1,
+      "con": 1,
+      "int": -2,
+      "wis": 2,
+      "cha": 1
+    },
+    "init": 1,
+    "attacks": [
+      "Multiattack: 2× Rake",
+      "Rake +3 5ft 1d4+1 slashing",
+      "Dread Gaze DC11 Wis or frightened until end of its next turn; frightened target can't take reactions"
+    ],
+    "cr": 0.5,
+    "xp": 100,
+    "special": "False Appearance: while motionless, indistinguishable from an ordinary scarecrow. Restless Straw: when reduced to 0 HP by non-fire damage, roll d6; on a 6 it rises with 1 HP at the start of its next turn. Vulnerable fire. Resist bludgeoning and piercing from nonmagical attacks. Immune poison; can't be charmed, frightened, or poisoned. Darkvision 60 ft., PP 12.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 1/2 haunted scarecrow"
+  }
+]

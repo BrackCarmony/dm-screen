@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Crimson Oathbreaker",
+    "hp": 187,
+    "ac": 18,
+    "speed": "30",
+    "saves": {
+      "str": 9,
+      "dex": 2,
+      "con": 8,
+      "int": 1,
+      "wis": 6,
+      "cha": 3
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 3× Greatsword, or 2× Greatsword + Bite",
+      "Greatsword +9 5ft 2d6+5 slashing + 2d6 necrotic",
+      "Bite +9 5ft 1d6+5 piercing + 3d6 necrotic (only vs. a grappled, prone or incapacitated target); target's max HP drops by the necrotic dealt until a long rest, and the Oathbreaker regains that much HP",
+      "Iron Grasp (bonus action): one creature within 5 ft. makes a DC17 Str save or is grappled (escape DC17) and knocked prone",
+      "Crimson Charge (Recharge 5-6): moves up to 30 ft. without provoking opportunity attacks, then makes 1 Greatsword attack against each creature it passed within 5 ft. of",
+      "Parry (reaction): +4 AC against one melee attack it can see"
+    ],
+    "cr": 10,
+    "xp": 5900,
+    "special": "Regeneration. Regains 10 HP at the start of its turn if it has at least 1 HP and didn't take radiant damage or start its turn in sunlight. Vampiric Weaknesses: 20 radiant damage when it starts its turn in sunlight, disadvantage on attacks and checks in sunlight; 20 acid damage if it ends its turn in running water; can't enter a residence uninvited. Undying Oath. When reduced to 0 HP by anything other than radiant damage or a stake through the heart, it makes a DC 5 + damage taken Con save; on a success it drops to 1 HP instead (once per day). Spider Climb. Resist necrotic; bludgeoning, piercing, and slashing from nonmagical attacks. Immune poison; charmed, frightened, poisoned. Darkvision 120 ft., PP 16.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "a CR 10 vampire knight. no spells, pure melee"
+  }
+]

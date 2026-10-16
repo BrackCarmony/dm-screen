@@ -6,3 +6,9 @@ data/dms/
 data/session-secret
 *.tmp
 .env
+# Eval output that is regenerated or too bulky to keep (see README, Evals)
+.claude/hillclimb/**/traces/
+.claude/hillclimb/**/report.html
+.claude/hillclimb/**/state.json
+.claude/hillclimb/**/progress.txt
+.claude/hillclimb/**/trajectory/

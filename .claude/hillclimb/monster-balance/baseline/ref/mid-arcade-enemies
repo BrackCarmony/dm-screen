@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Maze Wraith",
+    "hp": 90,
+    "ac": 13,
+    "speed": "0, fly 50 (hover)",
+    "saves": {
+      "str": -2,
+      "dex": 5,
+      "con": 2,
+      "int": -2,
+      "wis": 1,
+      "cha": 2
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Chilling Touch",
+      "Chilling Touch +5 5ft 2d8+3 necrotic",
+      "Corner the Prey (Recharge 5-6): teleports up to 30 ft to an unoccupied space it can see adjacent to a creature, then makes 1 Chilling Touch; on hit target DC13 Wis or frightened until end of its next turn"
+    ],
+    "cr": 4,
+    "xp": 1100,
+    "special": "Incorporeal Movement (passes through creatures and objects, 1d10 force if it ends turn inside). Turnabout: when it takes radiant damage it turns pale blue and flees, having disadvantage on attacks until end of its next turn. Relentless Chase: always knows the location of the last creature that damaged it if within 1 mile. Resist acid, cold, fire, lightning, thunder; bludgeoning, piercing, slashing from nonmagical attacks. Immune necrotic, poison; charmed, exhaustion, grappled, paralyzed, petrified, poisoned, prone, restrained. Darkvision 60 ft., PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 4 enemies based on characters from classic arcade games."
+  },
+  {
+    "name": "Girder Ape",
+    "hp": 126,
+    "ac": 13,
+    "speed": "40, climb 40",
+    "saves": {
+      "str": 7,
+      "dex": 2,
+      "con": 6,
+      "int": -2,
+      "wis": 1,
+      "cha": -1
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Fist",
+      "Fist +7 5ft 2d6+5 bludgeoning",
+      "Hurled Barrel +7 60/120ft 2d8+5 bludgeoning",
+      "Rolling Barrel (Recharge 5-6): 60ft line 5ft wide, DC13 Dex 4d10 bludgeoning and prone, half on success and not prone"
+    ],
+    "cr": 4,
+    "xp": 1100,
+    "special": "Chest Pound (bonus action, 1/turn): each enemy within 30 ft that can hear it DC13 Wis or can't take reactions until start of its next turn. Sure-Footed: ignores difficult terrain from ladders, scaffolds and rubble; can't be knocked prone while climbing. Keen Smell. PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 4 enemies based on characters from classic arcade games."
+  },
+  {
+    "name": "Fungal Centipede",
+    "hp": 120,
+    "ac": 14,
+    "speed": "40, climb 40",
+    "saves": {
+      "str": 3,
+      "dex": 4,
+      "con": 5,
+      "int": -4,
+      "wis": 0,
+      "cha": -3
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: Bite and 2× Leg Rake",
+      "Bite +5 5ft 2d8+3 piercing plus 2d6 poison (DC13 Con half)",
+      "Leg Rake +5 5ft 1d6+3 slashing"
+    ],
+    "cr": 4,
+    "xp": 1100,
+    "special": "Segmented: the first time it takes 20+ damage from a single attack, a tail segment breaks off as a separate creature in an adjacent space (AC 14, 15 hp, speed 40, Bite +5 1d8+3 piercing; acts on the centipede's initiative). Spore Trail: each space it leaves sprouts a mushroom for 1 minute; mushroom spaces are difficult terrain for others. Resist poison. Immune poisoned. Tremorsense 30 ft., darkvision 60 ft., PP 10.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 4 enemies based on characters from classic arcade games."
+  },
+  {
+    "name": "Descending Invader",
+    "hp": 110,
+    "ac": 15,
+    "speed": "20, fly 30 (hover)",
+    "saves": {
+      "str": 0,
+      "dex": 4,
+      "con": 3,
+      "int": 3,
+      "wis": 1,
+      "cha": 0
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 3× Plasma Bolt",
+      "Plasma Bolt +5 120ft 2d6+2 radiant",
+      "Formation Barrage (Recharge 5-6): 20ft-wide, 60ft line straight down or ahead, DC13 Dex 6d6 radiant, half on success; destroys nonmagical cover in the area"
+    ],
+    "cr": 4,
+    "xp": 1100,
+    "special": "Relentless Descent: it can't willingly move upward or away from the nearest enemy; each round it ends its turn closer to an enemy it gains +2 damage on bolts (max +6) until it takes damage from a creature behind cover. March in Step: if another invader is within 30 ft, it can't be surprised and has advantage on Dex saves. Resist radiant. Immune poison; poisoned. Blindsight 60 ft., PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 4 enemies based on characters from classic arcade games."
+  }
+]

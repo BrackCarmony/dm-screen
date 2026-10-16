@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Reedlurker",
+    "hp": 18,
+    "ac": 12,
+    "speed": "20, swim 30",
+    "saves": {
+      "str": 1,
+      "dex": 2,
+      "con": 1,
+      "int": -3,
+      "wis": 1,
+      "cha": -2
+    },
+    "init": 2,
+    "attacks": [
+      "Bite +4 5ft 1d6+2 piercing",
+      "Tongue Snare +4 15ft 1d4 bludgeoning; target Medium or smaller is grappled (escape DC 12) and pulled up to 10 ft toward the Reedlurker"
+    ],
+    "cr": 0.25,
+    "xp": 50,
+    "special": "Amphibious. Reed Camouflage: advantage on Dex (Stealth) checks in reeds, marsh grass or murky water; Stealth +6. Ambusher: advantage on attack rolls against any creature it has surprised. Gulp: bite attacks against a creature it is grappling have advantage. Darkvision 60 ft., PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 1/4 swamp creature that ambushes travelers from the reeds."
+  }
+]

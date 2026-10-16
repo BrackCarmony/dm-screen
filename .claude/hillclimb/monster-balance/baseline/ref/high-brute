@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Gravelhide Juggernaut",
+    "hp": 230,
+    "ac": 17,
+    "speed": "40, burrow 20",
+    "saves": {
+      "str": 10,
+      "dex": 0,
+      "con": 9,
+      "int": -3,
+      "wis": 5,
+      "cha": -1
+    },
+    "init": 0,
+    "attacks": [
+      "Multiattack: 2× Slam, 1× Gore (may replace one Slam with Grab)",
+      "Slam +10 10ft 3d8+6 bludgeoning",
+      "Gore +10 5ft 4d10+6 piercing; if the juggernaut moved 20+ ft straight first, target DC18 Str or knocked prone",
+      "Grab +10 10ft 2d8+6 bludgeoning, target grappled (escape DC18); while grappled, restrained and takes 2d8 bludgeoning at start of its turns",
+      "Rubble Quake (Recharge 5-6) DC18 Dex, 20-ft radius centered on self, 8d8 bludgeoning and knocked prone; half and not prone on success; area becomes difficult terrain"
+    ],
+    "cr": 11,
+    "xp": 7200,
+    "special": "Stone Regrowth: regains 15 HP at start of its turn unless it took acid or thunder damage since its last turn; dies only if it starts its turn at 0 HP without regrowing. Unstoppable: can't be knocked prone, pushed or pulled against its will. Legendary Resistance (2/Day). Seething Core: while bloodied, its Slam deals an extra 1d8 damage. Siege Monster: double damage to objects and structures. Resist bludgeoning, piercing, slashing from nonmagical attacks; immune poison, petrified, frightened. Darkvision 60 ft., tremorsense 30 ft., PP 15.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "An encounter for 5 level 9 characters: a single brute that can take a beating"
+  }
+]

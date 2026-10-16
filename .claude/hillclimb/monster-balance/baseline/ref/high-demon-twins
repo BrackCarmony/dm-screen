@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Ashkara, the Ember Twin",
+    "hp": 150,
+    "ac": 15,
+    "speed": "30, fly 40",
+    "saves": {
+      "str": 4,
+      "dex": 5,
+      "con": 6,
+      "int": 1,
+      "wis": 4,
+      "cha": 3
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Burning Claw",
+      "Burning Claw +7 5ft 2d8+4 slashing + 2d6 fire",
+      "Hellfire Burst (Recharge 5-6) DC15 Dex 20ft radius centered on self 8d6 fire, half on save; flammable objects ignite",
+      "Twin Swap (1/day, bonus action): swaps places with Rimeka if within 120 ft"
+    ],
+    "cr": 7,
+    "xp": 2900,
+    "special": "Fire Aura. Any creature that starts its turn within 5 ft of her takes 7 (2d6) fire damage; a creature that touches her or hits her with a melee attack within 5 ft takes 3 (1d6) fire. Twin Bond. When Rimeka drops to 0 HP within 120 ft, Ashkara regains 30 HP and her claws deal an extra 1d6 fire until she dies. Fire and Frost. A creature that takes fire damage from Ashkara and cold damage from Rimeka in the same round takes an extra 7 (2d6) force damage. Magic Resistance. Immune fire, poison; poisoned. Resist cold, lightning; bludgeoning, piercing, slashing from nonmagical attacks. Darkvision 120 ft., PP 11. Languages Abyssal, Common, telepathy 120 ft.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Two CR 7 twin demon sisters, one fire one ice"
+  },
+  {
+    "name": "Rimeka, the Frost Twin",
+    "hp": 150,
+    "ac": 15,
+    "speed": "40",
+    "saves": {
+      "str": 2,
+      "dex": 7,
+      "con": 6,
+      "int": 1,
+      "wis": 5,
+      "cha": 3
+    },
+    "init": 4,
+    "attacks": [
+      "Multiattack: 2× Frost Talon, or 2× Ice Lance",
+      "Frost Talon +7 5ft 2d6+4 slashing + 2d6 cold; target's speed -10 ft until end of its next turn",
+      "Ice Lance +7 60/120ft 2d8+4 cold",
+      "Frozen Breath (Recharge 5-6) DC15 Con 30ft cone 8d6 cold, half on save; on a failure speed is 0 until end of target's next turn",
+      "Twin Swap (1/day, bonus action): swaps places with Ashkara if within 120 ft"
+    ],
+    "cr": 7,
+    "xp": 2900,
+    "special": "Chilling Aura. Ground within 10 ft of her is difficult terrain for creatures other than demons. Ice Walk. Ignores difficult terrain from ice or snow. Twin Bond. When Ashkara drops to 0 HP within 120 ft, Rimeka regains 30 HP and her attacks deal an extra 1d6 cold until she dies. Fire and Frost. A creature that takes cold damage from Rimeka and fire damage from Ashkara in the same round takes an extra 7 (2d6) force damage. Magic Resistance. Immune cold, poison; poisoned. Resist fire, lightning; bludgeoning, piercing, slashing from nonmagical attacks. Darkvision 120 ft., PP 12. Languages Abyssal, Common, telepathy 120 ft.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Two CR 7 twin demon sisters, one fire one ice"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Sumpmaw",
+    "hp": 136,
+    "ac": 15,
+    "speed": "10, swim 40",
+    "saves": {
+      "str": 4,
+      "dex": 2,
+      "con": 6,
+      "int": -3,
+      "wis": 4,
+      "cha": -2
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: Bite + Tail Lash",
+      "Bite +7 5ft 2d10+4 piercing; target grappled (escape DC15) and restrained while grappled; can't Bite another target while grappling",
+      "Tail Lash +7 10ft 2d8+4 bludgeoning; DC15 Str save or knocked prone (Large or smaller)",
+      "Lantern Lure (Recharge 5-6) one creature within 60ft that can see the glowing lure: DC14 Wis save or charmed until end of its next turn and must use its movement to approach the Sumpmaw",
+      "Silt Plume (Recharge 5-6, only in water) 20ft-radius sphere of churned silt centered on itself, heavily obscured until end of its next turn"
+    ],
+    "cr": 5,
+    "xp": 1800,
+    "special": "Amphibious. Drag Under (Bonus Action): swims up to 20 ft. pulling a creature it has grappled; a creature dragged fully underwater must hold its breath. Murk Ambush: advantage on attack rolls in the first round of combat against creatures in water that haven't yet acted. Silt Sense: unaffected by obscurement from its own Silt Plume. Resist cold. Blindsight 30 ft., darkvision 60 ft., PP 14. Str 18, Dex 14, Con 16, Int 5, Wis 13, Cha 6.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Something to challenge a level 4 party in a flooded mine"
+  }
+]

@@ -1,0 +1,115 @@
+[
+  {
+    "name": "Star-Stomper Brawler",
+    "hp": 210,
+    "ac": 17,
+    "speed": "40",
+    "saves": {
+      "str": 8,
+      "dex": 8,
+      "con": 7,
+      "int": 0,
+      "wis": 1,
+      "cha": 3
+    },
+    "init": 4,
+    "attacks": [
+      "Multiattack: 3× Haymaker, or 2× Haymaker + Flick Fireball",
+      "Haymaker +8 5ft 2d8+4 bludgeoning",
+      "Flick Fireball +8 120ft 3d10 fire; bounces to a second creature within 10 ft for 1d10 fire",
+      "Plummet Stomp (Recharge 5-6) leaps up to 40 ft without provoking opportunity attacks; creatures within 10 ft of landing DC16 Dex 8d8 bludgeoning and knocked prone, half on save without prone",
+      "Cape Twirl (Reaction) when hit by a ranged attack, roll 1d6; on 4+ the attack misses and is reflected at the attacker"
+    ],
+    "cr": 10,
+    "xp": 5900,
+    "special": "Triple Jump. Long and high jumps triple in distance and cost no extra movement. Grow Mushroom (1/Day, bonus action): becomes Large for 1 minute, gains 30 temp HP and Haymaker deals an extra 1d8. Resist fire. PP 11.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 10 enemies based off different fighters from the Super Smash Bros franchise."
+  },
+  {
+    "name": "Starfall Bounty Hunter",
+    "hp": 190,
+    "ac": 19,
+    "speed": "35",
+    "saves": {
+      "str": 4,
+      "dex": 7,
+      "con": 8,
+      "int": 2,
+      "wis": 6,
+      "cha": 1
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Arm Cannon, or 1× Arm Cannon + Seeker Missiles",
+      "Arm Cannon +8 120/360ft 3d8+4 force",
+      "Seeker Missiles: two missiles at up to two targets within 150 ft, each DC16 Dex 4d6 fire, half on save",
+      "Charged Blast (Recharge 5-6) 100-ft line 5 ft wide DC16 Dex 10d10 force, half on save",
+      "Grapple Beam +8 30ft 2d6+3 force; target Large or smaller is pulled up to 25 ft toward the hunter and grappled (escape DC16)"
+    ],
+    "cr": 10,
+    "xp": 5900,
+    "special": "Rolling Sphere (bonus action): turns into a Small armored ball until start of next turn, speed 50, can't be grappled, can drop a bomb DC16 Dex 3d6 force in a 10-ft radius. Sealed Suit: immune to poison, resist cold, fire, radiant; can't be blinded or deafened. Darkvision 120 ft., PP 16.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 10 enemies based off different fighters from the Super Smash Bros franchise."
+  },
+  {
+    "name": "Pink Devourer",
+    "hp": 225,
+    "ac": 16,
+    "speed": "25, fly 30 (hover)",
+    "saves": {
+      "str": 8,
+      "dex": 6,
+      "con": 9,
+      "int": 0,
+      "wis": 5,
+      "cha": 3
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Slam + Inhale, or 3× Slam",
+      "Slam +8 5ft 3d8+4 bludgeoning",
+      "Inhale: one Large or smaller creature within 30 ft DC16 Str or pulled into its mouth; swallowed creature is blinded, restrained, takes 4d6 acid at start of each of its turns; escapes on 25+ damage in one turn or by being spat out",
+      "Star Spit (bonus action) spits a swallowed creature or object up to 60 ft; it and a creature in the line DC16 Dex 5d8 bludgeoning",
+      "Hammer Copy (Recharge 5-6) only after copying: Copied Strike, a melee or 30-ft blast DC16 Dex 9d10 of the copied damage type"
+    ],
+    "cr": 10,
+    "xp": 5900,
+    "special": "Copy Essence. When it spits out a creature, it learns one of that creature's damage types or traits until it copies another. Bottomless Gut: one creature at a time, immune to effects of swallowed creatures. Puffball: can't fall prone, takes no falling damage. Resist bludgeoning. PP 15.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 10 enemies based off different fighters from the Super Smash Bros franchise."
+  },
+  {
+    "name": "Verdant Swordwarden",
+    "hp": 200,
+    "ac": 18,
+    "speed": "30",
+    "saves": {
+      "str": 8,
+      "dex": 7,
+      "con": 8,
+      "int": 1,
+      "wis": 6,
+      "cha": 2
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 3× Sacred Blade, or 2× Sacred Blade + Boomerang",
+      "Sacred Blade +8 5ft 2d8+4 slashing plus 1d6 radiant",
+      "Spinning Boomerang +8 60ft 2d6+3 bludgeoning; target can't take reactions until start of its next turn; returns to hand",
+      "Hero's Bow +7 150/600ft 2d8+3 piercing",
+      "Spin Attack (Recharge 5-6) each creature within 10 ft DC16 Dex 8d8 slashing and pushed 10 ft, half on save without push",
+      "Fuse Bomb (bonus action, 3/Day) thrown 40 ft, explodes at end of its next turn DC16 Dex 6d6 fire in 15-ft radius"
+    ],
+    "cr": 10,
+    "xp": 5900,
+    "special": "Hylian Shield. +2 AC (included); as a reaction, blocks a ranged attack or a Dex-save effect from the front, taking no damage on success. Courageous: advantage on saves vs. frightened and charmed. Master Blade: attacks are magical; deals double radiant damage to fiends and undead. PP 16.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "Make 4 CR 10 enemies based off different fighters from the Super Smash Bros franchise."
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Midnight Dolly",
+    "hp": 24,
+    "ac": 13,
+    "speed": "25, climb 20",
+    "saves": {
+      "str": -2,
+      "dex": 5,
+      "con": 1,
+      "int": 0,
+      "wis": 4,
+      "cha": 2
+    },
+    "init": 3,
+    "attacks": [
+      "Multiattack: 2× Needle Stab",
+      "Needle Stab +5 5ft 1d4+3 piercing",
+      "Stitched Lullaby (Recharge 5-6) DC12 Wis, each creature of its choice within 20 ft. that can hear it falls unconscious for 1 min (ends if damaged or shaken awake; constructs and undead immune)",
+      "Unblinking Stare (Bonus Action) DC12 Wis, one creature within 30 ft. is frightened of the doll until the end of its next turn"
+    ],
+    "cr": 1,
+    "xp": 200,
+    "special": "False Appearance: while motionless, indistinguishable from an ordinary porcelain doll. Sunlit Stillness: while in sunlight, the doll is incapacitated and can't move. Nightstep: in dim light or darkness, the doll can take the Hide action as a bonus action. Sleeper's Bane: the doll has advantage on attacks against unconscious creatures, and any hit against an unconscious creature is a critical hit. Resist bludgeoning, piercing, slashing from nonmagical attacks. Immune poison, psychic; immune charmed, exhaustion, frightened, poisoned. Darkvision 60 ft., PP 14. Tiny construct; understands Common but speaks only in giggles and nursery rhymes.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A creepy doll that walks at night"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Stormforged Sentinel",
+    "hp": 152,
+    "ac": 17,
+    "speed": "30",
+    "saves": {
+      "str": 5,
+      "dex": 0,
+      "con": 7,
+      "int": -4,
+      "wis": 0,
+      "cha": -5
+    },
+    "init": 0,
+    "attacks": [
+      "Multiattack: 2× Charged Slam",
+      "Charged Slam +8 5ft 2d8+5 bludgeoning plus 2d6 lightning",
+      "Lightning Breath (Recharge 5-6) DC15 Dex 60ft line (5ft wide) 10d10 lightning, half on save"
+    ],
+    "cr": 7,
+    "xp": 2900,
+    "special": "Large construct. Lightning Absorption: whenever subjected to lightning damage, it takes no damage, regains HP equal to the lightning damage dealt, and Lightning Breath recharges. Immutable Form: immune to any spell or effect that would alter its form. Arcing Plating: a creature that hits it with a metal melee weapon while within 5 ft. takes 1d6 lightning damage. Immune lightning, poison, psychic; bludgeoning, piercing and slashing from nonmagical attacks that aren't adamantine. Condition immune charmed, exhaustion, frightened, paralyzed, petrified, poisoned. Darkvision 60 ft., PP 10. Understands its creator's languages but can't speak.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "CR 7 mechanical golem with a lightning breath weapon"
+  }
+]

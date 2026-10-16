@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Bramble Crone",
+    "hp": 117,
+    "ac": 14,
+    "speed": "30",
+    "saves": {
+      "str": 0,
+      "dex": 2,
+      "con": 2,
+      "int": 1,
+      "wis": 5,
+      "cha": 4
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Hex Bolt, or 1× Thornwood Staff and 1× Hex Bolt",
+      "Thornwood Staff +5 5ft 1d6+3 bludgeoning plus 1d6 poison",
+      "Hex Bolt +5 60ft 3d8+3 necrotic (+1d8 vs. a Marked creature)",
+      "Withering Curse (Recharge 5-6) one creature within 60ft DC13 Wis or Marked for 1 min: disadvantage on attack rolls and ability checks, takes 2d6 necrotic at start of each of its turns; repeat save at end of each turn",
+      "Bonus: Mark of the Crone, one creature she can see within 60ft is Marked until she Marks another",
+      "Reaction: Evil Eye, when a creature within 30ft hits her, DC13 Cha or 2d6 psychic and it can't take reactions until its next turn"
+    ],
+    "cr": 4,
+    "xp": 1100,
+    "special": "Curse-Fed. When a Marked or Withering-Cursed creature drops to 0 HP, she regains 10 HP. Spellcasting (Wis, DC13): at will druidcraft, minor illusion; 2/day each bestow curse, hold person; 1/day fog cloud, polymorph. Speak with Beasts and Plants (innate). Advantage on saves vs. being charmed. PP 15. Languages Common, Sylvan.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 4 hedge witch who curses people"
+  }
+]

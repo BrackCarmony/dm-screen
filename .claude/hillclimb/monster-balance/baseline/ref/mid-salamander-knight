@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Salamander Knight",
+    "hp": 136,
+    "ac": 17,
+    "speed": "30",
+    "saves": {
+      "str": 7,
+      "dex": 2,
+      "con": 6,
+      "int": 0,
+      "wis": 4,
+      "cha": 2
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Flamebrand Spear, 1× Tail Lash",
+      "Flamebrand Spear +7 10ft 1d8+4 piercing + 1d6 fire",
+      "Tail Lash +7 5ft 1d6+4 bludgeoning; Large or smaller target DC15 Str save or knocked prone",
+      "Fire Breath (Recharge 5-6) DC14 Dex 15ft cone 8d6 fire, half on success",
+      "Reaction - Ember Parry: +2 AC against one melee attack it can see; if the attack misses, the attacker takes 1d6 fire"
+    ],
+    "cr": 5,
+    "xp": 1800,
+    "special": "Large elemental. Heated Body: a creature that touches the knight or hits it with a melee attack within 5 ft takes 1d6 fire. Knight's Challenge (bonus action): one creature within 30 ft has disadvantage on attacks against targets other than the knight until the start of the knight's next turn. Its spear ignites flammable objects it hits. Immune fire. Vulnerable cold. Darkvision 60 ft., PP 11. Languages: Ignan, Common.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A CR 5 fire-breathing salamander knight"
+  }
+]

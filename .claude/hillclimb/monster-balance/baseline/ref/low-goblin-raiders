@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Gutter Scrapper",
+    "hp": 9,
+    "ac": 13,
+    "speed": "30",
+    "saves": {
+      "str": -1,
+      "dex": 2,
+      "con": 0,
+      "int": -1,
+      "wis": -1,
+      "cha": -1
+    },
+    "init": 2,
+    "attacks": [
+      "Rusty Cleaver +4 5ft 1d6+2 slashing",
+      "Thrown Junk +4 20/60ft 1d4+2 bludgeoning"
+    ],
+    "cr": 0.25,
+    "xp": 50,
+    "special": "Slip Away. Bonus action: Disengage. Gang Up. +1d4 damage vs a target within 5 ft. of another raider. Small humanoid. Darkvision 60 ft., PP 9.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "goblin-ish raiders for a level 1 party, give me 3 different ones"
+  },
+  {
+    "name": "Bog Slinger",
+    "hp": 7,
+    "ac": 12,
+    "speed": "30",
+    "saves": {
+      "str": -2,
+      "dex": 2,
+      "con": 0,
+      "int": 0,
+      "wis": 0,
+      "cha": -1
+    },
+    "init": 2,
+    "attacks": [
+      "Sling +4 30/120ft 1d4+2 bludgeoning",
+      "Dagger +4 5ft 1d4+2 piercing",
+      "Stinkpot (1/Day) range 30ft, 5ft radius DC11 Con or poisoned until end of its next turn"
+    ],
+    "cr": 0.25,
+    "xp": 50,
+    "special": "Sniper's Hunch. While hidden or in dim light, ranged attacks deal +1d4 damage. Bog Skulker. Advantage on Stealth in swamp or mud. Small humanoid. Darkvision 60 ft., PP 10.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "goblin-ish raiders for a level 1 party, give me 3 different ones"
+  },
+  {
+    "name": "Snarl-Captain",
+    "hp": 22,
+    "ac": 15,
+    "speed": "30",
+    "saves": {
+      "str": 3,
+      "dex": 2,
+      "con": 1,
+      "int": 0,
+      "wis": -1,
+      "cha": 2
+    },
+    "init": 2,
+    "attacks": [
+      "Multiattack: 2× Hooked Spear",
+      "Hooked Spear +4 5ft 1d6+2 piercing; Medium or smaller target hit by both attacks in one turn is pulled 5 ft. toward captain",
+      "Javelin +4 30/120ft 1d6+2 piercing",
+      "Snarl Order (Recharge 5-6) bonus action: up to 2 allied raiders within 30 ft. that can hear it use their reaction to move half speed and make one weapon attack"
+    ],
+    "cr": 1,
+    "xp": 200,
+    "special": "Cowardly Command. When reduced below half HP, can use reaction to swap places with an ally within 5 ft.; that ally becomes the target of the triggering attack. Hide armor and shield. Small humanoid. Darkvision 60 ft., PP 9.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "goblin-ish raiders for a level 1 party, give me 3 different ones"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Clockwork Beetle Swarm",
+    "hp": 52,
+    "ac": 14,
+    "speed": "20, climb 20, fly 30",
+    "saves": {
+      "str": -2,
+      "dex": 2,
+      "con": 2,
+      "int": -5,
+      "wis": 0,
+      "cha": -4
+    },
+    "init": 2,
+    "attacks": [
+      "Mandibles +4 0ft 4d6 piercing (2d6 if swarm at half HP or less)",
+      "Spark Discharge (Recharge 6) DC12 Dex 10ft radius 3d6 lightning, half on save"
+    ],
+    "cr": 2,
+    "xp": 450,
+    "special": "Medium swarm of Tiny constructs. Swarm: can occupy another creature's space and move through openings large enough for a Tiny beetle; can't regain HP or gain temporary HP. Grinding Halt: if it takes lightning damage, it can't use reactions and its speed is halved until the end of its next turn. Resist bludgeoning, piercing, slashing. Immune poison, psychic; charmed, exhaustion, frightened, grappled, paralyzed, petrified, poisoned, prone, restrained, stunned. Darkvision 60 ft., PP 10. Understands its maker's commands but can't speak.",
+    "url": "",
+    "ai": true,
+    "aiPrompt": "A swarm of clockwork beetles, CR 2"
+  }
+]
