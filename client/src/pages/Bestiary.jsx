@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { api } from '../api.js';
-import { SAVES, fmtCr, fmtMod } from '../rules.js';
+import { SAVES, expandSpecial, fmtCr, fmtMod } from '../rules.js';
 
 const BLANK = { name: '', hp: '', ac: '', speed: '30', saves: {}, init: '', attacks: [], cr: '', xp: '', special: '', url: '' };
 
@@ -36,7 +36,7 @@ export default function Bestiary({ state, update, ai, mcp, onAi }) {
     const [lo, hi] = crMin !== '' && crMax !== '' && Number(crMin) > Number(crMax) ? [crMax, crMin] : [crMin, crMax];
     const list = state.bestiary.filter((m) =>
       (source === 'all' || (source === 'ai' && m.ai) || (source === 'imported' && m.imported)) &&
-      (!needle || m.name.toLowerCase().includes(needle) || m.special?.toLowerCase().includes(needle)) &&
+      (!needle || m.name.toLowerCase().includes(needle) || `${m.special ?? ''} ${expandSpecial(m.special)}`.toLowerCase().includes(needle)) &&
       (lo === '' || (!missing(m.cr) && m.cr >= Number(lo))) &&
       (hi === '' || (!missing(m.cr) && m.cr <= Number(hi))));
     const get = COLUMNS.find((c) => c.key === sort.key).get;
@@ -135,7 +135,7 @@ export default function Bestiary({ state, update, ai, mcp, onAi }) {
                   <tr className="detail">
                     <td colSpan={14}>
                       <ul className="attacks">{m.attacks.map((a, i) => <li key={i}>{a}</li>)}</ul>
-                      {m.special && <p>{m.special}</p>}
+                      {m.special && <p>{expandSpecial(m.special)}</p>}
                       {m.aiPrompt && <p className="muted small">Made with AI from “{m.aiPrompt}”. Check the numbers before you use it.</p>}
                       {m.url && <a href={m.url} target="_blank" rel="noreferrer">Full stat block ↗</a>}
                     </td>

@@ -7,7 +7,7 @@
 // add: nothing here edits or deletes what the DM has made.
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { SAVES, beastMap, currentHp, d, fmtCr, initiativeOrder, maxHp, uid, xpSummary } from '../client/src/rules.js';
+import { SAVES, beastMap, currentHp, d, expandSpecial, fmtCr, initiativeOrder, maxHp, uid, xpSummary } from '../client/src/rules.js';
 import { BALANCE, FIELD_RULES, normalizeMonster, withUniqueNames } from './ai.js';
 
 // Exact name ignoring case, else ignoring spacing and punctuation: bestiaries imported from the sheet use
@@ -21,7 +21,7 @@ const statBlock = (m) =>
     `AC ${m.ac}, HP ${m.hp}, speed ${m.speed}, init ${m.init >= 0 ? '+' : ''}${m.init}`,
     `Saves: ${Object.entries(m.saves ?? {}).map(([k, v]) => `${k} ${v >= 0 ? '+' : ''}${v}`).join(', ')}`,
     `Attacks:\n${(m.attacks ?? []).map((a) => `  - ${a}`).join('\n')}`,
-    m.special && `Special: ${m.special}`,
+    m.special && `Special: ${expandSpecial(m.special)}`,
     m.url && `Full stat block: ${m.url}`,
   ].filter(Boolean).join('\n');
 const text = (s) => ({ content: [{ type: 'text', text: s }] });

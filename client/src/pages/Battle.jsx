@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { SAVES, beastMap, currentHp, d, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, syncParty, uid, xpSummary } from '../rules.js';
+import { SAVES, beastMap, currentHp, d, expandSpecial, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, syncParty, uid, xpSummary } from '../rules.js';
 
 export default function Battle({ state, update }) {
   const beasts = useMemo(() => beastMap(state.bestiary), [state.bestiary]);
@@ -212,7 +212,7 @@ function MonsterCard({ c, beast, beasts, save, onSave, isTurn, onChange, onRemov
           {(beast.special || beast.url) && (
             <div className="special">
               {beast.special && (
-                <p className={open ? '' : 'clamp'} onClick={() => setOpen(!open)}>{beast.special}</p>
+                <p className={open ? '' : 'clamp'} onClick={() => setOpen(!open)}>{expandSpecial(beast.special)}</p>
               )}
               {beast.url && <a href={beast.url} target="_blank" rel="noreferrer">Full stat block ↗</a>}
             </div>
