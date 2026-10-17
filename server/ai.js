@@ -20,34 +20,30 @@ export class GenerateError extends Error {
 }
 
 const int = { type: 'integer' };
-const MONSTER_SCHEMA = {
+const MONSTER_ITEM = {
   type: 'object',
   properties: {
-    monsters: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          cr: { type: 'number', description: 'Challenge rating: 0, 0.125, 0.25, 0.5, or a whole number 1-30' },
-          hp: int,
-          ac: int,
-          speed: { type: 'string', description: 'Feet, e.g. "30" or "30, fly 60"' },
-          init: { type: 'integer', description: 'Initiative modifier (the Dex modifier)' },
-          saves: {
-            type: 'object',
-            properties: Object.fromEntries(SAVES.map((s) => [s, int])),
-            required: SAVES,
-            additionalProperties: false,
-          },
-          attacks: { type: 'array', items: { type: 'string' } },
-          special: { type: 'string' },
-        },
-        required: ['name', 'cr', 'hp', 'ac', 'speed', 'init', 'saves', 'attacks', 'special'],
-        additionalProperties: false,
-      },
+    name: { type: 'string' },
+    cr: { type: 'number', description: 'Challenge rating: 0, 0.125, 0.25, 0.5, or a whole number 1-30' },
+    hp: int,
+    ac: int,
+    speed: { type: 'string', description: 'Feet, e.g. "30" or "30, fly 60"' },
+    init: { type: 'integer', description: 'Initiative modifier (the Dex modifier)' },
+    saves: {
+      type: 'object',
+      properties: Object.fromEntries(SAVES.map((s) => [s, int])),
+      required: SAVES,
+      additionalProperties: false,
     },
+    attacks: { type: 'array', items: { type: 'string' } },
+    special: { type: 'string' },
   },
+  required: ['name', 'cr', 'hp', 'ac', 'speed', 'init', 'saves', 'attacks', 'special'],
+  additionalProperties: false,
+};
+const MONSTER_SCHEMA = {
+  type: 'object',
+  properties: { monsters: { type: 'array', items: MONSTER_ITEM } },
   required: ['monsters'],
   additionalProperties: false,
 };
@@ -74,9 +70,8 @@ export const TYPICAL_BY_CR = [
 ];
 const crName = (cr) => ({ 0.125: '1/8', 0.25: '1/4', 0.5: '1/2' })[cr] ?? String(cr);
 
-const SYSTEM = `You design monsters for a Dungeons & Dragons 5th edition DM's bestiary, used at the table to run combat.
-
-Make original monsters that fit the DM's request. Make ${MAX_MONSTERS} at most; if the request doesn't say how many, make one. ${BALANCE}
+// How to set a new monster's numbers. Shared by the monster and encounter table prompts.
+const MONSTER_GUIDE = `${BALANCE}
 
 Typical numbers for each CR, from the SRD's monsters. Each row is an average, not a stat block to copy: real monsters at the same CR differ, and yours should too, from the row and from each other. Let the monster's idea set its numbers, then check them against its CR's row: hit points up to about a third above or below it, AC two or three either side, and damage per round the other way, so a tougher monster hits softer and a fragile one harder, and the two still average out to its CR. Unless the DM asks for something lopsided, don't push both far the same way. Damage per round is its usual turn (every hit of its multiattack), with a recharge ability counted about once in three rounds. Above CR 10, keep growing from the CR 10 row.
 CR | HP | AC | attack bonus | save DC | damage per round
@@ -84,6 +79,10 @@ ${TYPICAL_BY_CR.map(([cr, hp, ac, bonus, dc, dpr]) => `${crName(cr)} | ${hp} | $
 
 Write fields the way the rest of the bestiary does:
 ${FIELD_RULES}`;
+
+const SYSTEM = `You design monsters for a Dungeons & Dragons 5th edition DM's bestiary, used at the table to run combat.
+
+Make original monsters that fit the DM's request. Make ${MAX_MONSTERS} at most; if the request doesn't say how many, make one. ${MONSTER_GUIDE}`;
 
 const EXAMPLE = { monsters: [{ name: 'Cinder Imp', cr: 0.5, hp: 10, ac: 13, speed: '20, fly 40', init: 3, saves: { str: -2, dex: 3, con: 1, int: 0, wis: 1, cha: 2 }, attacks: ['Sting +5 5ft 1d4+3 piercing', 'Ember Spit +5 30ft 2d4 fire'], special: 'Imm fire. Devil\'s Sight. Darkvision 120 ft., PP 11' }] };
 
@@ -165,48 +164,200 @@ export function parseImport(input, { xpTable = [] } = {}) {
   return { monsters, skipped: list.length - monsters.length };
 }
 
+// ---- Random encounter tables: mostly monsters already in the DM's bestiary, a few new ones only if nothing fits. ----
+// Claude reads the whole bestiary (one short line per monster) and writes back names and counts, so a table costs
+// many input tokens but few output tokens.
+
+export const TABLE_DICE = [6, 8, 10, 12, 20];
+const MAX_ENTRIES = 20;
+const MAX_NEW_MONSTERS = 2;
+
+const TABLE_SCHEMA = {
+  type: 'object',
+  properties: {
+    group: { type: 'string', description: 'Heading for the table, named for the place and level, e.g. "Darkwood (level 5)"' },
+    entries: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          roll: { type: 'string', description: 'The rolls on the die for this entry, e.g. "1-2" or "7"' },
+          name: { type: 'string', description: 'A short title, e.g. "Wolf Pack"' },
+          note: { type: 'string', description: 'One line for the DM: setup, tactics or a twist' },
+          monsters: {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string' }, count: int }, required: ['name', 'count'], additionalProperties: false },
+          },
+        },
+        required: ['roll', 'name', 'note', 'monsters'],
+        additionalProperties: false,
+      },
+    },
+    newMonsters: { type: 'array', items: MONSTER_ITEM, description: `At most ${MAX_NEW_MONSTERS}; usually none` },
+  },
+  required: ['group', 'entries', 'newMonsters'],
+  additionalProperties: false,
+};
+
+// 5e XP thresholds per character, levels 1-20: [easy, medium, hard, deadly].
+export const XP_THRESHOLDS = [
+  [25, 50, 75, 100], [50, 100, 150, 200], [75, 150, 225, 400], [125, 250, 375, 500], [250, 500, 750, 1100],
+  [300, 600, 900, 1400], [350, 750, 1100, 1700], [450, 900, 1400, 2100], [550, 1100, 1600, 2400], [600, 1200, 1900, 2800],
+  [800, 1600, 2400, 3600], [1000, 2000, 3000, 4500], [1100, 2200, 3400, 5100], [1250, 2500, 3800, 5700], [1400, 2800, 4300, 6400],
+  [1600, 3200, 4800, 7200], [2000, 3900, 5900, 8800], [2100, 4200, 6300, 9500], [2400, 4900, 7300, 10900], [2800, 5700, 8500, 12700],
+];
+const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Deadly'];
+// The 5e encounter multiplier for how many monsters there are.
+const multiplier = (n) => (n <= 1 ? 1 : n === 2 ? 1.5 : n <= 6 ? 2 : n <= 10 ? 2.5 : n <= 14 ? 3 : 4);
+
+// "easy 1000, medium 2000, hard 3000, deadly 4400" for a party of 4 at level 5.
+const targets = (partySize, level) =>
+  XP_THRESHOLDS[Math.min(20, Math.max(1, level)) - 1].map((t, i) => `${DIFFICULTIES[i].toLowerCase()} ${t * partySize}`).join(', ');
+
+// "Trivial", "Easy", ... "Deadly" for monsters' XP against a party, by the 5e encounter building rules.
+export function difficulty(xps, { partySize, level }) {
+  const adjusted = xps.reduce((s, x) => s + x, 0) * multiplier(xps.length);
+  const row = XP_THRESHOLDS[Math.min(20, Math.max(1, level)) - 1].map((t) => t * partySize);
+  const i = row.findLastIndex((t) => adjusted >= t);
+  return i === -1 ? 'Trivial' : DIFFICULTIES[i];
+}
+
+const TABLE_SYSTEM = `You build random encounter tables for a Dungeons & Dragons 5th edition DM. Each entry is a fight the DM can start from their Encounters page.
+
+Build the table from the monsters in the DM's bestiary, listed below: pick ones that would live in the place the DM describes and suit the party's level. Write their names exactly as listed. Give each entry a range of rolls so the table covers every number on the die once, with the most likely encounters on the widest ranges.
+
+Use the 5e encounter building rules: add up the monsters' XP and multiply it by 1 for one monster, 1.5 for two, 2 for 3-6, 2.5 for 7-10, 3 for 11-14 and 4 for 15 or more. Compare that adjusted XP with the party's targets, given with the request, and check each entry's sum before you settle on it. Make most entries easy or medium, a couple hard and at most one deadly, and none below easy: a fight under the easy target isn't worth rolling for.
+
+Notes are one line on setup, tactics or a twist. Don't say how hard the fight is: the app works that out and adds it.
+
+Only if nothing in the bestiary fits an entry, make up to ${MAX_NEW_MONSTERS} original monsters in newMonsters and use them by name in the entries. Usually make none. For a new monster:
+${MONSTER_GUIDE}`;
+
+// "Bite, Claw" from ["Multiattack: 2× Claw", "Bite +4 5ft 1d6+2 piercing", ...]: enough for Claude to tell what a monster does.
+const attackNames = (attacks = []) =>
+  attacks.map((a) => String(a).split(/:| [+(]| DC\d/)[0].trim()).filter((a) => a && a !== 'Multiattack').slice(0, 4).join(', ');
+
+// One line per monster, sorted, so the same bestiary is the same text and the prompt cache can reuse it.
+export function bestiaryListing(bestiary) {
+  return bestiary
+    .filter((m) => m?.name)
+    .slice()
+    .sort((a, b) => (a.cr ?? 0) - (b.cr ?? 0) || a.name.localeCompare(b.name))
+    .map((m) => [m.name, `CR ${crName(m.cr ?? 0)}`, `${m.xp ?? 0} XP`, attackNames(m.attacks), text(m.special, 120)].filter(Boolean).join(' | '))
+    .join('\n');
+}
+
+// Exact name ignoring case, else ignoring spacing and punctuation: bestiaries imported from the sheet use
+// names like "dire-wolf", which an AI will write as "Dire Wolf".
+const loose = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, '');
+export const findMonster = (bestiary, name) =>
+  bestiary.find((m) => m.name.toLowerCase() === String(name).trim().toLowerCase()) ?? bestiary.find((m) => loose(m.name) === loose(name));
+
+// Claude's table, checked against the bestiary as it is now. New monsters get unique names, unknown monsters are
+// dropped (and entries left with none), and each note starts with the entry's difficulty for the party.
+// Returns { group, encounters, monsters (new, for the bestiary), dropped (names that matched nothing) }.
+export function toEncounterTable(raw, { bestiary, encounters = [], prompt, xpTable = [], partySize, level }) {
+  const made = (Array.isArray(raw?.newMonsters) ? raw.newMonsters : [])
+    .map((m) => normalizeMonster(m, { xpTable })).filter(Boolean).slice(0, MAX_NEW_MONSTERS)
+    .map((m) => ({ ...m, ai: true, aiPrompt: prompt }));
+  const monsters = withUniqueNames(bestiary, made);
+  const dropped = new Set();
+  const resolve = (name) => {
+    const i = made.findIndex((m) => m.name.toLowerCase() === String(name).trim().toLowerCase());
+    const m = i === -1 ? findMonster(bestiary, name) : monsters[i];
+    if (!m) dropped.add(String(name));
+    return m;
+  };
+
+  const groups = new Set(encounters.map((e) => e.group.toLowerCase()));
+  const base = text(raw?.group, 60) || 'Random encounters';
+  let group = base;
+  for (let n = 2; groups.has(group.toLowerCase()); n++) group = `${base} ${n}`;
+
+  const table = (Array.isArray(raw?.entries) ? raw.entries : []).slice(0, MAX_ENTRIES).map((e) => {
+    const picks = (Array.isArray(e?.monsters) ? e.monsters : [])
+      .map((p) => ({ m: resolve(p?.name), count: Math.min(30, Math.max(1, whole(Number(p?.count), 1))) }))
+      .filter((p) => p.m);
+    const names = picks.flatMap((p) => Array(p.count).fill(p.m.name)).slice(0, 30);
+    if (!names.length) return null;
+    const label = difficulty(names.map((n) => findMonster([...monsters, ...bestiary], n).xp ?? 0), { partySize, level });
+    const roll = text(e.roll, 10);
+    const title = text(e.name, 70) || 'Encounter';
+    return {
+      group,
+      name: roll ? `${roll}: ${title}` : title,
+      note: text(`${label}. ${text(e.note, 280)}`, 300),
+      monsters: names,
+    };
+  }).filter(Boolean);
+
+  // Only keep new monsters that an entry uses.
+  const used = monsters.filter((m) => table.some((e) => e.monsters.includes(m.name)));
+  return { group, encounters: table, monsters: used, dropped: [...dropped] };
+}
+
 // Without a key (ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN) the feature is off.
 // model and effort are what the site uses unless set otherwise (evals/run-monsters.js tries others).
 // onResponse(response, request), if given, sees each reply from Claude, refusals included.
 export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN ? new Anthropic() : null, model = AI_MODEL, effort = 'medium', onResponse } = {}) {
+  // One request for JSON in the schema's shape. what says what was being made, for error messages.
+  async function ask({ system, content, schema, what }) {
+    const request = {
+      model,
+      max_tokens: 16000,
+      output_config: { effort, format: { type: 'json_schema', schema } },
+      // If a safety classifier declines, the API retries on Anthropic's recommended fallback model.
+      // Haiku has no fallback, and a request that asks for one is refused.
+      ...(!model.startsWith('claude-haiku') && { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }),
+      system,
+      messages: [{ role: 'user', content }],
+    };
+    let response;
+    try {
+      response = await client.beta.messages.create(request);
+      onResponse?.(response, request);
+    } catch (e) {
+      if (e instanceof Anthropic.RateLimitError || e instanceof Anthropic.InternalServerError || e instanceof Anthropic.APIConnectionError) {
+        throw new GenerateError('busy', 'Claude is out of capacity right now. Try again later.');
+      }
+      if (e instanceof Anthropic.APIError) {
+        console.error(`[ai] Claude API error ${e.status}:`, e.message);
+        throw new GenerateError('unavailable', `AI ${what} aren't available right now.`);
+      }
+      throw e;
+    }
+    if (response.stop_reason === 'refusal') throw new GenerateError('refused', `Claude couldn't make ${what} from that prompt. Try rewording it.`);
+    const block = response.content.find((b) => b.type === 'text');
+    try {
+      return JSON.parse(block?.text ?? '');
+    } catch {
+      throw new GenerateError('invalid', "Claude's reply couldn't be read. Try again.");
+    }
+  }
+
   return {
     enabled: Boolean(client),
     async generate(prompt, { xpTable } = {}) {
-      const request = {
-        model,
-        max_tokens: 16000,
-        output_config: { effort, format: { type: 'json_schema', schema: MONSTER_SCHEMA } },
-        // If a safety classifier declines, the API retries on Anthropic's recommended fallback model.
-        // Haiku has no fallback, and a request that asks for one is refused.
-        ...(!model.startsWith('claude-haiku') && { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }),
-        system: SYSTEM,
-        messages: [{ role: 'user', content: prompt }],
-      };
-      let response;
-      try {
-        response = await client.beta.messages.create(request);
-        onResponse?.(response, request);
-      } catch (e) {
-        if (e instanceof Anthropic.RateLimitError || e instanceof Anthropic.InternalServerError || e instanceof Anthropic.APIConnectionError) {
-          throw new GenerateError('busy', 'Claude is out of capacity right now. Try again later.');
-        }
-        if (e instanceof Anthropic.APIError) {
-          console.error(`[ai] Claude API error ${e.status}:`, e.message);
-          throw new GenerateError('unavailable', "AI monsters aren't available right now.");
-        }
-        throw e;
-      }
-      if (response.stop_reason === 'refusal') throw new GenerateError('refused', "Claude couldn't make monsters from that prompt. Try rewording it.");
-      const block = response.content.find((b) => b.type === 'text');
-      let parsed;
-      try {
-        parsed = JSON.parse(block?.text ?? '');
-      } catch {
-        throw new GenerateError('invalid', "Claude's reply couldn't be read. Try again.");
-      }
+      const parsed = await ask({ system: SYSTEM, content: prompt, schema: MONSTER_SCHEMA, what: 'monsters' });
       const monsters = toBestiaryEntries(parsed.monsters, { prompt, xpTable });
       if (!monsters.length) throw new GenerateError('invalid', "Claude didn't return any monsters. Try again.");
       return monsters;
+    },
+    // Claude's raw table ({ group, entries, newMonsters }); toEncounterTable checks it against the bestiary.
+    async table(prompt, { bestiary, partySize, level, die }) {
+      const parsed = await ask({
+        // The bestiary goes last in the system prompt, marked for caching: a DM's next table within a few
+        // minutes reads it from the cache at a tenth of the price.
+        system: [
+          { type: 'text', text: TABLE_SYSTEM },
+          { type: 'text', text: `The DM's bestiary (name | CR | XP | attacks | traits):\n${bestiaryListing(bestiary)}`, cache_control: { type: 'ephemeral' } },
+        ],
+        content: `Party: ${partySize} players at level ${level}. Adjusted XP targets for the whole party: ${targets(partySize, level)}. Table: roll a d${die}.\n\nThe DM asks for: ${prompt}`,
+        schema: TABLE_SCHEMA,
+        what: 'encounter tables',
+      });
+      if (!Array.isArray(parsed?.entries) || !parsed.entries.length) throw new GenerateError('invalid', "Claude didn't return a table. Try again.");
+      return parsed;
     },
   };
 }

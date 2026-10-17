@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
 import { createApp } from '../server/app.js';
-import { AI_MODEL, GenerateError, createMonsterGenerator, parseImport, toBestiaryEntries } from '../server/ai.js';
+import { AI_MODEL, GenerateError, bestiaryListing, createMonsterGenerator, difficulty, parseImport, toBestiaryEntries, toEncounterTable } from '../server/ai.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const XP = [{ cr: 0.5, xp: 100 }, { cr: 2, xp: 450 }, { cr: 5, xp: 1800 }];
@@ -229,4 +229,85 @@ test('the Admin page shows each DM\'s AI use against the limit, their AI monster
   assert.deepEqual({ ...me.ai, lastUsed: typeof me.ai.lastUsed }, { used: 4, limit: 5, lastUsed: 'string', monsters: 4, apps: 0 });
   assert.ok(Date.now() - Date.parse(me.ai.lastUsed) < 60_000);
   assert.deepEqual([totals.aiUsers, totals.aiGenerations, totals.aiNearLimit], [1, 4, 1]);
+});
+
+test('encounter difficulty follows the 5e thresholds and multipliers', () => {
+  const party = { partySize: 4, level: 1 };
+  assert.equal(difficulty([50], party), 'Trivial'); // 50 < 100
+  assert.equal(difficulty([50, 50], party), 'Easy'); // 100 × 1.5 = 150: easy is 100, medium 200
+  assert.equal(difficulty([50, 50, 50, 50], party), 'Deadly'); // 200 × 2 = 400
+  assert.equal(difficulty([12000], { partySize: 4, level: 25 }), 'Easy'); // levels clamp to 20: easy is 11200
+});
+
+test('a table from Claude is checked against the bestiary', () => {
+  const bestiary = [monster('Dire-Wolf', { xp: 200 }), monster('Goblin', { xp: 50 })];
+  const raw = {
+    group: 'Woods (level 1)',
+    entries: [
+      { roll: '1-3', name: 'Pack', note: 'They circle.', monsters: [{ name: 'Dire Wolf', count: 1 }, { name: 'Owlbear', count: 1 }] },
+      { roll: '4', name: 'Nothing real', note: '', monsters: [{ name: 'Tarrasque', count: 1 }] },
+      { roll: '5-6', name: 'Ambush', note: 'From the trees.', monsters: [{ name: 'goblin', count: 2 }, { name: 'Moss Lurker', count: 1 }] },
+    ],
+    newMonsters: [
+      { name: 'Moss Lurker', cr: 0.5, hp: 20, ac: 12, speed: '30', init: 1, saves: {}, attacks: ['Claw +4 5ft 1d6+2 slashing'], special: '' },
+      { name: 'Unused Thing', cr: 1, hp: 20, ac: 12, speed: '30', init: 1, saves: {}, attacks: [], special: '' },
+    ],
+  };
+  const t = toEncounterTable(raw, { bestiary, encounters: [{ group: 'woods (level 1)' }], prompt: 'woods', xpTable: XP, partySize: 4, level: 1 });
+  assert.equal(t.group, 'Woods (level 1) 2');
+  assert.deepEqual(t.encounters.map((e) => [e.name, e.note, e.monsters]), [
+    ['1-3: Pack', 'Medium. They circle.', ['Dire-Wolf']],
+    ['5-6: Ambush', 'Deadly. From the trees.', ['Goblin', 'Goblin', 'Moss Lurker']], // (50+50+100) × 2 = 400
+  ]);
+  assert.deepEqual(t.monsters.map((m) => [m.name, m.xp, m.ai, m.aiPrompt]), [['Moss Lurker', 100, true, 'woods']]);
+  assert.deepEqual(t.dropped, ['Owlbear', 'Tarrasque']);
+});
+
+test('a new monster whose name is taken is renamed in the table too', () => {
+  const raw = { group: 'Caves', entries: [{ roll: '1-8', name: 'Ooze', note: '', monsters: [{ name: 'Goblin', count: 1 }] }],
+    newMonsters: [{ name: 'Goblin', cr: 2, hp: 40, ac: 13, speed: '30', init: 0, saves: {}, attacks: [], special: '' }] };
+  const t = toEncounterTable(raw, { bestiary: [monster('Goblin')], prompt: 'p', partySize: 4, level: 3 });
+  assert.deepEqual(t.encounters[0].monsters, ['Goblin 2']);
+  assert.deepEqual(t.monsters.map((m) => m.name), ['Goblin 2']);
+});
+
+test('the table request sends the bestiary as a cached listing', async () => {
+  const fake = fakeClient(() => reply({ group: 'Caves', entries: [{ roll: '1-8', name: 'Rats', note: '', monsters: [{ name: 'Rat', count: 3 }] }], newMonsters: [] }));
+  const bestiary = [monster('Rat', { cr: 0, xp: 10, attacks: ['Bite +0 5ft 1 piercing'], special: 'Keen Smell.' })];
+  const raw = await createMonsterGenerator({ client: fake }).table('sewer caves', { bestiary, partySize: 5, level: 2, die: 8 });
+  assert.equal(raw.group, 'Caves');
+  const [req] = fake.requests;
+  assert.equal(req.output_config.format.type, 'json_schema');
+  assert.equal(req.system.length, 2);
+  assert.deepEqual(req.system[1].cache_control, { type: 'ephemeral' });
+  assert.match(req.system[1].text, /Rat \| CR 0 \| 10 XP \| Bite \| Keen Smell\./);
+  assert.equal(req.messages[0].content, 'Party: 5 players at level 2. Adjusted XP targets for the whole party: easy 250, medium 500, hard 750, deadly 1000. Table: roll a d8.\n\nThe DM asks for: sewer caves');
+  assert.equal(bestiaryListing([monster('B', { cr: 2 }), monster('A', { cr: 2 }), monster('C', { cr: 1 })]).split('\n').map((l) => l[0]).join(''), 'CAB');
+
+  const empty = fakeClient(() => reply({ group: 'x', entries: [], newMonsters: [] }));
+  await assert.rejects(createMonsterGenerator({ client: empty }).table('x', { bestiary, partySize: 4, level: 1, die: 6 }), (e) => e.code === 'invalid');
+});
+
+test('a generated table is saved as an encounter group and uses one generation', async (t) => {
+  let raw;
+  const dm = await start(t, { enabled: true, table: async (prompt, opts) => { assert.equal(opts.level, 3); return raw; } });
+  assert.equal((await dm('POST', '/api/encounters/generate', { prompt: 'woods', level: 0 })).status, 400);
+  assert.equal((await dm('POST', '/api/encounters/generate', { prompt: 'woods', level: 3, die: 7 })).status, 400);
+
+  raw = { group: 'Woods', entries: [{ roll: '1-8', name: 'Nope', note: '', monsters: [{ name: 'Not A Monster', count: 1 }] }], newMonsters: [] };
+  const bad = await dm('POST', '/api/encounters/generate', { prompt: 'woods', level: 3 });
+  assert.equal(bad.status, 502);
+  assert.equal(bad.body.ai.used, 0);
+
+  raw = { group: 'Woods', entries: [{ roll: '1-8', name: 'Wolves', note: 'Howls first.', monsters: [{ name: 'Wolf', count: 3 }] }], newMonsters: [] };
+  const r = await dm('POST', '/api/encounters/generate', { prompt: 'woods', level: 3 });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.ai.used, 1);
+  assert.equal(r.body.group, 'Woods');
+  const state = (await dm('GET', '/api/state')).body;
+  const saved = state.encounters.filter((e) => e.group === 'Woods');
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0].name, '1-8: Wolves');
+  assert.deepEqual(saved[0].monsters, ['Wolf', 'Wolf', 'Wolf']);
+  assert.match(saved[0].note, /^(Trivial|Easy|Medium|Hard|Deadly)\. Howls first\.$/);
 });

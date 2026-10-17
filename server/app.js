@@ -6,7 +6,7 @@ import { FEEDBACK_STATUSES, createDmStore, createFeedbackStore, createUserStore 
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
-import { AGENT_INSTRUCTIONS, MAX_PROMPT, createMonsterGenerator, parseImport, withUniqueNames } from './ai.js';
+import { AGENT_INSTRUCTIONS, GenerateError, MAX_PROMPT, TABLE_DICE, createMonsterGenerator, parseImport, toEncounterTable, withUniqueNames } from './ai.js';
 import { createGoogleAuth, pkcePair } from './google.js';
 import { getOAuthProtectedResourceMetadataUrl, mcpAuthRouter } from '@modelcontextprotocol/sdk/server/auth/router.js';
 import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
@@ -372,28 +372,64 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
   const generating = new Set(); // user ids with a generation in progress
   const aiLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 10 });
 
-  app.post('/api/bestiary/generate', requireDm, aiLimiter, async (req, res) => {
+  // Runs one AI generation for the DM, if they have one left and none running: make() does the work and returns
+  // what to send, or throws. Failures don't use up a generation.
+  async function generation(req, res, { what, empty, make }) {
     const prompt = String(req.body?.prompt ?? '').trim();
     const status = aiStatus(req.user);
-    if (!status.enabled) return res.status(503).json({ error: "AI monsters aren't set up on this server.", ai: status });
+    if (!status.enabled) return res.status(503).json({ error: `AI ${what} aren't set up on this server.`, ai: status });
     if (status.used >= status.limit) return res.status(403).json({ error: `You've used all ${status.limit} AI generations in the beta.`, ai: status });
-    if (!prompt) return res.status(400).json({ error: 'Describe the monsters you want.', ai: status });
+    if (!prompt) return res.status(400).json({ error: empty, ai: status });
     if (prompt.length > MAX_PROMPT) return res.status(400).json({ error: `Keep the prompt under ${MAX_PROMPT} characters.`, ai: status });
-    if (generating.has(req.user.id)) return res.status(409).json({ error: 'Already making monsters. Wait for that to finish.', ai: status });
+    if (generating.has(req.user.id)) return res.status(409).json({ error: 'Already generating. Wait for that to finish.', ai: status });
 
     generating.add(req.user.id);
     try {
-      const made = await generator.generate(prompt, { xpTable: dms.get(req.user.id).xp?.cr ?? [] });
-      const monsters = addToBestiary(req.user.id, made, fromTab(req));
+      const result = await make(prompt);
       const user = users.update(req.user.id, { aiUses: status.used + 1, aiLastUsed: new Date().toISOString() });
-      res.json({ monsters, ai: aiStatus(user) });
+      res.json({ ...result, ai: aiStatus(user) });
     } catch (e) {
-      if (!e.code) console.error('[ai] generation failed:', e);
+      if (!e.code) console.error(`[ai] ${what} failed:`, e);
       const code = { busy: 503, unavailable: 503, refused: 422, invalid: 502 }[e.code] ?? 500;
-      res.status(code).json({ error: `${e.code ? e.message : 'Something went wrong making monsters.'} This didn't use one of your generations.`, ai: status });
+      res.status(code).json({ error: `${e.code ? e.message : `Something went wrong making ${what}.`} This didn't use one of your generations.`, ai: status });
     } finally {
       generating.delete(req.user.id);
     }
+  }
+
+  app.post('/api/bestiary/generate', requireDm, aiLimiter, (req, res) =>
+    generation(req, res, {
+      what: 'monsters',
+      empty: 'Describe the monsters you want.',
+      make: async (prompt) => {
+        const made = await generator.generate(prompt, { xpTable: dms.get(req.user.id).xp?.cr ?? [] });
+        return { monsters: addToBestiary(req.user.id, made, fromTab(req)) };
+      },
+    }));
+
+  // A random encounter table, saved as one group on the Encounters page, with any new monsters it needs.
+  app.post('/api/encounters/generate', requireDm, aiLimiter, (req, res) => {
+    const level = Number(req.body?.level);
+    const die = Number(req.body?.die ?? 8);
+    if (!Number.isInteger(level) || level < 1 || level > 20) return res.status(400).json({ error: 'Pick a party level from 1 to 20.' });
+    if (!TABLE_DICE.includes(die)) return res.status(400).json({ error: `Pick a d${TABLE_DICE.join(', d')}.` });
+    return generation(req, res, {
+      what: 'encounter tables',
+      empty: 'Describe where the party is.',
+      make: async (prompt) => {
+        const s = dms.get(req.user.id);
+        const partySize = s.party.filter((p) => p.inParty).length || 4;
+        const raw = await generator.table(prompt, { bestiary: s.bestiary, partySize, level, die });
+        // Checked against the campaign as it is now: the DM may have changed it while Claude worked.
+        const now = dms.get(req.user.id);
+        const table = toEncounterTable(raw, { bestiary: now.bestiary, encounters: now.encounters, prompt, xpTable: now.xp?.cr ?? [], partySize, level });
+        if (!table.encounters.length) throw new GenerateError('invalid', "Claude's table didn't use any monsters from your bestiary. Try again.");
+        const encounters = table.encounters.map((e) => ({ id: `enc-${crypto.randomUUID()}`, ...e }));
+        if (table.monsters.length) dms.set(req.user.id, 'bestiary', [...now.bestiary, ...table.monsters], fromTab(req));
+        dms.set(req.user.id, 'encounters', [...now.encounters, ...encounters], fromTab(req));
+        return { group: table.group, encounters, monsters: table.monsters, dropped: table.dropped, partySize };
+      },
+    });
   });
 
   app.get('/api/state', requireDm, (req, res) => res.json(dms.get(req.user.id)));

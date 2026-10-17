@@ -237,6 +237,9 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .tag.ai-tag { background: var(--pc); color: var(--accent-text); }
 .panel.generate { max-width: 640px; }
 .panel.generate h2 { margin: 0; }
+.table-options { align-items: flex-end; gap: 1rem; }
+.table-options select { color: var(--text); }
+.table-options input { width: 4em; }
 .agent-guide summary { cursor: pointer; color: var(--accent); font-size: .9rem; }
 .agent-guide[open] { background: var(--surface-2); border-radius: 8px; padding: .5rem .7rem .7rem; }
 .agent-guide p { margin: .4rem 0; }

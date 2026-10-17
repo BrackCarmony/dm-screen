@@ -63,7 +63,7 @@ export default function Privacy() {
         <li><strong>DigitalOcean</strong> hosts the server where all of DM Screen's data is stored.</li>
         <li><strong>Google</strong> handles sign-in if you choose "Continue with Google".</li>
         <li><strong>Mailgun</strong> sends password reset emails, so it receives your email address and the reset link.</li>
-        <li><strong>Anthropic</strong> runs the Claude model behind "Generate with AI". When you use it, the prompt you write is sent to Anthropic to make the monsters; your name and email are not sent.</li>
+        <li><strong>Anthropic</strong> runs the Claude model behind "Generate with AI" and "Generate table". When you use them, the prompt you write is sent to Anthropic; for an encounter table, so are the party's size and level and your bestiary's monster names, challenge ratings, attacks and traits. Your name, email and players' names are not sent.</li>
       </ul>
       <p>DM Screen doesn't otherwise share your information, except if required by law.</p>
 
