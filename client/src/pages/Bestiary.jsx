@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { api } from '../api.js';
+import Modal from '../Modal.jsx';
 import { SAVES, expandSpecial, fmtCr, fmtMod } from '../rules.js';
 
 const BLANK = { name: '', hp: '', ac: '', speed: '30', saves: {}, init: '', attacks: [], cr: '', xp: '', special: '', url: '' };
@@ -105,7 +106,13 @@ export default function Bestiary({ state, update, ai, mcp, onAi }) {
       {panel === 'generate' && ai && <Generate ai={ai} onAi={onAi} onAdded={(m) => added(m, 'ai')} onClose={() => setPanel(null)} />}
       {panel === 'import' && <Import mcp={mcp} onAdded={(m) => added(m, 'imported')} onClose={() => setPanel(null)} />}
 
-      {editing && <Editor initial={editing.m} names={state.bestiary.map((m) => m.name)} xpTable={state.xp.cr} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />}
+      {editing && (
+        <Modal label={editing.original ? `Edit ${editing.original}` : 'New monster'} onClose={() => setEditing(null)}>
+          {/* Keyed so editing another monster starts a fresh form: without it React keeps the first one's fields
+              while original names the second, which showed "already exists" and would save over the wrong monster. */}
+          <Editor key={editing.original ?? '\u0000new'} initial={editing.m} names={state.bestiary.map((m) => m.name)} xpTable={state.xp.cr} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />
+        </Modal>
+      )}
 
       <div className="table-wrap">
         <table className="data">

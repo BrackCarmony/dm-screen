@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { DIFFICULTIES, xpTargets } from '../client/src/rules.js';
 
 // Haiku matched or beat Opus on the monster eval (balance, names, varied stats) at about 1/40th the cost:
 // see the README's Evals section and .claude/hillclimb/monster-balance.
@@ -168,8 +169,7 @@ export function parseImport(input, { xpTable = [] } = {}) {
 // Claude reads the whole bestiary (one short line per monster) and writes back names and counts, so a table costs
 // many input tokens but few output tokens.
 
-export const TABLE_DICE = [6, 8, 10, 12, 20];
-const MAX_ENTRIES = 20;
+export const MAX_ENTRIES = 12;
 const MAX_NEW_MONSTERS = 2;
 
 const TABLE_SCHEMA = {
@@ -181,15 +181,15 @@ const TABLE_SCHEMA = {
       items: {
         type: 'object',
         properties: {
-          roll: { type: 'string', description: 'The rolls on the die for this entry, e.g. "1-2" or "7"' },
           name: { type: 'string', description: 'A short title, e.g. "Wolf Pack"' },
+          weight: { type: 'integer', description: 'How many numbers of the roll this entry gets, 1-3: more for the commonest encounters' },
           note: { type: 'string', description: 'One line for the DM: setup, tactics or a twist' },
           monsters: {
             type: 'array',
             items: { type: 'object', properties: { name: { type: 'string' }, count: int }, required: ['name', 'count'], additionalProperties: false },
           },
         },
-        required: ['roll', 'name', 'note', 'monsters'],
+        required: ['name', 'weight', 'note', 'monsters'],
         additionalProperties: false,
       },
     },
@@ -199,36 +199,16 @@ const TABLE_SCHEMA = {
   additionalProperties: false,
 };
 
-// 5e XP thresholds per character, levels 1-20: [easy, medium, hard, deadly].
-export const XP_THRESHOLDS = [
-  [25, 50, 75, 100], [50, 100, 150, 200], [75, 150, 225, 400], [125, 250, 375, 500], [250, 500, 750, 1100],
-  [300, 600, 900, 1400], [350, 750, 1100, 1700], [450, 900, 1400, 2100], [550, 1100, 1600, 2400], [600, 1200, 1900, 2800],
-  [800, 1600, 2400, 3600], [1000, 2000, 3000, 4500], [1100, 2200, 3400, 5100], [1250, 2500, 3800, 5700], [1400, 2800, 4300, 6400],
-  [1600, 3200, 4800, 7200], [2000, 3900, 5900, 8800], [2100, 4200, 6300, 9500], [2400, 4900, 7300, 10900], [2800, 5700, 8500, 12700],
-];
-const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Deadly'];
-// The 5e encounter multiplier for how many monsters there are.
-const multiplier = (n) => (n <= 1 ? 1 : n === 2 ? 1.5 : n <= 6 ? 2 : n <= 10 ? 2.5 : n <= 14 ? 3 : 4);
-
-// "easy 1000, medium 2000, hard 3000, deadly 4400" for a party of 4 at level 5.
-const targets = (partySize, level) =>
-  XP_THRESHOLDS[Math.min(20, Math.max(1, level)) - 1].map((t, i) => `${DIFFICULTIES[i].toLowerCase()} ${t * partySize}`).join(', ');
-
-// "Trivial", "Easy", ... "Deadly" for monsters' XP against a party, by the 5e encounter building rules.
-export function difficulty(xps, { partySize, level }) {
-  const adjusted = xps.reduce((s, x) => s + x, 0) * multiplier(xps.length);
-  const row = XP_THRESHOLDS[Math.min(20, Math.max(1, level)) - 1].map((t) => t * partySize);
-  const i = row.findLastIndex((t) => adjusted >= t);
-  return i === -1 ? 'Trivial' : DIFFICULTIES[i];
-}
+// "easy 1000, medium 2000, hard 3000, deadly 4400" for four level 5 characters.
+const targets = (levels) => xpTargets(levels).map((t, i) => `${DIFFICULTIES[i].toLowerCase()} ${t}`).join(', ');
 
 const TABLE_SYSTEM = `You build random encounter tables for a Dungeons & Dragons 5th edition DM. Each entry is a fight the DM can start from their Encounters page.
 
-Build the table from the monsters in the DM's bestiary, listed below: pick ones that would live in the place the DM describes and suit the party's level. Write their names exactly as listed. Give each entry a range of rolls so the table covers every number on the die once, with the most likely encounters on the widest ranges.
+Build the table from the monsters in the DM's bestiary, listed below: pick ones that would live in the place the DM describes and suit the party's level. Write their names exactly as listed. Give each entry a weight, how many numbers of the roll it gets: 2 or 3 for the encounters most likely there, 1 for rare ones. The app turns the weights into roll ranges.
 
 Use the 5e encounter building rules: add up the monsters' XP and multiply it by 1 for one monster, 1.5 for two, 2 for 3-6, 2.5 for 7-10, 3 for 11-14 and 4 for 15 or more. Compare that adjusted XP with the party's targets, given with the request, and check each entry's sum before you settle on it. Make most entries easy or medium, a couple hard and at most one deadly, and none below easy: a fight under the easy target isn't worth rolling for.
 
-Notes are one line on setup, tactics or a twist. Don't say how hard the fight is: the app works that out and adds it.
+Notes are one line on setup, tactics or a twist. Don't say how hard the fight is: the app works that out and shows it.
 
 Only if nothing in the bestiary fits an entry, make up to ${MAX_NEW_MONSTERS} original monsters in newMonsters and use them by name in the entries. Usually make none. For a new monster:
 ${MONSTER_GUIDE}`;
@@ -253,10 +233,10 @@ const loose = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, '');
 export const findMonster = (bestiary, name) =>
   bestiary.find((m) => m.name.toLowerCase() === String(name).trim().toLowerCase()) ?? bestiary.find((m) => loose(m.name) === loose(name));
 
-// Claude's table, checked against the bestiary as it is now. New monsters get unique names, unknown monsters are
-// dropped (and entries left with none), and each note starts with the entry's difficulty for the party.
-// Returns { group, encounters, monsters (new, for the bestiary), dropped (names that matched nothing) }.
-export function toEncounterTable(raw, { bestiary, encounters = [], prompt, xpTable = [], partySize, level }) {
+// Claude's table, checked against the bestiary as it is now. New monsters get unique names, and unknown monsters
+// are dropped (and entries left with none). Returns { group, encounters, monsters (new, for the bestiary),
+// dropped (names that matched nothing) }.
+export function toEncounterTable(raw, { bestiary, encounters = [], prompt, xpTable = [] }) {
   const made = (Array.isArray(raw?.newMonsters) ? raw.newMonsters : [])
     .map((m) => normalizeMonster(m, { xpTable })).filter(Boolean).slice(0, MAX_NEW_MONSTERS)
     .map((m) => ({ ...m, ai: true, aiPrompt: prompt }));
@@ -275,20 +255,12 @@ export function toEncounterTable(raw, { bestiary, encounters = [], prompt, xpTab
   for (let n = 2; groups.has(group.toLowerCase()); n++) group = `${base} ${n}`;
 
   const table = (Array.isArray(raw?.entries) ? raw.entries : []).slice(0, MAX_ENTRIES).map((e) => {
-    const picks = (Array.isArray(e?.monsters) ? e.monsters : [])
+    const names = (Array.isArray(e?.monsters) ? e.monsters : [])
       .map((p) => ({ m: resolve(p?.name), count: Math.min(30, Math.max(1, whole(Number(p?.count), 1))) }))
-      .filter((p) => p.m);
-    const names = picks.flatMap((p) => Array(p.count).fill(p.m.name)).slice(0, 30);
+      .filter((p) => p.m)
+      .flatMap((p) => Array(p.count).fill(p.m.name)).slice(0, 30);
     if (!names.length) return null;
-    const label = difficulty(names.map((n) => findMonster([...monsters, ...bestiary], n).xp ?? 0), { partySize, level });
-    const roll = text(e.roll, 10);
-    const title = text(e.name, 70) || 'Encounter';
-    return {
-      group,
-      name: roll ? `${roll}: ${title}` : title,
-      note: text(`${label}. ${text(e.note, 280)}`, 300),
-      monsters: names,
-    };
+    return { group, name: text(e.name, 80) || 'Encounter', weight: Math.min(6, Math.max(1, whole(Number(e.weight), 1))), note: text(e.note, 300), monsters: names };
   }).filter(Boolean);
 
   // Only keep new monsters that an entry uses.
@@ -344,7 +316,8 @@ export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY 
       return monsters;
     },
     // Claude's raw table ({ group, entries, newMonsters }); toEncounterTable checks it against the bestiary.
-    async table(prompt, { bestiary, partySize, level, die }) {
+    // levels: each character's level, which sets the XP targets.
+    async table(prompt, { bestiary, levels, entries = 8 }) {
       const parsed = await ask({
         // The bestiary goes last in the system prompt, marked for caching: a DM's next table within a few
         // minutes reads it from the cache at a tenth of the price.
@@ -352,7 +325,7 @@ export function createMonsterGenerator({ client = process.env.ANTHROPIC_API_KEY 
           { type: 'text', text: TABLE_SYSTEM },
           { type: 'text', text: `The DM's bestiary (name | CR | XP | attacks | traits):\n${bestiaryListing(bestiary)}`, cache_control: { type: 'ephemeral' } },
         ],
-        content: `Party: ${partySize} players at level ${level}. Adjusted XP targets for the whole party: ${targets(partySize, level)}. Table: roll a d${die}.\n\nThe DM asks for: ${prompt}`,
+        content: `Party: ${levels.length} characters, level ${[...new Set(levels)].sort((a, b) => a - b).join('/')}. Adjusted XP targets for the whole party: ${targets(levels)}. Make ${entries} entries.\n\nThe DM asks for: ${prompt}`,
         schema: TABLE_SCHEMA,
         what: 'encounter tables',
       });

@@ -154,6 +154,9 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .editor label, .form-row label { display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); gap: .15rem; }
 .editor label input, .editor label textarea { color: var(--text); }
 .panel.editor { max-width: 640px; }
+dialog.modal { padding: 0; border: 0; background: none; color: var(--text); width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; }
+dialog.modal::backdrop { background: rgb(0 0 0 / .45); }
+dialog.modal > .panel { margin: 0; max-width: none; }
 .form-actions { border-top: 1px solid var(--border); padding-top: .75rem; margin-top: .5rem; }
 .form-row { display: flex; gap: .5rem; flex-wrap: wrap; }
 
@@ -163,7 +166,18 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .shop-tables > .panel { flex: 0 1 300px; min-width: 0; }
 .shop-tables > .panel.editing { flex-basis: 450px; }
 .card.enc p { margin: 0; }
-.card.enc button.primary { align-self: start; margin-top: auto; }
+.card.enc .enc-foot { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: auto; }
+.card.enc .weight { display: flex; align-items: center; gap: .15rem; }
+.card.enc .card-actions { display: flex; gap: .1rem; }
+.card.enc.off-table { opacity: .6; }
+.card.enc.rolled { outline: 3px solid var(--accent); }
+.roll-range { display: inline-block; min-width: 2.2em; padding: 0 .35rem; margin-right: .2rem; border-radius: 6px; background: var(--surface-2); color: var(--muted); font-size: .8em; text-align: center; font-variant-numeric: tabular-nums; }
+.group-head { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.group-head h2 { margin-right: auto; }
+.rolled-result { display: flex; align-items: center; gap: .5rem; }
+.difficulty.easy { color: var(--good); }
+.difficulty.hard { color: var(--warn); }
+.difficulty.deadly { color: var(--bad); font-weight: 600; }
 .items { list-style: none; padding: 0; margin: .6rem 0; }
 .items li { display: flex; justify-content: space-between; gap: .5rem; padding: .25rem 0; border-bottom: 1px dashed var(--border); }
 .items li span:last-child { white-space: nowrap; color: var(--muted); }
@@ -172,6 +186,8 @@ table.data tr.detail td { white-space: normal; background: var(--bg); }
 .party { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
 .party li { display: flex; gap: .5rem; align-items: center; }
 .party li input:first-child { flex: 1; }
+.party .level { display: flex; align-items: center; gap: .3rem; font-size: .85rem; color: var(--muted); }
+.party .level input { width: 3.5em; color: var(--text); }
 .check { display: flex; align-items: center; gap: .3rem; white-space: nowrap; }
 .ref-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; align-items: start; }
 

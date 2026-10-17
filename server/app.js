@@ -6,7 +6,8 @@ import { FEEDBACK_STATUSES, createDmStore, createFeedbackStore, createUserStore 
 import { publicView } from './public.js';
 import { createResetToken, findByResetToken, hashPassword, loadSecret, rateLimit, resetLink, sessionCookie, verifyPassword } from './auth.js';
 import { createMailer } from './mailer.js';
-import { AGENT_INSTRUCTIONS, GenerateError, MAX_PROMPT, TABLE_DICE, createMonsterGenerator, parseImport, toEncounterTable, withUniqueNames } from './ai.js';
+import { partyLevels } from '../client/src/rules.js';
+import { AGENT_INSTRUCTIONS, GenerateError, MAX_ENTRIES, MAX_PROMPT, createMonsterGenerator, parseImport, toEncounterTable, withUniqueNames } from './ai.js';
 import { createGoogleAuth, pkcePair } from './google.js';
 import { getOAuthProtectedResourceMetadataUrl, mcpAuthRouter } from '@modelcontextprotocol/sdk/server/auth/router.js';
 import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
@@ -408,26 +409,28 @@ export function createApp({ dataDir, seedDir, distDir, appUrl = process.env.APP_
     }));
 
   // A random encounter table, saved as one group on the Encounters page, with any new monsters it needs.
+  // It's pitched at the levels set on the Party page; a level in the request stands in for every member's.
   app.post('/api/encounters/generate', requireDm, aiLimiter, (req, res) => {
-    const level = Number(req.body?.level);
-    const die = Number(req.body?.die ?? 8);
-    if (!Number.isInteger(level) || level < 1 || level > 20) return res.status(400).json({ error: 'Pick a party level from 1 to 20.' });
-    if (!TABLE_DICE.includes(die)) return res.status(400).json({ error: `Pick a d${TABLE_DICE.join(', d')}.` });
+    const entries = Number(req.body?.entries ?? 8);
+    const level = req.body?.level === undefined || req.body.level === '' ? null : Number(req.body.level);
+    if (!Number.isInteger(entries) || entries < 2 || entries > MAX_ENTRIES) return res.status(400).json({ error: `Ask for 2 to ${MAX_ENTRIES} encounters.` });
+    if (level !== null && (!Number.isInteger(level) || level < 1 || level > 20)) return res.status(400).json({ error: 'Pick a party level from 1 to 20.' });
+    const { party } = dms.get(req.user.id);
+    const levels = level === null ? partyLevels(party) : Array(party.filter((p) => p.inParty).length || 4).fill(level);
+    if (!levels.length) return res.status(400).json({ error: "Set your players' levels on the Party page, or pick a level." });
     return generation(req, res, {
       what: 'encounter tables',
       empty: 'Describe where the party is.',
       make: async (prompt) => {
-        const s = dms.get(req.user.id);
-        const partySize = s.party.filter((p) => p.inParty).length || 4;
-        const raw = await generator.table(prompt, { bestiary: s.bestiary, partySize, level, die });
+        const raw = await generator.table(prompt, { bestiary: dms.get(req.user.id).bestiary, levels, entries });
         // Checked against the campaign as it is now: the DM may have changed it while Claude worked.
         const now = dms.get(req.user.id);
-        const table = toEncounterTable(raw, { bestiary: now.bestiary, encounters: now.encounters, prompt, xpTable: now.xp?.cr ?? [], partySize, level });
+        const table = toEncounterTable(raw, { bestiary: now.bestiary, encounters: now.encounters, prompt, xpTable: now.xp?.cr ?? [] });
         if (!table.encounters.length) throw new GenerateError('invalid', "Claude's table didn't use any monsters from your bestiary. Try again.");
         const encounters = table.encounters.map((e) => ({ id: `enc-${crypto.randomUUID()}`, ...e }));
         if (table.monsters.length) dms.set(req.user.id, 'bestiary', [...now.bestiary, ...table.monsters], fromTab(req));
         dms.set(req.user.id, 'encounters', [...now.encounters, ...encounters], fromTab(req));
-        return { group: table.group, encounters, monsters: table.monsters, dropped: table.dropped, partySize };
+        return { group: table.group, encounters, monsters: table.monsters, dropped: table.dropped };
       },
     });
   });
