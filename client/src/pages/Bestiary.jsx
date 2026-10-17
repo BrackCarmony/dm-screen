@@ -108,7 +108,9 @@ export default function Bestiary({ state, update, ai, mcp, onAi }) {
 
       {editing && (
         <Modal label={editing.original ? `Edit ${editing.original}` : 'New monster'} onClose={() => setEditing(null)}>
-          <Editor initial={editing.m} names={state.bestiary.map((m) => m.name)} xpTable={state.xp.cr} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />
+          {/* Keyed so editing another monster starts a fresh form: without it React keeps the first one's fields
+              while original names the second, which showed "already exists" and would save over the wrong monster. */}
+          <Editor key={editing.original ?? '\u0000new'} initial={editing.m} names={state.bestiary.map((m) => m.name)} xpTable={state.xp.cr} original={editing.original} onSave={save} onCancel={() => setEditing(null)} />
         </Modal>
       )}
 
