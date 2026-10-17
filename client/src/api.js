@@ -28,6 +28,7 @@ export const api = {
   sendFeedback: (item) => call('POST', '/api/feedback', item),
   adminDms: () => call('GET', '/api/admin/dms'),
   generateMonsters: (prompt) => call('POST', '/api/bestiary/generate', { prompt }),
+  generateTable: (fields) => call('POST', '/api/encounters/generate', fields),
   importMonsters: (json) => call('POST', '/api/bestiary/import', { json }),
   agentInstructions: () => call('GET', '/api/bestiary/agent-instructions'),
   markFeedback: (id, patch) => call('PUT', `/api/admin/feedback/${id}`, patch),

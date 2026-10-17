@@ -8,13 +8,8 @@
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { SAVES, beastMap, currentHp, d, fmtCr, initiativeOrder, maxHp, uid, xpSummary } from '../client/src/rules.js';
-import { BALANCE, FIELD_RULES, normalizeMonster, withUniqueNames } from './ai.js';
+import { BALANCE, FIELD_RULES, findMonster, normalizeMonster, withUniqueNames } from './ai.js';
 
-// Exact name ignoring case, else ignoring spacing and punctuation: bestiaries imported from the sheet use
-// names like "dire-wolf", which an AI will write as "Dire Wolf".
-const loose = (n) => n.toLowerCase().replace(/[^a-z0-9]+/g, '');
-const findMonster = (bestiary, name) =>
-  bestiary.find((m) => m.name.toLowerCase() === name.trim().toLowerCase()) ?? bestiary.find((m) => loose(m.name) === loose(name));
 const statBlock = (m) =>
   [
     `${m.name} (CR ${fmtCr(m.cr)}, ${m.xp ?? 0} XP)`,

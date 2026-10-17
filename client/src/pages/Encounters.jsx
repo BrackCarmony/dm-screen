@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from 'react';
+import { api } from '../api.js';
 import { beastMap, uid } from '../rules.js';
 import { newMonster, partyCombatants, partyCount } from './Battle.jsx';
 
 const NEW_GROUP = '\u0000new';
 
-export default function Encounters({ state, update }) {
+export default function Encounters({ state, update, ai, onAi }) {
   const beasts = useMemo(() => beastMap(state.bestiary), [state.bestiary]);
   const [draft, setDraft] = useState(null);
+  const [generating, setGenerating] = useState(false);
   const groups = [...new Set(state.encounters.map((e) => e.group))];
 
   function start(enc) {
@@ -30,8 +32,23 @@ export default function Encounters({ state, update }) {
       <div className="toolbar">
         <p className="muted">Saved groups of monsters. Starting one creates a new battle with your party added.</p>
         <span className="spacer" />
+        {ai?.enabled && <button onClick={() => setGenerating(!generating)} aria-expanded={generating}>✨ Generate table</button>}
         <button className="primary" onClick={() => setDraft({ id: uid('enc'), group: groups[0] ?? 'Custom', newGroup: !groups.length, name: '', note: '', monsters: [] })}>New encounter</button>
       </div>
+
+      {generating && ai && (
+        <GenerateTable
+          ai={ai}
+          onAi={onAi}
+          partySize={partyCount(state)}
+          onClose={() => setGenerating(false)}
+          // The server has already saved them; add them here too so the next save keeps them.
+          onAdded={(r) => {
+            if (r.monsters.length) update('bestiary', (all) => [...all, ...r.monsters.filter((m) => !all.some((x) => x.name === m.name))]);
+            update('encounters', (all) => [...all, ...r.encounters.filter((e) => !all.some((x) => x.id === e.id))]);
+          }}
+        />
+      )}
 
       {draft && (
         <form
@@ -96,6 +113,68 @@ export default function Encounters({ state, update }) {
         </section>
       ))}
     </div>
+  );
+}
+
+const DICE = [6, 8, 10, 12, 20];
+
+// Describe a place; Claude builds a random encounter table from the bestiary and saves it as a new group.
+function GenerateTable({ ai, onAi, partySize, onAdded, onClose }) {
+  const [prompt, setPrompt] = useState('');
+  const [level, setLevel] = useState(3);
+  const [die, setDie] = useState(8);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState(null);
+  const left = Math.max(0, ai.limit - ai.used);
+
+  function submit(e) {
+    e.preventDefault();
+    if (!prompt.trim() || busy) return;
+    setBusy(true);
+    setMsg(null);
+    api.generateTable({ prompt, level: Number(level), die })
+      .then((r) => {
+        onAi(r.ai);
+        onAdded(r);
+        setPrompt('');
+        setMsg({
+          text: [
+            `Added “${r.group}” with ${r.encounters.length} encounters.`,
+            r.monsters.length && `New monsters in your bestiary: ${r.monsters.map((m) => m.name).join(', ')}.`,
+            r.dropped.length && `Left out monsters that aren't in your bestiary: ${r.dropped.join(', ')}.`,
+          ].filter(Boolean).join(' '),
+        });
+      })
+      .catch((x) => {
+        if (x.data?.ai) onAi(x.data.ai);
+        setMsg({ text: x.message, error: true });
+      })
+      .finally(() => setBusy(false));
+  }
+
+  return (
+    <form className="panel editor generate" onSubmit={submit}>
+      <div className="panel-head">
+        <h2>Generate an encounter table <span className="tag">beta</span></h2>
+        <span className="muted small">{left} of {ai.limit} generations left</span>
+      </div>
+      <p className="muted small">
+        Describe where the party is, for example “a haunted marsh at night”. Claude builds a random encounter table from your
+        bestiary for your party of {partySize}, and adds a new monster only if nothing fits. Each note starts with how hard the fight is.
+      </p>
+      <textarea rows={2} maxLength={500} value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Where is the party?" disabled={busy || !left} autoFocus />
+      <div className="btn-row table-options">
+        <label>Party level <input type="number" min={1} max={20} value={level} onChange={(e) => setLevel(e.target.value)} disabled={busy} /></label>
+        <label>Roll <select value={die} onChange={(e) => setDie(Number(e.target.value))} disabled={busy}>{DICE.map((n) => <option key={n} value={n}>d{n}</option>)}</select></label>
+      </div>
+      <div className="btn-row">
+        <button className="primary" disabled={busy || !left || !prompt.trim()}>{busy ? 'Building table…' : 'Generate'}</button>
+        <button type="button" onClick={onClose}>Close</button>
+        {busy && <span className="muted small">This can take a minute.</span>}
+      </div>
+      {!left && <p className="muted small">You've used all your beta generations.</p>}
+      {msg && <p className={msg.error ? 'error-text small' : 'small'}>{msg.text}</p>}
+    </form>
   );
 }
 

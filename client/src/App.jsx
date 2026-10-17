@@ -139,7 +139,7 @@ export default function App() {
       <main>
         {tab === 'battle' && <Battle {...props} />}
         {tab === 'bestiary' && <Bestiary {...props} ai={me.ai} mcp={me.mcp} onAi={(ai) => setMe((m) => ({ ...m, ai }))} />}
-        {tab === 'encounters' && <Encounters {...props} />}
+        {tab === 'encounters' && <Encounters {...props} ai={me.ai} onAi={(ai) => setMe((m) => ({ ...m, ai }))} />}
         {tab === 'shop' && <Shop {...props} />}
         {tab === 'party' && <Party {...props} />}
         {tab === 'reference' && <Reference {...props} />}
