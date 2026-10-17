@@ -7,6 +7,10 @@ export const fmtMod = (n) => (n === null || n === undefined || n === '' ? '–' 
 
 export const fmtCr = (cr) => ({ 0.125: '1/8', 0.25: '1/4', 0.5: '1/2' })[cr] ?? (cr ?? '–');
 
+// Special text abbreviates passive Perception as "PP 13" (the SRD import, the generator) or "pperp 13" (the
+// sheet). Shown spelled out; the stored text is left as it is.
+export const expandSpecial = (text) => String(text ?? '').replace(/\b(?:PP|[Pp]perp)\s*(\d+)/g, 'Passive Perception $1');
+
 export function beastMap(bestiary) {
   return new Map(bestiary.map((m) => [m.name, m]));
 }
