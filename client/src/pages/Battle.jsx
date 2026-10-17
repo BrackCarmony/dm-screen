@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { SAVES, beastMap, currentHp, d, expandSpecial, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, syncParty, uid, xpSummary } from '../rules.js';
+import { SAVES, XP_THRESHOLDS, beastMap, difficulty, currentHp, d, expandSpecial, fmtCr, fmtMod, initMod, initiativeOrder, maxHp, syncParty, uid, xpSummary } from '../rules.js';
 
 export default function Battle({ state, update }) {
   const beasts = useMemo(() => beastMap(state.bestiary), [state.bestiary]);
@@ -83,7 +83,7 @@ export default function Battle({ state, update }) {
 
         <aside>
           <Initiative battle={battle} beasts={beasts} state={state} setBattle={setBattle} setCombatant={setCombatant} />
-          <XpPanel battle={battle} beasts={beasts} setBattle={setBattle} />
+          <XpPanel battle={battle} beasts={beasts} party={state.party} setBattle={setBattle} />
         </aside>
       </div>
     </div>
@@ -375,8 +375,14 @@ function useInfo(text, label) {
   return [button, open && <span className="hint">{text}</span>];
 }
 
-function XpPanel({ battle, beasts, setBattle }) {
+function XpPanel({ battle, beasts, party, setBattle }) {
   const x = xpSummary(battle, beasts);
+  // Rated against the levels (from the Party page) of the players in this battle.
+  const levels = battle.combatants
+    .filter((c) => c.kind === 'player' && c.partyId)
+    .map((c) => Number(party.find((p) => p.id === c.partyId)?.level))
+    .filter((l) => l >= 1 && l <= XP_THRESHOLDS.length);
+  const rating = difficulty(battle.combatants.filter((c) => c.kind === 'monster').map((c) => beasts.get(c.name)?.xp), levels);
   const [scaleInfo, scaleHint] = useInfo(SCALE_HELP, 'What is enemy scale?');
   const [damageInfo, damageHint] = useInfo(DAMAGE_HELP, 'What is party damage per round for?');
   return (
@@ -399,6 +405,7 @@ function XpPanel({ battle, beasts, setBattle }) {
         <dd>×{x.scale.toFixed(2)}</dd>
         {scaleHint && <dd className="hint-row">{scaleHint}</dd>}
         <dt title="XP each (unscaled) × enemy scale">XP each (scaled)</dt><dd><strong>{x.award.toLocaleString()}</strong></dd>
+        {rating && <><dt title={`5e difficulty for the players' levels (${levels.join(', ')})`}>Difficulty</dt><dd><span className={`difficulty ${rating.toLowerCase()}`}>{rating}</span></dd></>}
         <dt>Enemy HP left</dt><dd>{x.remaining}</dd>
       </dl>
       <label className="field">

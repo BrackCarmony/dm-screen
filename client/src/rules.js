@@ -97,3 +97,60 @@ export function syncParty(battle, party) {
     changed, added, removed, renamed, partySize: sizeChanged ? partySize : null,
   };
 }
+
+// ---- Encounter difficulty, by the 5e encounter building rules. ----
+
+// XP thresholds per character, levels 1-20: [easy, medium, hard, deadly].
+export const XP_THRESHOLDS = [
+  [25, 50, 75, 100], [50, 100, 150, 200], [75, 150, 225, 400], [125, 250, 375, 500], [250, 500, 750, 1100],
+  [300, 600, 900, 1400], [350, 750, 1100, 1700], [450, 900, 1400, 2100], [550, 1100, 1600, 2400], [600, 1200, 1900, 2800],
+  [800, 1600, 2400, 3600], [1000, 2000, 3000, 4500], [1100, 2200, 3400, 5100], [1250, 2500, 3800, 5700], [1400, 2800, 4300, 6400],
+  [1600, 3200, 4800, 7200], [2000, 3900, 5900, 8800], [2100, 4200, 6300, 9500], [2400, 4900, 7300, 10900], [2800, 5700, 8500, 12700],
+];
+export const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Deadly'];
+// The encounter multiplier for how many monsters there are.
+const multiplier = (n) => (n <= 1 ? 1 : n === 2 ? 1.5 : n <= 6 ? 2 : n <= 10 ? 2.5 : n <= 14 ? 3 : 4);
+const clampLevel = (l) => Math.min(20, Math.max(1, Math.round(l)));
+
+// The levels of the party members who count toward difficulty: in the party, with a level set (pets and NPCs can go without).
+export const partyLevels = (party) => party.filter((p) => p.inParty && Number(p.level) >= 1).map((p) => clampLevel(Number(p.level)));
+
+// The whole party's [easy, medium, hard, deadly] XP: each character's thresholds added up.
+export const xpTargets = (levels) => levels.reduce((sum, l) => sum.map((s, i) => s + XP_THRESHOLDS[clampLevel(l) - 1][i]), [0, 0, 0, 0]);
+
+// "Trivial", "Easy", ... "Deadly" for monsters' XP against characters of these levels. Null without either, or when
+// a monster's XP is unknown (undefined or null: not in the bestiary), since the rating would be too low.
+export function difficulty(xps, levels) {
+  if (!xps.length || !levels.length || xps.some((x) => x === undefined || x === null)) return null;
+  const adjusted = xps.reduce((s, x) => s + x, 0) * multiplier(xps.length);
+  const i = xpTargets(levels).findLastIndex((t) => adjusted >= t);
+  return i === -1 ? 'Trivial' : DIFFICULTIES[i];
+}
+
+// ---- Random encounter tables: an encounter group is the table. ----
+// Each encounter has a weight, how many numbers of the roll it gets (0 keeps it off the table), and the group's
+// roll runs from 1 to the weights' total, so removing an encounter shrinks the roll. Encounters saved before
+// weights existed have their rolls in the name, like "3-4: Wolf Pack"; that counts as weight 2 and the name
+// reads "Wolf Pack".
+const ROLL_PREFIX = /^\s*(\d+)\s*(?:[-–]\s*(\d+))?\s*:\s*(.+)$/;
+export function rollParts(enc) {
+  const m = enc.name.match(ROLL_PREFIX);
+  const title = m ? m[3] : enc.name;
+  if (enc.weight !== undefined && enc.weight !== null) return { title, weight: Math.max(0, Math.round(Number(enc.weight)) || 0) };
+  return { title, weight: m ? Math.max(1, Number(m[2] ?? m[1]) - Number(m[1]) + 1) : 1 };
+}
+
+// Each encounter's numbers in its group's roll, in order: { from, to } (null when its weight is 0), and the total.
+export function rollTable(encounters) {
+  let total = 0;
+  const ranges = new Map();
+  for (const e of encounters) {
+    const { weight } = rollParts(e);
+    ranges.set(e.id, weight ? { from: total + 1, to: total + weight } : null);
+    total += weight;
+  }
+  return { ranges, total };
+}
+
+// "3" or "3-4".
+export const fmtRange = (r) => (r ? (r.from === r.to ? `${r.from}` : `${r.from}-${r.to}`) : '–');

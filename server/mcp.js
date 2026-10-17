@@ -7,7 +7,7 @@
 // add: nothing here edits or deletes what the DM has made.
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { SAVES, beastMap, currentHp, d, expandSpecial, fmtCr, initiativeOrder, maxHp, uid, xpSummary } from '../client/src/rules.js';
+import { SAVES, beastMap, currentHp, d, difficulty, expandSpecial, fmtCr, fmtRange, initiativeOrder, maxHp, partyLevels, rollParts, rollTable, uid, xpSummary } from '../client/src/rules.js';
 import { BALANCE, FIELD_RULES, findMonster, normalizeMonster, withUniqueNames } from './ai.js';
 
 const statBlock = (m) =>
@@ -26,6 +26,21 @@ const partyCount = (s) => Math.max(1, s.party.filter((p) => p.inParty).length);
 // ["Wolf", "Wolf", "Dire Wolf"] -> "2× Wolf, Dire Wolf"
 const countNames = (names) => Object.entries(names.reduce((c, n) => ({ ...c, [n]: (c[n] ?? 0) + 1 }), {}))
   .map(([n, k]) => (k > 1 ? `${k}× ${n}` : n)).join(', ');
+
+// A group as a roll table: "1-2  Wolf Pack: 3× Wolf - 150 XP, Easy (note)", then the roll it takes.
+function tableLines(s, list) {
+  const beasts = beastMap(s.bestiary);
+  const levels = partyLevels(s.party);
+  const { ranges, total } = rollTable(list);
+  return [
+    ...list.map((e) => {
+      const xps = e.monsters.map((n) => beasts.get(n)?.xp);
+      const rating = difficulty(xps, levels);
+      return `${fmtRange(ranges.get(e.id)).padEnd(5)} ${rollParts(e).title}: ${countNames(e.monsters)} - ${xps.reduce((a, b) => a + (b ?? 0), 0)} XP${rating ? `, ${rating}` : ''}${e.note ? ` (${e.note})` : ''}`;
+    }),
+    total ? `Roll 1-${total} (weights 0 are off the table).` : 'Every weight is 0, so there is nothing to roll.',
+  ];
+}
 
 // An MCP server for one DM (a user record), on a DM store (createDmStore). Not yet connected to a transport.
 export function createMcpServer({ dms, dm }) {
@@ -119,7 +134,8 @@ export function createMcpServer({ dms, dm }) {
     'encounter_xp',
     {
       title: 'Price an encounter',
-      description: 'XP for a planned encounter, using the same formula as the Battle page: total XP / party size x max(1, monsters / party size).',
+      description: 'XP for a planned encounter, using the same formula as the Battle page: total XP / party size x max(1, monsters / party size). ' +
+        'Also its 5e difficulty (Trivial, Easy, Medium, Hard or Deadly) when the DM has set levels on the Party page.',
       inputSchema: {
         monsters: z.array(z.object({ name: z.string(), count: z.number().int().min(1).default(1) })).min(1),
         partySize: z.number().int().min(1).optional().describe('Defaults to the players in the DM\'s party'),
@@ -131,6 +147,7 @@ export function createMcpServer({ dms, dm }) {
         award: z.number(),
         partySize: z.number(),
         totalHp: z.number(),
+        difficulty: z.string().optional(),
       },
       annotations: { readOnlyHint: true },
     },
@@ -144,9 +161,12 @@ export function createMcpServer({ dms, dm }) {
       );
       const beasts = beastMap(s.bestiary);
       const xp = xpSummary({ combatants, partySize: size }, beasts);
-      const result = { totalXp: xp.total, perPlayer: xp.perPlayer, scale: xp.scale, award: xp.award, partySize: size, totalHp: xp.remaining };
+      const levels = partyLevels(s.party);
+      const rating = difficulty(combatants.map((c) => beasts.get(c.name)?.xp), levels);
+      const result = { totalXp: xp.total, perPlayer: xp.perPlayer, scale: xp.scale, award: xp.award, partySize: size, totalHp: xp.remaining, ...(rating && { difficulty: rating }) };
       return {
-        ...text(`${combatants.length} monsters, ${result.totalHp} HP: ${result.totalXp} XP total, ${result.award} XP per player for a party of ${size}.`),
+        ...text(`${combatants.length} monsters, ${result.totalHp} HP: ${result.totalXp} XP total, ${result.award} XP per player for a party of ${size}.` +
+          (rating ? ` ${rating} for the party (levels ${levels.join(', ')}).` : ' Set levels on the Party page to rate its difficulty.')),
         structuredContent: result,
       };
     },
@@ -224,12 +244,14 @@ ${FIELD_RULES}`,
     {
       title: 'Add encounters',
       description: 'Save encounters to the DM\'s Encounters page under one group, such as the entries of a random encounter table. ' +
+        'A group is a table the DM can roll on: each encounter\'s weight is how many numbers of the roll it gets, and the roll runs to the weights\' total. ' +
         'Every monster must already be in the bestiary (add_monsters first for new ones); if any name is unknown, nothing is saved. ' +
         'The DM starts a battle from an encounter in the app.',
       inputSchema: {
         group: z.string().min(1).max(60).describe('Heading they appear under, e.g. "Woods (level 5)". An existing group is added to; see list_encounters'),
         encounters: z.array(z.object({
-          name: z.string().min(1).max(80).describe('e.g. "1-2: Wolf Pack" for a random table entry'),
+          name: z.string().min(1).max(80).describe('e.g. "Wolf Pack"; the app shows the roll range'),
+          weight: z.number().int().min(0).max(20).default(1).describe('How many numbers of the group\'s roll it gets: 2-3 for common encounters, 1 for rare ones'),
           note: z.string().max(300).default('').describe('One line for the DM: setup, tactics or a twist'),
           monsters: z.array(z.object({ name: z.string(), count: z.number().int().min(1).max(30).default(1) })).min(1),
         })).min(1).max(20),
@@ -247,16 +269,13 @@ ${FIELD_RULES}`,
         id: uid('enc'),
         group: heading,
         name: e.name.trim(),
+        weight: e.weight,
         note: e.note.trim(),
         monsters: e.monsters.flatMap((m) => Array(m.count).fill(findMonster(s.bestiary, m.name).name)),
       }));
-      dms.set(dm.id, 'encounters', [...s.encounters, ...made]);
-      const beasts = beastMap(s.bestiary);
-      const xpOf = (e) => xpSummary({ combatants: e.monsters.map((name) => ({ kind: 'monster', name })), partySize: partyCount(s) }, beasts);
-      return text([
-        `Saved ${made.length} encounters under "${heading}" (XP per player for a party of ${partyCount(s)}):`,
-        ...made.map((e) => `${e.name}: ${countNames(e.monsters)} - ${xpOf(e).total} XP, ${xpOf(e).award} each`),
-      ].join('\n'));
+      const all = [...s.encounters, ...made];
+      dms.set(dm.id, 'encounters', all);
+      return text([`Saved ${made.length} encounters under "${heading}". The group's table is now:`, ...tableLines(s, all.filter((e) => e.group === heading))].join('\n'));
     },
   );
 
@@ -276,7 +295,7 @@ ${FIELD_RULES}`,
       }
       const list = s.encounters.filter((e) => e.group.toLowerCase() === group.trim().toLowerCase());
       if (!list.length) return fail(`No group "${group}". Call list_encounters without a group to see them.`);
-      return text(list.map((e) => `${e.name}: ${countNames(e.monsters)}${e.note ? ` (${e.note})` : ''}`).join('\n'));
+      return text(tableLines(s, list).join('\n'));
     },
   );
 
@@ -338,27 +357,26 @@ ${FIELD_RULES}`,
     'random_encounter_table',
     {
       title: 'Random encounter table',
-      description: 'Build a random encounter table for a place and level, and save it to the Encounters page',
+      description: 'Build a random encounter table for a place, and save it to the Encounters page',
       argsSchema: {
         environment: z.string().describe('e.g. "the woods", "a swamp", "city streets at night"'),
-        level: z.string().describe('The party\'s level, e.g. "5"'),
-        die: z.string().optional().describe('The die to roll on the table, d6, d8 (default) or d12'),
+        entries: z.string().optional().describe('How many encounters, default 8'),
       },
     },
-    ({ environment, level, die = 'd8' }) => ({
+    ({ environment, entries = '8' }) => ({
       messages: [{
         role: 'user',
         content: {
           type: 'text',
-          text: `Make a ${die} random encounter table for my level ${level} party in ${environment}, and save it to my Encounters page.\n` +
-            '1. Read dm://party for how many players there are.\n' +
-            `2. Use search_monsters to find monsters in my bestiary that would live in ${environment} and suit level ${level}. ` +
-            'Use the 5e XP thresholds for that level to make a mix: mostly easy and medium, a couple hard, at most one deadly.\n' +
+          text: `Make a random encounter table of ${entries} encounters for my party in ${environment}, and save it to my Encounters page.\n` +
+            '1. Read dm://party for who is playing and their levels.\n' +
+            `2. Use search_monsters to find monsters in my bestiary that would live in ${environment} and suit the party. ` +
+            'Make a mix: mostly easy and medium, a couple hard, at most one deadly.\n' +
             '3. Only if nothing in the bestiary fits an entry, make a few original monsters with add_monsters.\n' +
-            '4. Check each entry with encounter_xp.\n' +
-            `5. Save the table with add_encounters as one group named for the place and level, one encounter per roll or range of rolls on a ${die}, ` +
-            'named like "1-2: Wolf Pack", each with a one-line note on setup, tactics or a twist.\n' +
-            'Then show me the table with each entry\'s rolls, difficulty and XP, and list any monsters you added.',
+            '4. Check each entry with encounter_xp, which rates its difficulty for the party.\n' +
+            '5. Save the table with add_encounters as one group named for the place and level. Give each encounter a short name, ' +
+            'a weight (2-3 for the commonest, 1 for rare ones) and a one-line note on setup, tactics or a twist.\n' +
+            'Then show me the table it saved, and list any monsters you added.',
         },
       }],
     }),

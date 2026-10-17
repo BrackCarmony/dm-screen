@@ -24,6 +24,8 @@ export default function Help({ user, mcp }) {
           <li>
             <strong>Plan ahead:</strong> on the <a href="#encounters">Encounters</a> tab, click <em>New encounter</em> and pick monsters from the bestiary.
             When it's time to fight, click <em>Start battle</em>. You start with a few example encounters to try.
+            Each group doubles as a random encounter table: <em>Roll</em> picks one, and an encounter's <em>Rolls</em> set how likely it is
+            (0 takes it off the table). Set your players' levels on the <a href="#party">Party</a> tab to see how hard each one is.
           </li>
           <li>
             <strong>On the spot:</strong> on the <a href="#battle">Battle</a> tab, click <em>New</em>, then use <em>Add monster…</em> to drop monsters in.

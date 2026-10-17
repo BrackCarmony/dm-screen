@@ -70,28 +70,37 @@ test('add_encounters saves nothing when a monster is unknown, and otherwise expa
   assert.match(bad.text, /Nothing saved.*Moss Horror/);
   assert.equal((await web('GET', '/api/state')).encounters.length, before);
 
-  const ok = await call('add_encounters', { group: 'Woods (level 5)', encounters: [{ name: '1-2: Wolves', note: 'They circle first.', monsters: [{ name: 'wolf', count: 3 }, { name: 'Dire Wolf' }] }] });
+  const ok = await call('add_encounters', { group: 'Woods (level 5)', encounters: [{ name: 'Wolves', weight: 2, note: 'They circle first.', monsters: [{ name: 'wolf', count: 3 }, { name: 'Dire Wolf' }] }] });
   assert.equal(ok.error, false);
-  assert.match(ok.text, /1-2: Wolves: 3× Wolf, Dire Wolf/);
+  assert.match(ok.text, /1-2 +Wolves: 3× Wolf, Dire Wolf/);
   const saved = (await web('GET', '/api/state')).encounters.at(-1);
-  assert.deepEqual([saved.group, saved.name, saved.note, saved.monsters], ['Woods (level 5)', '1-2: Wolves', 'They circle first.', ['Wolf', 'Wolf', 'Wolf', 'Dire Wolf']]);
+  assert.deepEqual([saved.group, saved.name, saved.weight, saved.note, saved.monsters], ['Woods (level 5)', 'Wolves', 2, 'They circle first.', ['Wolf', 'Wolf', 'Wolf', 'Dire Wolf']]);
 
   // Names are matched ignoring spacing and punctuation, and saved as the bestiary spells them.
   await web('PUT', '/api/state/bestiary', [...(await web('GET', '/api/state')).bestiary, monster('dire-boar')]);
-  await call('add_encounters', { group: 'Woods (level 5)', encounters: [{ name: '4: Boar', monsters: [{ name: 'Dire Boar' }] }] });
+  await call('add_encounters', { group: 'Woods (level 5)', encounters: [{ name: 'Boar', monsters: [{ name: 'Dire Boar' }] }] });
   assert.deepEqual((await web('GET', '/api/state')).encounters.at(-1).monsters, ['dire-boar']);
 
   // A second batch with the group in different case joins the same group.
-  await call('add_encounters', { group: 'woods (LEVEL 5)', encounters: [{ name: '3: Owlbear', monsters: [{ name: 'Owlbear' }] }] });
+  await call('add_encounters', { group: 'woods (LEVEL 5)', encounters: [{ name: 'Owlbear', monsters: [{ name: 'Owlbear' }] }] });
   assert.match((await call('list_encounters', {})).text, /3× Woods \(level 5\)/);
-  assert.match((await call('list_encounters', { group: 'Woods (level 5)' })).text, /3: Owlbear: Owlbear/);
+  const table = (await call('list_encounters', { group: 'Woods (level 5)' })).text;
+  assert.match(table, /^3 +Boar: dire-boar/m);
+  assert.match(table, /^4 +Owlbear: Owlbear - 700 XP\n/m); // no levels set, so no difficulty
+  assert.match(table, /Roll 1-4/);
+
+  // With levels on the Party page, entries and encounter_xp are rated.
+  await web('PUT', '/api/state/party', [{ id: 'P1', name: 'Ulf', inParty: true, level: 3 }, { id: 'P2', name: 'Ada', inParty: true, level: 3 }, { id: 'P3', name: 'Pip', inParty: true }]);
+  assert.match((await call('list_encounters', { group: 'Woods (level 5)' })).text, /Owlbear: Owlbear - 700 XP, Hard/); // hard 2 × 225, deadly 2 × 400
+  const xp = await call('encounter_xp', { monsters: [{ name: 'Wolf', count: 2 }] });
+  assert.match(xp.text, /Easy for the party \(levels 3, 3\)/); // 100 × 1.5 = 150: easy 150, medium 300
 });
 
 test('the random encounter table prompt names the tools and the place', async (t) => {
   const { client } = await start(t);
-  const { messages } = await client.getPrompt({ name: 'random_encounter_table', arguments: { environment: 'the woods', level: '5' } });
+  const { messages } = await client.getPrompt({ name: 'random_encounter_table', arguments: { environment: 'the woods', entries: '6' } });
   const text = messages[0].content.text;
-  for (const s of ['d8', 'the woods', 'level 5', 'search_monsters', 'encounter_xp', 'add_encounters']) assert.ok(text.includes(s), s);
+  for (const s of ['6 encounters', 'the woods', 'dm://party', 'weight', 'search_monsters', 'encounter_xp', 'add_encounters']) assert.ok(text.includes(s), s);
 });
 
 test('the store reports which collections another process changed, and not its own writes', async () => {
